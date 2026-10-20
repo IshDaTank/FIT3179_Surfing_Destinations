@@ -1,17 +1,17 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Monthly median and observed minimum-to-maximum significant wave height at Bilinga, 2025.",
+  "description": "Monthly Bilinga 2025 significant wave heights: median line and observed minimum-to-maximum shaded range.",
   "usermeta": {
     "title": "How Did Wave Conditions Change at Bilinga in 2025?",
-    "analysis": "Wave conditions at Bilinga varied markedly throughout 2025. May had the highest monthly median significant wave height (1.20 m), while July had the lowest (0.58 m). March stood out for its extremes, with a maximum of 4.87 m compared with a monthly median of 1.15 m. Of the year's 521 valid half-hourly observations reaching at least 2 m, 452 occurred in March, coinciding with the major swell associated with Tropical Cyclone Alfred. The difference between March's peak and May's higher median shows that short-lived extreme conditions and a consistently elevated typical wave height are not the same. The next chart examines whether seasonal differences in typical conditions recur across 2022–2025.",
-    "method": "Queensland Government Bilinga wave buoy: 30-minute 2025 observations in AEST. Of 17,520 observations, 515 missing-value readings coded -99.9 were excluded. The line represents monthly medians and the shaded area spans the observed minimum to maximum of 17,005 valid significant wave-height observations.",
+    "analysis": "Bilinga's wave record shows two different forms of variation during 2025. May had the highest monthly median significant wave height (1.20 m), over twice July's 0.58 m, indicating notably stronger typical conditions in May. March, however, produced the year's exceptional peak of 4.87 m while its monthly median was 1.15 m. The contrast is striking: March experienced an intense upper extreme, whereas May led in typical wave height. March also contained 452 of the year's 521 readings at or above 2 m (87%), during the period when Tropical Cyclone Alfred generated substantial swell along southeast Queensland. August brought another noticeable maximum of 2.93 m alongside a relatively high median of 1.14 m. These differences show that the height of the largest observed waves and the conditions experienced most often tell complementary stories. Chart 6 now tests which monthly patterns repeat across multiple years.",
+    "method": "Queensland Government Bilinga wave buoy: 30-minute 2025 AEST observations of significant wave height (Hs, metres). 515 sentinel readings of -99.9 excluded; 17,005 valid. Teal line = median of valid observations each month. Shaded band = observed minimum to maximum (not 25th–75th percentiles). Isolated extremes can strongly influence the monthly range.",
     "sources": [
       {
-        "label": "Queensland Government — Bilinga Verified Wave Data",
+        "label": "Queensland Government — Bilinga 2025 Verified Wave Data",
         "url": "https://www.data.qld.gov.au/dataset/coastal-data-system-waves-bilinga/resource/f4a7339d-1e9a-464b-a780-f4e98c6cec8c"
       },
       {
-        "label": "Bureau of Meteorology — Tropical Cyclone Alfred",
+        "label": "Bureau of Meteorology — Tropical Cyclone Alfred (2025)",
         "url": "https://www.bom.gov.au/cyclone/history/Alfred2025.shtml"
       }
     ]
@@ -27,10 +27,9 @@
   },
   "title": {
     "text": "Monthly Significant Wave Height at Bilinga",
-    "subtitle": "Teal line: median  ·  shaded area: observed minimum–maximum  ·  2025",
+    "subtitle": "Teal line: median · shaded range: observed minimum–maximum · January–December 2025",
     "anchor": "start",
     "fontSize": 15,
-    "fontWeight": "bold",
     "subtitleFontSize": 11,
     "color": "#173b48",
     "subtitleColor": "#48636c",
@@ -51,15 +50,16 @@
         "x": {
           "field": "month",
           "type": "quantitative",
+          "title": "Month (2025)",
           "scale": {
             "domain": [0.65, 12.4],
             "nice": false
           },
           "axis": {
-            "title": "Month (2025)",
             "values": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
             "labelExpr": "timeFormat(datetime(2025, datum.value - 1, 1), '%b')",
             "labelFontSize": 12,
+            "titleFontSize": 12,
             "titleFontWeight": "bold",
             "labelColor": "#48636c",
             "titleColor": "#173b48",
@@ -73,19 +73,20 @@
         "y": {
           "field": "max",
           "type": "quantitative",
-          "title": "Significant Wave Height (m)",
+          "title": "Significant wave height (m)",
           "scale": {
             "domain": [0, 5.6],
             "nice": false
           },
           "axis": {
             "values": [0, 1, 2, 3, 4, 5],
+            "format": ".0f",
             "grid": true,
             "gridColor": "#e4eeeb",
             "domain": false,
+            "titleFontWeight": "bold",
             "labelColor": "#48636c",
             "titleColor": "#173b48",
-            "titleFontWeight": "bold",
             "titlePadding": 12
           }
         },
@@ -93,34 +94,12 @@
           "field": "min"
         },
         "tooltip": [
-          {
-            "field": "month_name",
-            "type": "nominal",
-            "title": "Month"
-          },
-          {
-            "field": "median",
-            "type": "quantitative",
-            "format": ".2f",
-            "title": "Median (m)"
-          },
-          {
-            "field": "min",
-            "type": "quantitative",
-            "format": ".2f",
-            "title": "Minimum (m)"
-          },
-          {
-            "field": "max",
-            "type": "quantitative",
-            "format": ".2f",
-            "title": "Maximum (m)"
-          },
-          {
-            "field": "n",
-            "type": "quantitative",
-            "title": "Valid readings"
-          }
+          {"field": "month_name", "type": "nominal", "title": "Month"},
+          {"field": "median", "type": "quantitative", "format": ".2f", "title": "Median Hs (m)"},
+          {"field": "n", "type": "quantitative", "title": "Valid records"},
+          {"field": "high2", "type": "quantitative", "title": "Records Hs ≥ 2 m"},
+          {"field": "min", "type": "quantitative", "format": ".2f", "title": "Monthly minimum (m)"},
+          {"field": "max", "type": "quantitative", "format": ".2f", "title": "Monthly maximum (m)"}
         ]
       }
     },
@@ -158,56 +137,21 @@
           }
         },
         "tooltip": [
-          {
-            "field": "month_name",
-            "type": "nominal",
-            "title": "Month"
-          },
-          {
-            "field": "median",
-            "type": "quantitative",
-            "format": ".2f",
-            "title": "Median (m)"
-          },
-          {
-            "field": "min",
-            "type": "quantitative",
-            "format": ".2f",
-            "title": "Minimum (m)"
-          },
-          {
-            "field": "max",
-            "type": "quantitative",
-            "format": ".2f",
-            "title": "Maximum (m)"
-          }
+          {"field": "month_name", "type": "nominal", "title": "Month"},
+          {"field": "median", "type": "quantitative", "format": ".2f", "title": "Median Hs (m)"},
+          {"field": "n", "type": "quantitative", "title": "Valid records"},
+          {"field": "high2", "type": "quantitative", "title": "Records Hs ≥ 2 m"},
+          {"field": "min", "type": "quantitative", "format": ".2f", "title": "Monthly minimum (m)"},
+          {"field": "max", "type": "quantitative", "format": ".2f", "title": "Monthly maximum (m)"}
         ]
       }
     },
     {
       "data": {
         "values": [
-          {
-            "x1": 1.1,
-            "x2": 4.65,
-            "y1": 5.07,
-            "y2": 5.43,
-            "tone": "storm"
-          },
-          {
-            "x1": 5.45,
-            "x2": 8.85,
-            "y1": 2.55,
-            "y2": 2.94,
-            "tone": "high"
-          },
-          {
-            "x1": 8.15,
-            "x2": 11.65,
-            "y1": 0.12,
-            "y2": 0.51,
-            "tone": "low"
-          }
+          {"x1": 1.1, "x2": 4.65, "y1": 5.07, "y2": 5.43, "tone": "storm"},
+          {"x1": 5.45, "x2": 8.85, "y1": 2.55, "y2": 2.94, "tone": "high"},
+          {"x1": 8.15, "x2": 11.65, "y1": 0.12, "y2": 0.51, "tone": "low"}
         ]
       },
       "mark": {
@@ -216,26 +160,16 @@
         "strokeWidth": 1
       },
       "encoding": {
-        "x": {
-          "field": "x1",
-          "type": "quantitative"
-        },
-        "x2": {
-          "field": "x2"
-        },
-        "y": {
-          "field": "y1",
-          "type": "quantitative"
-        },
-        "y2": {
-          "field": "y2"
-        },
+        "x": {"field": "x1", "type": "quantitative"},
+        "x2": {"field": "x2"},
+        "y": {"field": "y1", "type": "quantitative"},
+        "y2": {"field": "y2"},
         "fill": {
           "field": "tone",
           "type": "nominal",
           "scale": {
             "domain": ["storm", "high", "low"],
-            "range": ["#FDEFE2", "#E3F3EE", "#E8F1F8"]
+            "range": ["#FDEFE2", "#E3F3EE", "#F4E9FA"]
           },
           "legend": null
         },
@@ -244,7 +178,7 @@
           "type": "nominal",
           "scale": {
             "domain": ["storm", "high", "low"],
-            "range": ["#D7A274", "#6BAC99", "#91B7CE"]
+            "range": ["#D7A274", "#6BAC99", "#9B70B6"]
           },
           "legend": null
         }
@@ -253,27 +187,9 @@
     {
       "data": {
         "values": [
-          {
-            "x1": 3,
-            "x2": 3,
-            "y1": 4.869,
-            "y2": 5.07,
-            "tone": "storm"
-          },
-          {
-            "x1": 5,
-            "x2": 5.45,
-            "y1": 1.201,
-            "y2": 2.55,
-            "tone": "high"
-          },
-          {
-            "x1": 7,
-            "x2": 8.15,
-            "y1": 0.576,
-            "y2": 0.51,
-            "tone": "low"
-          }
+          {"x1": 3, "x2": 3, "y1": 4.869, "y2": 5.07, "tone": "storm"},
+          {"x1": 5, "x2": 5.45, "y1": 1.201, "y2": 2.55, "tone": "high"},
+          {"x1": 7, "x2": 8.15, "y1": 0.576, "y2": 0.51, "tone": "low"}
         ]
       },
       "mark": {
@@ -281,26 +197,16 @@
         "strokeWidth": 1.5
       },
       "encoding": {
-        "x": {
-          "field": "x1",
-          "type": "quantitative"
-        },
-        "x2": {
-          "field": "x2"
-        },
-        "y": {
-          "field": "y1",
-          "type": "quantitative"
-        },
-        "y2": {
-          "field": "y2"
-        },
+        "x": {"field": "x1", "type": "quantitative"},
+        "x2": {"field": "x2"},
+        "y": {"field": "y1", "type": "quantitative"},
+        "y2": {"field": "y2"},
         "color": {
           "field": "tone",
           "type": "nominal",
           "scale": {
             "domain": ["storm", "high", "low"],
-            "range": ["#C07835", "#178365", "#397DAB"]
+            "range": ["#C07835", "#178365", "#8754AA"]
           },
           "legend": null
         }
@@ -309,21 +215,9 @@
     {
       "data": {
         "values": [
-          {
-            "x": 2.9,
-            "y": 5.25,
-            "label": "March: maximum 4.87 m"
-          },
-          {
-            "x": 7.12,
-            "y": 2.745,
-            "label": "May: highest median 1.20 m"
-          },
-          {
-            "x": 9.88,
-            "y": 0.315,
-            "label": "July: lowest median 0.58 m"
-          }
+          {"x": 2.9, "y": 5.25, "label": "March: maximum 4.87 m"},
+          {"x": 7.12, "y": 2.745, "label": "May: highest median 1.20 m"},
+          {"x": 9.88, "y": 0.315, "label": "July: lowest median 0.58 m"}
         ]
       },
       "mark": {
@@ -335,25 +229,14 @@
         "baseline": "middle"
       },
       "encoding": {
-        "x": {
-          "field": "x",
-          "type": "quantitative"
-        },
-        "y": {
-          "field": "y",
-          "type": "quantitative"
-        },
-        "text": {
-          "field": "label",
-          "type": "nominal"
-        }
+        "x": {"field": "x", "type": "quantitative"},
+        "y": {"field": "y", "type": "quantitative"},
+        "text": {"field": "label", "type": "nominal"}
       }
     }
   ],
   "config": {
-    "view": {
-      "stroke": null
-    },
+    "view": {"stroke": null},
     "axis": {
       "labelFont": "Arial",
       "titleFont": "Arial"
