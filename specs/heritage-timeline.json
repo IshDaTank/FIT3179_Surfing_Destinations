@@ -1,13 +1,23 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Cumulative step chart of Australian National Surfing Reserve dedications, 2006–2022, with three annotated milestones.",
+  "description": "Cumulative step-line chart showing 19 Australian National Surfing Reserve dedications from 2006 to 2022, with three milestone annotations.",
   "usermeta": {
     "title": "When Did Australia's Surfing Reserves Gain Recognition?",
-    "analysis": "Formal recognition began with Maroubra in 2006 and reached eight listed reserves by the end of 2009; all eight were in New South Wales. The total doubled to 16 by 2013 as recognition expanded into Western Australia, Queensland, South Australia and Victoria. Eleven reserves had already been recognised by 2010, including three dedicated that year. Subsequent additions were less frequent: Noosa in 2015, Bondi in 2017 and Norah Head in 2022 brought the current register to 19. The flat stretches indicate years without a new listing in this register, not a decline in surfing activity or the disappearance of surfing heritage. Similarly, a dedication date marks official recognition of an established surfing community, not the date surfing began there. The early NSW concentration may reflect the history of the recognition program and local nomination activity, but these totals alone cannot establish its causes. The chart counts the 19 entries on the official register and should not be interpreted as a comprehensive timeline of Australian surf breaks or tourism demand.",
-    "source": {
-      "label": "National Surfing Reserves — official dedication register",
-      "url": "https://surfingreserves.org.au/national-surfing-reserves/"
-    }
+    "analysis": "The recognition timeline rises quickly during its early years: Maroubra became the first National Surfing Reserve in 2006, and eight NSW locations had been dedicated by the end of 2009. Another eight were added from 2010 to 2013, doubling the national total to 16. The sharp steps in 2010 and 2013 correspond to three dedications in each year, showing that new recognitions arrived in bursts rather than at a steady annual rate. Growth then became less frequent: Noosa joined in 2015, Bondi in 2017 and Norah Head in 2022, bringing the register to 19. This change in pace suggests a transition from the program's initial rollout and national expansion to a more selective period of individual local dedications. Because communities must develop nominations, local steering committees and public support, dedication dates reflect the work of organising and recognising existing surfing heritage. The long interval between Bondi and Norah Head is particularly striking: five years passed between those additions to the register.",
+    "sources": [
+      {
+        "label": "National Surfing Reserves — Official Register",
+        "url": "https://surfingreserves.org.au/national-surfing-reserves/"
+      },
+      {
+        "label": "National Surfing Reserves — Nomination Process",
+        "url": "https://surfingreserves.org.au/nomination-process/"
+      },
+      {
+        "label": "Maroubra — First National Surfing Reserve",
+        "url": "https://surfingreserves.org.au/maroubra/"
+      }
+    ]
   },
   "width": "container",
   "height": 350,
@@ -20,16 +30,11 @@
   },
   "layer": [
     {
-      "data": {
-        "url": "data/reserves.csv"
-      },
+      "data": {"url": "data/reserves.csv"},
       "transform": [
         {
           "aggregate": [
-            {
-              "op": "count",
-              "as": "new_reserves"
-            }
+            {"op": "count", "as": "new_reserves"}
           ],
           "groupby": ["year"]
         },
@@ -42,10 +47,7 @@
             }
           ],
           "sort": [
-            {
-              "field": "year",
-              "order": "ascending"
-            }
+            {"field": "year", "order": "ascending"}
           ],
           "frame": [null, 0]
         }
@@ -157,20 +159,10 @@
         "strokeWidth": 1.2
       },
       "encoding": {
-        "x": {
-          "field": "left",
-          "type": "quantitative"
-        },
-        "x2": {
-          "field": "right"
-        },
-        "y": {
-          "field": "bottom",
-          "type": "quantitative"
-        },
-        "y2": {
-          "field": "top"
-        },
+        "x": {"field": "left", "type": "quantitative"},
+        "x2": {"field": "right"},
+        "y": {"field": "bottom", "type": "quantitative"},
+        "y2": {"field": "top"},
         "fill": {
           "field": "phase",
           "type": "nominal",
@@ -219,17 +211,9 @@
         "strokeWidth": 1.8
       },
       "encoding": {
-        "x": {
-          "field": "year",
-          "type": "quantitative"
-        },
-        "y": {
-          "field": "from",
-          "type": "quantitative"
-        },
-        "y2": {
-          "field": "to"
-        },
+        "x": {"field": "year", "type": "quantitative"},
+        "y": {"field": "from", "type": "quantitative"},
+        "y2": {"field": "to"},
         "color": {
           "field": "phase",
           "type": "nominal",
@@ -270,14 +254,8 @@
         "size": 115
       },
       "encoding": {
-        "x": {
-          "field": "year",
-          "type": "quantitative"
-        },
-        "y": {
-          "field": "arrowY",
-          "type": "quantitative"
-        },
+        "x": {"field": "year", "type": "quantitative"},
+        "y": {"field": "arrowY", "type": "quantitative"},
         "shape": {
           "field": "direction",
           "type": "nominal",
@@ -327,25 +305,14 @@
         "baseline": "middle"
       },
       "encoding": {
-        "x": {
-          "field": "x",
-          "type": "quantitative"
-        },
-        "y": {
-          "field": "y",
-          "type": "quantitative"
-        },
-        "text": {
-          "field": "label",
-          "type": "nominal"
-        }
+        "x": {"field": "x", "type": "quantitative"},
+        "y": {"field": "y", "type": "quantitative"},
+        "text": {"field": "label", "type": "nominal"}
       }
     }
   ],
   "config": {
-    "view": {
-      "stroke": null
-    },
+    "view": {"stroke": null},
     "axis": {
       "labelFont": "Arial",
       "titleFont": "Arial"
