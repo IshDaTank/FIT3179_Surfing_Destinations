@@ -18,16 +18,24 @@
   "description": "Proportional symbol map for estimated people aged 15+ who surfed in 2025, by Australian state or territory. ACT has no coastline; its symbol represents residents, not a surf site.",
   "usermeta": {
     "title": "Where Are Australia’s Surfers?",
-    "analysis": "New South Wales accounts for about 38% of the combined estimated adult surfing population across Australia’s eight states and territories (117,953 of 313,396). Queensland (63,787), Victoria (58,683) and Western Australia (43,496) follow. Yet the geographic pattern changes when population size is considered: WA records the highest estimated adult participation rate (1.76%), narrowly ahead of NSW (1.67%). Symbols indicate participants’ state or territory of residence—not where they surf—and therefore include the landlocked ACT. As AusPlay results are survey estimates, particularly small jurisdictions and narrow differences require caution.",
+    "analysis": "New South Wales is home to the largest estimated adult surfing population (117,953), accounting for around 38% of the total across the eight jurisdictions. Queensland (63,787), Victoria (58,683) and Western Australia (43,496) follow. These figures indicate where surfers live, not where surfing occurs. The different pattern in participation rates—with WA at 1.76% and NSW at 1.67%—shows why population size matters when interpreting the map. AusPlay figures are survey estimates, and small differences should not be treated as definitive.",
     "sources": [
       {
         "label": "Australian Sports Commission · AusPlay 2025, state and territory tables (30 Apr 2026)",
         "url": "https://www.ausport.gov.au/clearinghouse/research/ausplay/results"
       }
     ],
-    "annotation": "NSW leads Australia with 117,953 estimated adult surfing participants in 2025."
+    "annotation": "NSW has the largest estimated adult surfing population: 117,953 participants.",
+    "sizeLegendValues": [
+      0,
+      25000,
+      50000,
+      75000,
+      100000
+    ],
+    "sizeLegendTitle": "Estimated surfers aged 15+"
   },
-  "height": 540,
+  "height": 565,
   "projection": {
     "type": "mercator"
   },
@@ -49,7 +57,8 @@
         "type": "geoshape",
         "fill": "#eef5f3",
         "stroke": "#a6bcbc",
-        "strokeWidth": 1.35
+        "strokeWidth": 1.35,
+        "clip": false
       }
     },
     {
@@ -85,21 +94,7 @@
               2600
             ]
           },
-          "legend": {
-            "title": "Estimated surfers (15+)",
-            "format": ",.0f",
-            "values": [
-              20000,
-              60000,
-              100000
-            ],
-            "labelFontSize": 13,
-            "titleFontSize": 14,
-            "titleFontWeight": "bold",
-            "labelPadding": 9,
-            "symbolStrokeColor": "#596c73",
-            "offset": 15
-          }
+          "legend": null
         },
         "color": {
           "field": "state",
