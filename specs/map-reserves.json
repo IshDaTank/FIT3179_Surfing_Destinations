@@ -1,0 +1,66 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "National Surfing Reserves in Australia, with an annotation identifying the concentration in New South Wales.",
+  "usermeta": {
+    "title": "Where are Australia's recognised surfing destinations?",
+    "annotation": "11 of Australia's 19 listed National Surfing Reserves are in New South Wales (58%).",
+    "analysis": "Australia's formally recognised surfing heritage stretches from Western Australia's southwest coast to Queensland's subtropical beaches, but its distribution is far from uniform. New South Wales accounts for 11 of the 19 National Surfing Reserves, revealing a notable concentration of officially acknowledged surfing places along its coastline. Other reserves are located in Western Australia, Queensland, South Australia and Victoria, showing that recognised surf communities exist across several distinct coastal regions. This geographic spread helps introduce Australia's diversity as a surfing destination, while the concentration in NSW raises a question explored in the next chart: which parts of the coastline contain the closest clusters of reserves? Crucially, the register documents cultural recognition; it does not measure wave quality, tourist visitation or the number of surfers at each beach.",
+    "source": {
+      "label": "National Surfing Reserves — official register",
+      "url": "https://surfingreserves.org.au/national-surfing-reserves/"
+    }
+  },
+  "width": "container",
+  "height": 410,
+  "autosize": {"type": "fit", "contains": "padding"},
+  "background": "#ffffff",
+  "projection": {"type": "mercator", "center": [134, -26], "scale": 700},
+  "layer": [
+    {
+      "data": {
+        "url": "https://vega.github.io/vega-datasets/data/world-110m.json",
+        "format": {"type": "topojson", "feature": "countries"}
+      },
+      "mark": {"type": "geoshape", "fill": "#edf2ef", "stroke": "#aebfbe", "strokeWidth": 0.8}
+    },
+    {
+      "data": {"url": "data/reserves.csv"},
+      "mark": {"type": "circle", "size": 98, "filled": true, "opacity": 0.93, "stroke": "white", "strokeWidth": 1.4},
+      "encoding": {
+        "longitude": {"field": "lon", "type": "quantitative"},
+        "latitude": {"field": "lat", "type": "quantitative"},
+        "color": {
+          "field": "state", "type": "nominal", "title": "State",
+          "scale": {"domain": ["NSW", "QLD", "VIC", "SA", "WA"], "range": ["#117989", "#E3A049", "#7D6BA3", "#B96A75", "#568C69"]},
+          "legend": {"orient": "bottom", "direction": "horizontal", "symbolType": "circle", "title": null, "labelFontSize": 12, "symbolSize": 100}
+        },
+        "tooltip": [
+          {"field": "name", "type": "nominal", "title": "Surfing reserve"},
+          {"field": "state", "type": "nominal", "title": "State"},
+          {"field": "region", "type": "nominal", "title": "Region"},
+          {"field": "year", "type": "quantitative", "format": "d", "title": "Dedicated"}
+        ]
+      }
+    },
+    {
+      "data": {"values": [{"lon": 141.0, "lat": -21.0, "lon2": 149.0, "lat2": -30.6}]},
+      "mark": {"type": "rule", "stroke": "#146875", "strokeWidth": 1.7, "strokeDash": [4, 3]},
+      "encoding": {
+        "longitude": {"field": "lon", "type": "quantitative"},
+        "latitude": {"field": "lat", "type": "quantitative"},
+        "longitude2": {"field": "lon2"},
+        "latitude2": {"field": "lat2"}
+      }
+    },
+    {
+      "data": {"values": [{"lon": 140.6, "lat": -20.3, "label": "NSW: 11 of 19 reserves"}]},
+      "mark": {"type": "text", "font": "Arial", "fontSize": 14, "fontWeight": "bold", "align": "right", "baseline": "middle", "fill": "#165b67", "stroke": "#ffffff", "strokeWidth": 3, "paintOrder": "stroke"},
+      "encoding": {
+        "longitude": {"field": "lon", "type": "quantitative"},
+        "latitude": {"field": "lat", "type": "quantitative"},
+        "text": {"field": "label"}
+      }
+    }
+  ],
+  "config": {"view": {"stroke": null}, "axis": {"labelFont": "Arial", "titleFont": "Arial"}}
+}
