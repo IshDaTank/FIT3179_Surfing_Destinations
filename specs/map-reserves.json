@@ -1,87 +1,78 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Interactive map of Australia's National Surfing Reserves. Equal-sized location markers use distinct, colour-blind-friendly state colours.",
+  "description": "Interactive geographic point map of 19 Australian National Surfing Reserves, coloured by state.",
   "usermeta": {
     "title": "Where are Australia's recognised surfing destinations?",
     "defaultState": "All",
     "stateOrder": ["All", "NSW", "QLD", "VIC", "SA", "WA"],
-    "source": {
-      "label": "National Surfing Reserves — official register",
-      "url": "https://surfingreserves.org.au/national-surfing-reserves/"
-    },
     "interpretations": {
       "All": {
         "callout": "The Sydney-area cluster helps explain NSW's 11 of 19 listings (58%).",
         "detail": "19 listed reserves · five states · dedication years 2006–2022",
-        "analysis": "Australia's National Surfing Reserves register covers 19 localities across New South Wales (11), Western Australia (3), Queensland (2), South Australia (2) and Victoria (1). The strongest concentration is in NSW, particularly around Sydney, but recognised surfing heritage also spans distant coastal communities such as Kalbarri, Noosa and Phillip Island. This geographic spread supports a story of multiple surfing identities rather than one universally 'best' beach. Importantly, the register records places that received formal heritage recognition—not all surf breaks, wave quality, participation or visitor numbers. The next chart compares how unevenly these recognised locations are distributed between states."
+        "analysis": "Australia's 19 National Surfing Reserves stretch across five states, from Kalbarri in Western Australia to Noosa in Queensland and Phillip Island in Victoria. New South Wales holds 11 listings (58%), with a pronounced concentration along the Sydney and wider NSW coastline. Yet the distribution also reveals markedly different coastal settings: WA's Indian Ocean-facing southwest, Queensland's subtropical point breaks and Victoria's exposed southern coast. These places represent different surfing communities and coastal identities, not a single uniform Australian surfing experience. The strong NSW cluster leads naturally to the next comparison: how much does each state contribute to the national register?"
       },
       "NSW": {
         "callout": "Sydney contains five of NSW's 11 listed reserves.",
         "detail": "11 reserves · 58% of national list · earliest 2006, latest 2022",
-        "analysis": "New South Wales accounts for 11 of the 19 nationally listed reserves (58%), making it the largest group in this register. Five are in the Sydney region—Maroubra, Cronulla, North Narrabeen, Manly–Freshwater and Bondi—while the remainder extend from Lennox Head and Angourie on the North Coast to Crescent Head, Merewether, Norah Head and Killalea. The first NSW listing is Maroubra (2006), and Norah Head was dedicated in 2022, illustrating recognition across multiple years and coastal communities. The NSW lead therefore reflects the distribution of registered heritage sites, not evidence that NSW offers the best surf or draws the largest number of surfing tourists."
+        "analysis": "New South Wales accounts for 11 of the 19 listings (58%), spread from Angourie and Lennox Head on the North Coast to Killalea in the Illawarra. Five lie in the Sydney region: Maroubra, Cronulla, North Narrabeen, Manly–Freshwater and Bondi. Maroubra became Australia's first National Surfing Reserve in March 2006, recognising a beach with established boardriding clubs and generations of surfing history. Merewether adds Newcastle's competitive surfing heritage to this east-coast network. Together, these sites reveal a particularly dense chain of recognised communities along the NSW coast, helping explain why NSW leads the state comparison in Chart 2."
       },
       "QLD": {
-        "callout": "Gold Coast and Noosa are Queensland's two listed reserves.",
+        "callout": "Gold Coast and Noosa form Queensland's two recognised coastal locations.",
         "detail": "2 reserves · Gold Coast (2012) · Noosa (2015)",
-        "analysis": "Queensland has two entries on the National Surfing Reserves register: Gold Coast, dedicated in 2012, and Noosa, dedicated in 2015. Both appear in the state's southeast, but they represent distinct coastal communities rather than one continuous surf site. Their recognition adds a subtropical Queensland dimension to Australia's surfing heritage. The count of two is not a comprehensive inventory of Queensland's surf beaches and does not measure surf conditions, total visitation or participation. Gold Coast's significance in the professional surfing circuit should be examined separately from the reserve register."
+        "analysis": "Queensland's two recognised reserves are the Gold Coast (2012) and Noosa (2015), both in the state's southeast. Although close together on the national map, they reflect different surfing identities: the Gold Coast designation includes renowned point-break areas from Burleigh Heads to Snapper–Kirra, while Noosa is known for its headland point breaks and longstanding longboarding community. Noosa has hosted its Festival of Surfing since 1998 and subsequently gained World Surfing Reserve status in 2021. These examples show how formally recognised sites can combine distinctive coastal geography, community heritage and major surfing events."
       },
       "VIC": {
-        "callout": "Phillip Island is Victoria's one listed reserve.",
+        "callout": "Phillip Island is Victoria's one listed National Surfing Reserve.",
         "detail": "1 reserve · Phillip Island · dedicated 2013",
-        "analysis": "Victoria has one locality on this particular register: Phillip Island, dedicated in 2013. The location highlights that recognised surfing heritage extends to Australia's cooler southern coastline. It would nevertheless be misleading to conclude that Victorian surfing is confined to Phillip Island. Bells Beach, for instance, has a separate history as a professional competition destination, but does not appear as an entry in this list. This distinction shows why formal heritage listings and international event hosting are different indicators of a destination's surfing significance."
+        "analysis": "Phillip Island, dedicated in March 2013, is Victoria's one entry in the national register. The designation encompasses several sections of its southern coastline, including Woolamai, Smiths Beach, Summerland and Cat Bay, where different reef and beach breaks respond to varying swell and wind conditions. The island's boardriding tradition stretches back decades, with its boardriders club founded in 1963. Although represented by one marker, the reserve itself embraces a network of coastal breaks; the map therefore highlights a broader Victorian surfing community through a single nationally recognised locality."
       },
       "SA": {
-        "callout": "Point Sinclair and Daly Head are on different South Australian peninsulas.",
+        "callout": "Point Sinclair and Daly Head lie on two separate South Australian peninsulas.",
         "detail": "2 reserves · Point Sinclair and Daly Head · both dedicated 2013",
-        "analysis": "South Australia's two listed reserves—Point Sinclair on Eyre Peninsula and Daly Head on Yorke Peninsula—were both dedicated in 2013. Their separation across different peninsulas makes the state's documented surf heritage more geographically varied than a single dot or destination name might imply. The register confirms the significance formally assigned to these two communities, but a small number of listed sites should not be interpreted as a lack of other surf breaks or as a comparison of wave quality with the eastern states."
+        "analysis": "South Australia's two listings, Daly Head on Yorke Peninsula and Point Sinclair on Eyre Peninsula, were both dedicated in January 2013. Their separation across two peninsulas highlights the geographic breadth of the state's recognised surfing heritage. Daly Head's history includes surfers camping and settling around the area's breaks from the 1970s onwards, eventually developing local boardriding clubs and a community-led nomination. The paired 2013 dedications illustrate recognition extending to longstanding surfing communities beyond Australia's densely populated eastern coastline."
       },
       "WA": {
-        "callout": "Margaret River and Yallingup cluster in the southwest.",
+        "callout": "Margaret River and Yallingup form a southwest coastal cluster.",
         "detail": "3 reserves · Margaret River and Kalbarri (2010) · Yallingup (2011)",
-        "analysis": "Western Australia has three National Surfing Reserve listings: Kalbarri in the Mid West and Margaret River and Yallingup in the South West. Margaret River and Kalbarri were dedicated in 2010, followed by Yallingup in 2011. The map reveals two geographically distant parts of the state represented in the national register, rather than a single west-coast hotspot. Margaret River also appears in elite surfing competition, providing a later opportunity to examine how cultural recognition and international sporting prominence sometimes overlap. These designations still do not indicate how many people surf each location or compare offshore wave conditions."
+        "analysis": "Western Australia's three recognised reserves occupy two distinct coastal regions: Kalbarri in the Mid West, and Margaret River and Yallingup in the southwest. Margaret River and Kalbarri were dedicated in 2010, followed by Yallingup in 2011. Margaret River's March 2010 dedication was especially significant as the first National Surfing Reserve in WA, extending the program across the continent. The southwest cluster reflects a region celebrated for varied reef breaks and a deeply established surfing culture, while the more distant Kalbarri listing shows that recognised heritage is not confined to the Capes."
       }
     },
     "annotationTargets": {
-      "All": {
-        "name": "Sydney coastal cluster"
+      "All": {"name": "Sydney coastal cluster"},
+      "NSW": {"name": "Sydney coastal cluster"},
+      "QLD": {"name": "Gold Coast and Noosa"},
+      "VIC": {"name": "Phillip Island"},
+      "SA": {"name": "South Australian peninsulas"},
+      "WA": {"name": "Western Australia's southwest"}
+    },
+    "sources": [
+      {
+        "label": "National Surfing Reserves — Official Register",
+        "url": "https://surfingreserves.org.au/national-surfing-reserves/"
       },
-      "NSW": {
-        "name": "Sydney coastal cluster"
+      {
+        "label": "Maroubra Reserve History",
+        "url": "https://surfingreserves.org.au/maroubra/"
       },
-      "QLD": {
-        "name": "Gold Coast and Noosa"
-      },
-      "VIC": {
-        "name": "Phillip Island"
-      },
-      "SA": {
-        "name": "South Australian peninsulas"
-      },
-      "WA": {
-        "name": "Western Australia's southwest"
+      {
+        "label": "Margaret River Reserve History",
+        "url": "https://surfingreserves.org.au/margaret-river/"
       }
-    }
+    ]
   },
   "width": "container",
   "height": 350,
   "padding": 8,
   "background": "#ffffff",
-  "projection": {
-    "type": "mercator"
-  },
+  "projection": {"type": "mercator"},
   "layer": [
     {
       "data": {
         "url": "https://vega.github.io/vega-datasets/data/world-110m.json",
-        "format": {
-          "type": "topojson",
-          "feature": "countries"
-        }
+        "format": {"type": "topojson", "feature": "countries"}
       },
       "transform": [
-        {
-          "filter": "datum.id == 36 || datum.id == '036'"
-        }
+        {"filter": "datum.id == 36 || datum.id == '036'"}
       ],
       "mark": {
         "type": "geoshape",
@@ -91,30 +82,22 @@
       }
     },
     {
-      "data": {
-        "url": "data/reserves.csv"
-      },
+      "data": {"url": "data/reserves.csv"},
       "mark": {
         "type": "circle",
-        "size": 125,
+        "size": 115,
         "filled": true,
-        "opacity": 1,
+        "opacity": 0.95,
         "stroke": "#ffffff",
-        "strokeWidth": 1.8
+        "strokeWidth": 1.5
       },
       "encoding": {
-        "longitude": {
-          "field": "lon",
-          "type": "quantitative"
-        },
-        "latitude": {
-          "field": "lat",
-          "type": "quantitative"
-        },
+        "longitude": {"field": "lon", "type": "quantitative"},
+        "latitude": {"field": "lat", "type": "quantitative"},
         "color": {
           "field": "state",
           "type": "nominal",
-          "title": "State",
+          "title": null,
           "scale": {
             "domain": ["NSW", "QLD", "VIC", "SA", "WA"],
             "range": [
@@ -128,34 +111,13 @@
           "legend": null
         },
         "tooltip": [
-          {
-            "field": "name",
-            "type": "nominal",
-            "title": "Reserve"
-          },
-          {
-            "field": "state",
-            "type": "nominal",
-            "title": "State"
-          },
-          {
-            "field": "region",
-            "type": "nominal",
-            "title": "Coastal region"
-          },
-          {
-            "field": "year",
-            "type": "quantitative",
-            "format": "d",
-            "title": "Dedicated"
-          }
+          {"field": "name", "type": "nominal", "title": "Reserve"},
+          {"field": "state", "type": "nominal", "title": "State"},
+          {"field": "region", "type": "nominal", "title": "Coastal region"},
+          {"field": "year", "type": "quantitative", "format": "d", "title": "Dedicated"}
         ]
       }
     }
   ],
-  "config": {
-    "view": {
-      "stroke": null
-    }
-  }
+  "config": {"view": {"stroke": null}}
 }
