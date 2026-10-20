@@ -1,56 +1,445 @@
-:root{--ink:#123442;--muted:#4f6972;--deep:#0d3443;--pale:#eef6f3;--sea:#167d88;--line:#d9e7e3}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;line-height:1.55;color:var(--ink);background:white}
-a{color:inherit}
-.wrap{max-width:1120px;margin:auto;padding:0 24px}
-header{background:var(--deep);color:white;padding:70px 0 56px}
-header .eyebrow,.section-label{text-transform:uppercase;letter-spacing:.15em;font-size:.75rem;font-weight:700}
-h1,h2,h3{font-family:Arial,Helvetica,sans-serif;letter-spacing:-.035em;line-height:1.15}
-h1{font-size:clamp(3rem,7vw,5rem);max-width:800px;margin:12px 0}
-header p{color:#d0e5e7;max-width:720px;font-size:1.1rem}
-nav{display:flex;gap:18px;flex-wrap:wrap;margin-top:28px}
-nav a{font-size:.83rem;text-decoration:none;color:#c3e4e2}
-nav a:hover{text-decoration:underline}
-section{padding:52px 0 42px;scroll-margin-top:25px}
-section:nth-of-type(even){background:var(--pale)}
-.section-head{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:end;margin-bottom:20px}
-.section-label{color:var(--sea);margin:0 0 8px}
-h2{font-size:clamp(2rem,4vw,3.1rem);margin:0}
-.section-head>p{font-size:1rem;color:var(--muted);max-width:480px;margin:0}
-.chart-card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:22px 24px;margin:0 0 20px;overflow:hidden}
-.chart-card[hidden],.chart-callout[hidden],.chart-story[hidden],.chart-source[hidden]{display:none}
-h3{font-size:clamp(1.28rem,2vw,1.65rem);margin:0 0 14px}
-.viz{width:100%;overflow-x:auto;min-width:0}
-.viz .vega-embed{max-width:100%}
-.chart-callout{position:relative;margin:18px 0 12px 16px;padding:13px 17px;background:#e0f2ed;border:1px solid #bcded4;border-radius:8px;font-weight:700;max-width:860px}
-.chart-callout::before{content:'↗';position:absolute;left:-22px;top:-21px;color:var(--sea);font-size:27px;line-height:1}
-.chart-story{margin:0 0 10px;padding-left:15px;border-left:3px solid var(--sea);max-width:950px;font-size:1rem;line-height:1.68}
-.chart-source{margin:10px 0 0;color:var(--muted);font-size:.8rem}
-footer{background:var(--deep);color:#d3e6e9;padding:25px 0;font-size:.83rem}
-footer p{margin:5px 0}
-@media(max-width:700px){header{padding:48px 0}section{padding:38px 0 28px}.section-head{grid-template-columns:1fr;gap:10px}.chart-card{padding:16px}.wrap{padding:0 16px}}
+:root {
+  --ink: #123442;
+  --muted: #4f6972;
+  --deep: #0d3443;
+  --pale: #eef6f3;
+  --sea: #167d88;
+  --line: #d9e7e3;
+}
 
-/* Chart 1: compact interactive map, filter controls and state-specific analysis */
-.map-card{padding:22px 24px 20px}
-.map-card h3{margin:0 0 16px}
-.map-layout{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,1fr);gap:24px;align-items:stretch}
-.map-side{min-width:0;display:flex;flex-direction:column}
-.state-filters{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 10px}
-.state-filter{font:inherit;font-size:.82rem;font-weight:700;line-height:1.2;cursor:pointer;background:#f5faf8;color:#375b65;border:1px solid #c8dcda;border-radius:999px;padding:8px 12px;transition:background .15s,border-color .15s}
-.state-filter:hover{border-color:#117989;background:#e7f4f0}
-.state-filter:focus-visible{outline:3px solid #117989;outline-offset:2px}
-.state-filter.is-active{background:#0e5967;color:#fff;border-color:#0e5967}
-.state-filter:not(:first-child)::before{content:'';display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--state-color,#117989);margin-right:6px;vertical-align:1px}
-.state-filter.is-active:not(:first-child)::before{border:1px solid #fff}
-.map-card .viz{width:100%;overflow:visible;min-height:0}
-.map-card .vega-embed,.map-card .vega-embed svg{max-width:100%;display:block}
-.state-context{font-size:.77rem;color:var(--muted);margin:4px 0 0}
-.map-analysis{display:flex;flex-direction:column;justify-content:center;gap:12px;min-width:0;padding:17px 18px;background:#f0f7f5;border:1px solid #d4e6e1;border-radius:12px}
-.map-card .chart-callout{margin:0;padding:14px 16px;background:#d7efea;border:1px solid #afd6ce;border-radius:8px;max-width:none;line-height:1.4;font-size:1.04rem;color:#124552}
-.map-card .chart-callout::before{content:none}
-.map-card .state-detail{font-size:.78rem;letter-spacing:.01em;font-weight:700;color:#386875;margin:0}
-.map-card .chart-story{margin:0;padding:0;border:0;max-width:none;font-size:.91rem;line-height:1.66;color:#294b56}
-.map-card .chart-source{margin:11px 0 0}
-@media(max-width:860px){.map-layout{grid-template-columns:1fr;gap:12px}.map-analysis{padding:17px}.map-card .chart-story{font-size:.95rem}}
-@media(max-width:480px){.map-card{padding:16px}.state-filter{padding:7px 10px;font-size:.76rem}}
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.55;
+  color: var(--ink);
+  background: white;
+}
+
+a {
+  color: inherit;
+}
+
+.wrap {
+  max-width: 1120px;
+  margin: auto;
+  padding: 0 24px;
+}
+
+header {
+  background: var(--deep);
+  color: white;
+  padding: 70px 0 56px;
+}
+
+header .eyebrow,
+.section-label {
+  text-transform: uppercase;
+  letter-spacing: .15em;
+  font-size: .75rem;
+  font-weight: 700;
+}
+
+h1,
+h2,
+h3 {
+  font-family: Arial, Helvetica, sans-serif;
+  letter-spacing: -.035em;
+  line-height: 1.15;
+}
+
+h1 {
+  font-size: clamp(3rem, 7vw, 5rem);
+  max-width: 800px;
+  margin: 12px 0;
+}
+
+header p {
+  color: #d0e5e7;
+  max-width: 720px;
+  font-size: 1.1rem;
+}
+
+nav {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-top: 28px;
+}
+
+nav a {
+  font-size: .83rem;
+  text-decoration: none;
+  color: #c3e4e2;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+section {
+  padding: 52px 0 42px;
+  scroll-margin-top: 25px;
+}
+
+section:nth-of-type(even) {
+  background: var(--pale);
+}
+
+.section-head {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  align-items: end;
+  margin-bottom: 20px;
+}
+
+.section-label {
+  color: var(--sea);
+  margin: 0 0 8px;
+}
+
+h2 {
+  font-size: clamp(2rem, 4vw, 3.1rem);
+  margin: 0;
+}
+
+.section-head > p {
+  font-size: 1rem;
+  color: var(--muted);
+  max-width: 480px;
+  margin: 0;
+}
+
+.chart-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 22px 24px;
+  margin: 0 0 20px;
+  overflow: hidden;
+}
+
+.chart-card[hidden],
+.chart-callout[hidden],
+.chart-story[hidden],
+.chart-source[hidden] {
+  display: none;
+}
+
+h3 {
+  font-size: clamp(1.28rem, 2vw, 1.65rem);
+  margin: 0 0 14px;
+}
+
+.viz {
+  width: 100%;
+  overflow-x: auto;
+  min-width: 0;
+}
+
+.viz .vega-embed {
+  max-width: 100%;
+}
+
+.chart-callout {
+  position: relative;
+  margin: 18px 0 12px 16px;
+  padding: 13px 17px;
+  background: #e0f2ed;
+  border: 1px solid #bcded4;
+  border-radius: 8px;
+  font-weight: 700;
+  max-width: 860px;
+}
+
+.chart-callout::before {
+  content: "↗";
+  position: absolute;
+  left: -22px;
+  top: -21px;
+  color: var(--sea);
+  font-size: 27px;
+  line-height: 1;
+}
+
+.chart-story {
+  margin: 0 0 10px;
+  padding-left: 15px;
+  border-left: 3px solid var(--sea);
+  max-width: 950px;
+  font-size: 1rem;
+  line-height: 1.68;
+}
+
+.chart-source {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: .8rem;
+}
+
+footer {
+  background: var(--deep);
+  color: #d3e6e9;
+  padding: 25px 0;
+  font-size: .83rem;
+}
+
+footer p {
+  margin: 5px 0;
+}
+
+/* Chart 1: Interactive map */
+
+.map-card {
+  padding: 22px 24px 20px;
+}
+
+.map-card h3 {
+  margin: 0 0 16px;
+}
+
+/* Map and analysis side by side */
+
+.map-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 1fr);
+  gap: 24px;
+  align-items: stretch;
+}
+
+.map-side {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* State selection buttons */
+
+.state-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 0 0 10px;
+}
+
+.state-filter {
+  font: inherit;
+  font-size: .82rem;
+  font-weight: 700;
+  line-height: 1.2;
+  cursor: pointer;
+  background: #f5faf8;
+  color: #375b65;
+  border: 1px solid #c8dcda;
+  border-radius: 999px;
+  padding: 8px 12px;
+  transition: background .15s, border-color .15s;
+}
+
+.state-filter:hover {
+  border-color: #117989;
+  background: #e7f4f0;
+}
+
+.state-filter:focus-visible {
+  outline: 3px solid #117989;
+  outline-offset: 2px;
+}
+
+.state-filter.is-active {
+  background: #0e5967;
+  color: #fff;
+  border-color: #0e5967;
+}
+
+.state-filter:not(:first-child)::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--state-color, #117989);
+  margin-right: 6px;
+  vertical-align: 1px;
+}
+
+.state-filter.is-active:not(:first-child)::before {
+  border: 1px solid #fff;
+}
+
+/* Map sizing */
+
+.map-card .viz {
+  width: 100%;
+  overflow: visible;
+  min-height: 0;
+}
+
+.map-card .vega-embed,
+.map-card .vega-embed svg {
+  max-width: 100%;
+  display: block;
+}
+
+.state-context {
+  font-size: .77rem;
+  color: var(--muted);
+  margin: 4px 0 0;
+}
+
+/* Right-hand interpretation panel */
+
+.map-analysis {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 11px;
+  min-width: 0;
+  padding: 16px 18px;
+  background: #f6faf9;
+  border: 1px solid #d4e6e1;
+  border-radius: 12px;
+}
+
+/* Short visual annotation */
+
+.map-card .chart-callout {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  position: relative;
+  margin: 0 0 2px 9px;
+  background: #dff2ee;
+  border: 1px solid #b6d9d0;
+  border-left: 4px solid #117989;
+  border-radius: 8px;
+  padding: 12px 14px;
+  line-height: 1.4;
+  font-size: .92rem;
+  font-weight: 400;
+  max-width: none;
+  color: #124552;
+}
+
+.map-card .chart-callout::before {
+  content: "";
+  position: absolute;
+  display: block;
+  top: 20px;
+  left: -17px;
+  width: 0;
+  height: 0;
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
+  border-right: 13px solid #117989;
+}
+
+.map-card .chart-callout strong {
+  font-size: 1rem;
+  color: #0e4c59;
+  line-height: 1.35;
+}
+
+.map-card .chart-callout span {
+  font-size: .91rem;
+  color: #264e57;
+}
+
+/* State-specific facts and figures */
+
+.map-card .state-detail {
+  font-size: .78rem;
+  color: #426773;
+  margin: 0 0 2px;
+  line-height: 1.4;
+  letter-spacing: .01em;
+  font-weight: 700;
+}
+
+/* Detailed analytical paragraph */
+
+.map-card .chart-story {
+  border: 0;
+  border-top: 1px solid #d5e5e0;
+  padding: 11px 0 0;
+  margin: 0;
+  max-width: none;
+  font-size: .9rem;
+  line-height: 1.58;
+  color: #294b56;
+}
+
+.map-card .map-side .state-context {
+  margin: 3px 0 0;
+}
+
+.map-card .chart-source {
+  margin: 11px 0 0;
+}
+
+/* Responsive layout */
+
+@media (max-width: 860px) {
+  .map-layout {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .map-analysis {
+    padding: 17px;
+  }
+
+  .map-card .chart-callout::before {
+    display: none;
+  }
+
+  .map-card .chart-callout {
+    margin-left: 0;
+  }
+
+  .map-card .chart-story {
+    font-size: .95rem;
+  }
+}
+
+@media (max-width: 700px) {
+  header {
+    padding: 48px 0;
+  }
+
+  section {
+    padding: 38px 0 28px;
+  }
+
+  .section-head {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .chart-card {
+    padding: 16px;
+  }
+
+  .wrap {
+    padding: 0 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .map-card {
+    padding: 16px;
+  }
+
+  .state-filter {
+    padding: 7px 10px;
+    font-size: .76rem;
+  }
+}
