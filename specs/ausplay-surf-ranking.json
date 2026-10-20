@@ -32,15 +32,19 @@
       }
     ],
     "interpretations": {
-      "count": "New South Wales has the largest estimated adult surfing population at 117,953, nearly twice Queensland’s 63,787. Victoria follows at 58,683, then Western Australia at 43,496. This ordering is influenced by state population size: absolute participant numbers do not necessarily indicate a stronger surfing culture per resident.",
-      "rate": "Western Australia ranks first in estimated adult surfing participation rate (1.76%), narrowly ahead of NSW (1.67%). Queensland (1.38%) and Tasmania (1.36%) follow. This population-adjusted ranking reverses the impression from raw counts; however, close estimates and smaller territories should not be treated as statistically significant differences without confidence intervals."
+      "count": "New South Wales leads in estimated adult surfers (117,953), followed by Queensland (63,787), Victoria (58,683) and Western Australia (43,496). Together these four states represent approximately 91% of the summed state and territory estimates. This pattern partly reflects population size; the number of participants alone does not establish how widespread surfing is among residents. Switching to participation rate provides a population-adjusted comparison.",
+      "rate": "Western Australia ranks first in estimated adult surfing participation rate (1.76%), just ahead of New South Wales (1.67%). Queensland (1.38%) and Tasmania (1.36%) follow. Compared with the participant-count ranking, WA rises from fourth to first, illustrating why population-adjusted measures matter. Differences are survey estimates, however, and small gaps should not be presented as statistically significant without uncertainty intervals."
     },
     "sources": [
       {
         "label": "Australian Sports Commission · AusPlay 2025, state and territory tables (30 Apr 2026)",
         "url": "https://www.ausport.gov.au/clearinghouse/research/ausplay/results"
       }
-    ]
+    ],
+    "highlights": {
+      "count": "NSW leads by volume: 117,953 estimated adult surfers.",
+      "rate": "WA leads by participation rate: 1.76% of adults."
+    }
   },
   "height": 360,
   "data": {
@@ -60,12 +64,14 @@
       "type": "nominal",
       "sort": {
         "field": "value",
+        "op": "max",
         "order": "descending"
       },
       "axis": {
         "title": null,
-        "labelFontSize": 12,
-        "labelFontWeight": "bold"
+        "labelFontSize": 14,
+        "labelFontWeight": "bold",
+        "labelPadding": 10
       }
     },
     "x": {
@@ -78,7 +84,9 @@
       "axis": {
         "title": "Estimated surfing participants aged 15+",
         "tickCount": 5,
-        "grid": true
+        "grid": true,
+        "labelFontSize": 12,
+        "titleFontSize": 13
       }
     },
     "tooltip": [
@@ -151,7 +159,14 @@
             "title": "State / territory",
             "orient": "bottom",
             "columns": 4,
-            "symbolSize": 110
+            "symbolSize": 190,
+            "titleFontSize": 14,
+            "titleFontWeight": "bold",
+            "labelFontSize": 13,
+            "columnPadding": 18,
+            "rowPadding": 12,
+            "labelLimit": 150,
+            "offset": 14
           }
         }
       }
@@ -162,7 +177,7 @@
         "align": "left",
         "baseline": "middle",
         "dx": 11,
-        "fontSize": 12,
+        "fontSize": 13,
         "fontWeight": "bold",
         "color": "#244654"
       },
