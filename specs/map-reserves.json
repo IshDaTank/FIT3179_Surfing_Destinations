@@ -1,11 +1,17 @@
-
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Interactive locations of National Surfing Reserves in Australia. Equal-sized markers identify localities, not surfing quality or visitor counts.",
+  "description": "Interactive map of Australia's National Surfing Reserves with state and territory boundaries. Equal-sized markers represent recognised locations, not wave quality or visitor numbers.",
   "usermeta": {
     "title": "Where are Australia's recognised surfing destinations?",
     "defaultState": "All",
-    "stateOrder": ["All", "NSW", "QLD", "VIC", "SA", "WA"],
+    "stateOrder": [
+      "All",
+      "NSW",
+      "QLD",
+      "VIC",
+      "SA",
+      "WA"
+    ],
     "source": {
       "label": "National Surfing Reserves — official register",
       "url": "https://surfingreserves.org.au/national-surfing-reserves/"
@@ -19,10 +25,10 @@
       "NSW": {
         "callout": "Sydney contains five of NSW's 11 listed reserves.",
         "detail": "11 reserves · 58% of national list · earliest 2006, latest 2022",
-        "analysis": "New South Wales accounts for 11 of the 19 nationally listed reserves (58%), making it the largest group in this register. Five are in the Sydney region — Maroubra, Cronulla, North Narrabeen, Manly–Freshwater and Bondi, while the remainder extend from Lennox Head and Angourie on the North Coast to Crescent Head, Merewether, Norah Head and Killalea. The first NSW listing is Maroubra (2006), and Norah Head was dedicated in 2022, illustrating recognition across multiple years and coastal communities. The NSW lead therefore reflects the distribution of registered heritage sites, not evidence that NSW offers the best surf or draws the largest number of surfing tourists."
+        "analysis": "New South Wales accounts for 11 of the 19 nationally listed reserves (58%), making it the largest group in this register. Five are in the Sydney region—Maroubra, Cronulla, North Narrabeen, Manly–Freshwater and Bondi—while the remainder extend from Lennox Head and Angourie on the North Coast to Crescent Head, Merewether, Norah Head and Killalea. The first NSW listing is Maroubra (2006), and Norah Head was dedicated in 2022, illustrating recognition across multiple years and coastal communities. The NSW lead therefore reflects the distribution of registered heritage sites, not evidence that NSW offers the best surf or draws the largest number of surfing tourists."
       },
       "QLD": {
-        "callout": "The arrow identifies Gold Coast; Noosa is farther north.",
+        "callout": "Gold Coast and Noosa are Queensland's two listed reserves.",
         "detail": "2 reserves · Gold Coast (2012) · Noosa (2015)",
         "analysis": "Queensland has two entries on the National Surfing Reserves register: Gold Coast, dedicated in 2012, and Noosa, dedicated in 2015. Both appear in the state's southeast, but they represent distinct coastal communities rather than one continuous surf site. Their recognition adds a subtropical Queensland dimension to Australia's surfing heritage. The count of two is not a comprehensive inventory of Queensland's surf beaches and does not measure surf conditions, total visitation or participation. Gold Coast's significance in the professional surfing circuit should be examined separately from the reserve register."
       },
@@ -32,7 +38,7 @@
         "analysis": "Victoria has one locality on this particular register: Phillip Island, dedicated in 2013. The location highlights that recognised surfing heritage extends to Australia's cooler southern coastline. It would nevertheless be misleading to conclude that Victorian surfing is confined to Phillip Island. Bells Beach, for instance, has a separate history as a professional competition destination, but does not appear as an entry in this list. This distinction shows why formal heritage listings and international event hosting are different indicators of a destination's surfing significance."
       },
       "SA": {
-        "callout": "Point Sinclair is on Eyre Peninsula; Daly Head is farther east.",
+        "callout": "Point Sinclair and Daly Head are on different South Australian peninsulas.",
         "detail": "2 reserves · Point Sinclair and Daly Head · both dedicated 2013",
         "analysis": "South Australia's two listed reserves—Point Sinclair on Eyre Peninsula and Daly Head on Yorke Peninsula—were both dedicated in 2013. Their separation across different peninsulas makes the state's documented surf heritage more geographically varied than a single dot or destination name might imply. The register confirms the significance formally assigned to these two communities, but a small number of listed sites should not be interpreted as a lack of other surf breaks or as a comparison of wave quality with the eastern states."
       },
@@ -46,44 +52,32 @@
       "All": {
         "name": "Sydney coastal cluster",
         "lon": 151.26,
-        "lat": -33.95,
-        "startLon": 143.8,
-        "startLat": -25.6
+        "lat": -33.95
       },
       "NSW": {
         "name": "Sydney coastal cluster",
         "lon": 151.26,
-        "lat": -33.95,
-        "startLon": 143.8,
-        "startLat": -25.6
+        "lat": -33.95
       },
       "QLD": {
-        "name": "Gold Coast",
+        "name": "Gold Coast and Noosa",
         "lon": 153.48,
-        "lat": -28.12,
-        "startLon": 146.0,
-        "startLat": -22.6
+        "lat": -28.12
       },
       "VIC": {
         "name": "Phillip Island",
         "lon": 145.24,
-        "lat": -38.5,
-        "startLon": 138.5,
-        "startLat": -32.6
+        "lat": -38.5
       },
       "SA": {
-        "name": "Point Sinclair",
-        "lon": 133.0,
-        "lat": -32.14,
-        "startLon": 126.8,
-        "startLat": -27.8
+        "name": "South Australian peninsulas",
+        "lon": 133,
+        "lat": -32.14
       },
       "WA": {
-        "name": "Margaret River",
+        "name": "Western Australia's southwest",
         "lon": 114.99,
-        "lat": -33.98,
-        "startLon": 121.5,
-        "startLat": -27.6
+        "lat": -33.98
       }
     }
   },
@@ -97,22 +91,17 @@
   "layer": [
     {
       "data": {
-        "url": "https://vega.github.io/vega-datasets/data/world-110m.json",
+        "url": "https://raw.githubusercontent.com/rowanhogan/australian-states/master/states.min.geojson",
         "format": {
-          "type": "topojson",
-          "feature": "countries"
+          "type": "json",
+          "property": "features"
         }
       },
-      "transform": [
-        {
-          "filter": "datum.id == 36 || datum.id == '036'"
-        }
-      ],
       "mark": {
         "type": "geoshape",
         "fill": "#e8f1ee",
-        "stroke": "#97b6b6",
-        "strokeWidth": 1
+        "stroke": "#a6bfc0",
+        "strokeWidth": 1.1
       }
     },
     {
@@ -141,7 +130,13 @@
           "type": "nominal",
           "title": null,
           "scale": {
-            "domain": ["NSW", "QLD", "VIC", "SA", "WA"],
+            "domain": [
+              "NSW",
+              "QLD",
+              "VIC",
+              "SA",
+              "WA"
+            ],
             "range": [
               "#117989",
               "#E3A049",
