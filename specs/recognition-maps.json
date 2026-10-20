@@ -1,0 +1,367 @@
+
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Three equally scaled maps showing when Australia's National Surfing Reserves were formally dedicated.",
+  "usermeta": {
+    "title": "How Did Surfing Reserve Recognition Spread Across Australia?",
+    "analysis": "Recognition began with a strong NSW focus: all eight reserves dedicated between 2006 and 2009 were in that state. The next eight dedications, between 2010 and 2013, expanded the register to five states. Western Australia entered in 2010, Queensland in 2012, and South Australia and Victoria in 2013; NSW also added Manly–Freshwater in 2010. By the end of 2013, 16 of the eventual 19 listed reserves had been recognised. The final three entries were Noosa (2015), Bondi (2017) and Norah Head (2022). This progression demonstrates the geographic expansion of formal recognition, rather than the emergence of surfing itself: these communities had surfing histories before their dedication dates. Recognition timing may also reflect nominations, local support and administrative processes, so the maps should not be interpreted as a timeline of surfing popularity. The same geographic extent is retained across panels to support comparison.",
+    "source": {
+      "label": "National Surfing Reserves — Official Dedication Register",
+      "url": "https://surfingreserves.org.au/national-surfing-reserves/"
+    }
+  },
+  "background": "#ffffff",
+  "spacing": 14,
+  "hconcat": [
+    {
+      "title": {
+        "text": "2006–2009",
+        "subtitle": "8 new · NSW only",
+        "anchor": "middle",
+        "fontSize": 15,
+        "fontWeight": "bold",
+        "color": "#153D4A",
+        "subtitleFontSize": 11,
+        "subtitleColor": "#4F6A72"
+      },
+      "width": 285,
+      "height": 230,
+      "projection": {
+        "type": "mercator"
+      },
+      "layer": [
+        {
+          "data": {
+            "url": "https://vega.github.io/vega-datasets/data/world-110m.json",
+            "format": {
+              "type": "topojson",
+              "feature": "countries"
+            }
+          },
+          "transform": [
+            {
+              "filter": "datum.id == 36 || datum.id == '036'"
+            }
+          ],
+          "mark": {
+            "type": "geoshape",
+            "fill": "#E8F1EE",
+            "stroke": "#9EBBB9",
+            "strokeWidth": 1
+          }
+        },
+        {
+          "data": {
+            "url": "data/reserves.csv"
+          },
+          "transform": [
+            {
+              "filter": "datum.year <= 2009"
+            }
+          ],
+          "mark": {
+            "type": "circle",
+            "filled": true,
+            "size": 105,
+            "opacity": 0.95,
+            "stroke": "#FFFFFF",
+            "strokeWidth": 1.2,
+            "color": "#087B89"
+          },
+          "encoding": {
+            "longitude": {
+              "field": "lon",
+              "type": "quantitative"
+            },
+            "latitude": {
+              "field": "lat",
+              "type": "quantitative"
+            },
+            "tooltip": [
+              {
+                "field": "name",
+                "type": "nominal",
+                "title": "Reserve"
+              },
+              {
+                "field": "state",
+                "type": "nominal",
+                "title": "State"
+              },
+              {
+                "field": "year",
+                "type": "quantitative",
+                "format": "d",
+                "title": "Dedicated"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "title": {
+        "text": "2010–2013",
+        "subtitle": "8 new · five states total",
+        "anchor": "middle",
+        "fontSize": 15,
+        "fontWeight": "bold",
+        "color": "#153D4A",
+        "subtitleFontSize": 11,
+        "subtitleColor": "#4F6A72"
+      },
+      "width": 285,
+      "height": 230,
+      "projection": {
+        "type": "mercator"
+      },
+      "layer": [
+        {
+          "data": {
+            "url": "https://vega.github.io/vega-datasets/data/world-110m.json",
+            "format": {
+              "type": "topojson",
+              "feature": "countries"
+            }
+          },
+          "transform": [
+            {
+              "filter": "datum.id == 36 || datum.id == '036'"
+            }
+          ],
+          "mark": {
+            "type": "geoshape",
+            "fill": "#E8F1EE",
+            "stroke": "#9EBBB9",
+            "strokeWidth": 1
+          }
+        },
+        {
+          "data": {
+            "url": "data/reserves.csv"
+          },
+          "transform": [
+            {
+              "filter": "datum.year <= 2009"
+            }
+          ],
+          "mark": {
+            "type": "circle",
+            "filled": true,
+            "size": 54,
+            "opacity": 0.55,
+            "stroke": "#FFFFFF",
+            "strokeWidth": 0.7,
+            "color": "#A4B8B8"
+          },
+          "encoding": {
+            "longitude": {
+              "field": "lon",
+              "type": "quantitative"
+            },
+            "latitude": {
+              "field": "lat",
+              "type": "quantitative"
+            },
+            "tooltip": [
+              {
+                "field": "name",
+                "type": "nominal",
+                "title": "Previously dedicated"
+              },
+              {
+                "field": "year",
+                "type": "quantitative",
+                "format": "d",
+                "title": "Dedicated"
+              }
+            ]
+          }
+        },
+        {
+          "data": {
+            "url": "data/reserves.csv"
+          },
+          "transform": [
+            {
+              "filter": "datum.year >= 2010 && datum.year <= 2013"
+            }
+          ],
+          "mark": {
+            "type": "circle",
+            "filled": true,
+            "size": 105,
+            "opacity": 0.95,
+            "stroke": "#FFFFFF",
+            "strokeWidth": 1.2,
+            "color": "#087B89"
+          },
+          "encoding": {
+            "longitude": {
+              "field": "lon",
+              "type": "quantitative"
+            },
+            "latitude": {
+              "field": "lat",
+              "type": "quantitative"
+            },
+            "tooltip": [
+              {
+                "field": "name",
+                "type": "nominal",
+                "title": "New reserve"
+              },
+              {
+                "field": "state",
+                "type": "nominal",
+                "title": "State"
+              },
+              {
+                "field": "year",
+                "type": "quantitative",
+                "format": "d",
+                "title": "Dedicated"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "title": {
+        "text": "2014–2022",
+        "subtitle": "3 new · 19 listed overall",
+        "anchor": "middle",
+        "fontSize": 15,
+        "fontWeight": "bold",
+        "color": "#153D4A",
+        "subtitleFontSize": 11,
+        "subtitleColor": "#4F6A72"
+      },
+      "width": 285,
+      "height": 230,
+      "projection": {
+        "type": "mercator"
+      },
+      "layer": [
+        {
+          "data": {
+            "url": "https://vega.github.io/vega-datasets/data/world-110m.json",
+            "format": {
+              "type": "topojson",
+              "feature": "countries"
+            }
+          },
+          "transform": [
+            {
+              "filter": "datum.id == 36 || datum.id == '036'"
+            }
+          ],
+          "mark": {
+            "type": "geoshape",
+            "fill": "#E8F1EE",
+            "stroke": "#9EBBB9",
+            "strokeWidth": 1
+          }
+        },
+        {
+          "data": {
+            "url": "data/reserves.csv"
+          },
+          "transform": [
+            {
+              "filter": "datum.year <= 2013"
+            }
+          ],
+          "mark": {
+            "type": "circle",
+            "filled": true,
+            "size": 54,
+            "opacity": 0.55,
+            "stroke": "#FFFFFF",
+            "strokeWidth": 0.7,
+            "color": "#A4B8B8"
+          },
+          "encoding": {
+            "longitude": {
+              "field": "lon",
+              "type": "quantitative"
+            },
+            "latitude": {
+              "field": "lat",
+              "type": "quantitative"
+            },
+            "tooltip": [
+              {
+                "field": "name",
+                "type": "nominal",
+                "title": "Previously dedicated"
+              },
+              {
+                "field": "year",
+                "type": "quantitative",
+                "format": "d",
+                "title": "Dedicated"
+              }
+            ]
+          }
+        },
+        {
+          "data": {
+            "url": "data/reserves.csv"
+          },
+          "transform": [
+            {
+              "filter": "datum.year >= 2014"
+            }
+          ],
+          "mark": {
+            "type": "circle",
+            "filled": true,
+            "size": 105,
+            "opacity": 0.95,
+            "stroke": "#FFFFFF",
+            "strokeWidth": 1.2,
+            "color": "#087B89"
+          },
+          "encoding": {
+            "longitude": {
+              "field": "lon",
+              "type": "quantitative"
+            },
+            "latitude": {
+              "field": "lat",
+              "type": "quantitative"
+            },
+            "tooltip": [
+              {
+                "field": "name",
+                "type": "nominal",
+                "title": "New reserve"
+              },
+              {
+                "field": "state",
+                "type": "nominal",
+                "title": "State"
+              },
+              {
+                "field": "year",
+                "type": "quantitative",
+                "format": "d",
+                "title": "Dedicated"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "config": {
+    "view": {
+      "stroke": null
+    },
+    "concat": {
+      "spacing": 14
+    }
+  }
+}
