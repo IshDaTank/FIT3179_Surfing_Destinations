@@ -121,16 +121,7 @@
               "#666666"
             ]
           },
-          "legend": {
-            "title": "State / territory",
-            "orient": "right",
-            "direction": "vertical",
-            "symbolSize": 180,
-            "labelFontSize": 13,
-            "titleFontSize": 14,
-            "titleFontWeight": "bold",
-            "offset": 8
-          }
+          "legend": null
         },
         "tooltip": [
           {
