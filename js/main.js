@@ -1,5 +1,5 @@
 // FIT3179 — Australia: A Nation Built on Surf
-// Vega-Lite 6 chart loader, filters and interpretation panels.
+// Vega-Lite 6: shared loader, charts and interactions.
 
 const root = new URL('../', import.meta.url);
 
@@ -14,8 +14,9 @@ const STATE_COLORS = {
   NT: '#666666'
 };
 
-// Dashboard additions use existing colours,
-// teal highlights and no decorative arrows.
+// ============================================================
+// SHARED CHART STYLES
+// ============================================================
 
 const participationStyle = document.createElement('style');
 
@@ -36,13 +37,7 @@ participationStyle.textContent = `
 
   [data-chart="ausplay-surf-map"] .chart-callout::before,
   [data-chart="ausplay-surf-ranking"] .chart-callout::before,
-  [data-chart="ausplay-surf-gender"] .chart-callout::before {
-    content: none !important;
-    display: none !important;
-  }
-
-  /* Remove decorative arrows from participation charts. */
-
+  [data-chart="ausplay-surf-gender"] .chart-callout::before,
   [data-chart="ausplay-surf-map"] .chart-callout::after,
   [data-chart="ausplay-surf-ranking"] .chart-callout::after,
   [data-chart="ausplay-surf-gender"] .chart-callout::after,
@@ -52,8 +47,6 @@ participationStyle.textContent = `
     content: none !important;
     display: none !important;
   }
-
-  /* Custom, horizontally arranged proportional-symbol legend. */
 
   .participation-size-key {
     max-width: 780px;
@@ -103,8 +96,6 @@ participationStyle.textContent = `
     white-space: nowrap;
   }
 
-  /* Chart 6 dropdown controls. */
-
   .participation-ranking-controls {
     display: flex;
     align-items: center;
@@ -126,20 +117,21 @@ participationStyle.textContent = `
     cursor: pointer;
   }
 
-  /* Chart 6 compact size legend. */
-
-  [data-chart="ausplay-surf-ranking"] .participation-size-key {
+  [data-chart="ausplay-surf-ranking"]
+  .participation-size-key {
     max-width: 100%;
     margin: 4px 0 7px;
     padding: 8px 12px;
   }
 
-  [data-chart="ausplay-surf-ranking"] .participation-size-key strong {
+  [data-chart="ausplay-surf-ranking"]
+  .participation-size-key strong {
     margin-bottom: 5px;
     font-size: .83rem;
   }
 
-  [data-chart="ausplay-surf-ranking"] .participation-size-key .key-step {
+  [data-chart="ausplay-surf-ranking"]
+  .participation-size-key .key-step {
     gap: 3px;
     font-size: .78rem;
   }
@@ -163,7 +155,7 @@ participationStyle.textContent = `
 document.head.append(participationStyle);
 
 // ============================================================
-// CHART 1 — MAP PROJECTION HELPERS
+// CHART 1 — STATE MAP PROJECTION
 // ============================================================
 
 const MAP_ZOOM_BOUNDS = {
@@ -215,7 +207,7 @@ function getStateProjection(state, width, height) {
 }
 
 // ============================================================
-// SHARED TEXT AND SOURCES HELPERS
+// SHARED HELPERS
 // ============================================================
 
 function setText(element, content) {
@@ -256,9 +248,7 @@ function renderSources(source, info) {
 }
 
 // ============================================================
-// SIZE LEGEND
-// Equal horizontal spacing of reference values.
-// Circle AREA, not radius, increases with value.
+// CUSTOM PROPORTIONAL CIRCLE SIZE LEGEND
 // ============================================================
 
 function createSizeKey(
@@ -284,19 +274,18 @@ function createSizeKey(
     step.className = 'key-step';
 
     const circle = document.createElement('span');
-
     circle.className = 'key-circle';
 
-    const diameter =
-      value === 0
-        ? 5
-        : maxDiameter * Math.sqrt(value / maxValue);
+    // Circle area, not diameter, scales with value.
+
+    const diameter = value === 0
+      ? 5
+      : maxDiameter * Math.sqrt(value / maxValue);
 
     circle.style.width = `${diameter}px`;
     circle.style.height = `${diameter}px`;
 
     const label = document.createElement('span');
-
     label.className = 'key-label';
 
     label.textContent = title.includes('(%)')
@@ -313,6 +302,278 @@ function createSizeKey(
 }
 
 // ============================================================
+// CHART 6 — DORLING CARTOGRAM SOURCE DATA
+// ============================================================
+
+// Each state / territory has an approximate geographic anchor.
+// The final centre positions are calculated to avoid overlaps.
+
+const DORLING_STATES = [
+  {
+    state: 'WA',
+    name: 'Western Australia',
+    participants: 43496,
+    rate: 1.762,
+    ax: .17,
+    ay: .47
+  },
+  {
+    state: 'NT',
+    name: 'Northern Territory',
+    participants: 451,
+    rate: .217,
+    ax: .43,
+    ay: .18
+  },
+  {
+    state: 'QLD',
+    name: 'Queensland',
+    participants: 63787,
+    rate: 1.379,
+    ax: .76,
+    ay: .25
+  },
+  {
+    state: 'SA',
+    name: 'South Australia',
+    participants: 20188,
+    rate: 1.277,
+    ax: .43,
+    ay: .54
+  },
+  {
+    state: 'NSW',
+    name: 'New South Wales',
+    participants: 117953,
+    rate: 1.671,
+    ax: .77,
+    ay: .56
+  },
+  {
+    state: 'VIC',
+    name: 'Victoria',
+    participants: 58683,
+    rate: 1.010,
+    ax: .61,
+    ay: .78
+  },
+  {
+    state: 'ACT',
+    name: 'Australian Capital Territory',
+    participants: 2272,
+    rate: .571,
+    ax: .94,
+    ay: .75
+  },
+  {
+    state: 'TAS',
+    name: 'Tasmania',
+    participants: 6566,
+    rate: 1.358,
+    ax: .71,
+    ay: .94
+  }
+];
+
+// ============================================================
+// CHART 6 — COLLISION-FREE DORLING LAYOUT
+// ============================================================
+
+function createDorlingData(
+  metric,
+  plotWidth = 760,
+  plotHeight = 440
+) {
+  const isRate = metric === 'rate';
+
+  const maxValue = isRate ? 2 : 125000;
+
+  // Vega symbol area is measured in square pixels.
+
+  const maxArea = 10500;
+  const minRadius = 4;
+
+  const nodes = DORLING_STATES.map((state) => {
+    const value = isRate
+      ? state.rate
+      : state.participants;
+
+    const area =
+      maxArea * value / maxValue;
+
+    const radius = Math.max(
+      minRadius,
+      Math.sqrt(area / Math.PI)
+    );
+
+    return {
+      ...state,
+      value,
+      area,
+      radius,
+
+      x: state.ax * plotWidth,
+      y: state.ay * plotHeight,
+
+      targetX: state.ax * plotWidth,
+      targetY: state.ay * plotHeight
+    };
+  });
+
+  // Iteratively separate overlapping circles while gently
+  // pulling them towards their approximate geographic anchors.
+
+  for (
+    let iteration = 0;
+    iteration < 300;
+    iteration++
+  ) {
+    let overlaps = 0;
+
+    for (
+      let i = 0;
+      i < nodes.length;
+      i++
+    ) {
+      for (
+        let j = i + 1;
+        j < nodes.length;
+        j++
+      ) {
+        const a = nodes[i];
+        const b = nodes[j];
+
+        let dx = b.x - a.x;
+        let dy = b.y - a.y;
+
+        let distance = Math.hypot(dx, dy);
+
+        if (distance < .001) {
+          dx = 1;
+          dy = 0;
+          distance = 1;
+        }
+
+        const requiredDistance =
+          a.radius + b.radius + 13;
+
+        if (distance < requiredDistance) {
+          const shift =
+            (requiredDistance - distance) / 2;
+
+          a.x -= dx / distance * shift;
+          a.y -= dy / distance * shift;
+
+          b.x += dx / distance * shift;
+          b.y += dy / distance * shift;
+
+          overlaps++;
+        }
+      }
+    }
+
+    for (const node of nodes) {
+      const easing =
+        overlaps ? .045 : .01;
+
+      node.x += (
+        node.targetX - node.x
+      ) * easing;
+
+      node.y += (
+        node.targetY - node.y
+      ) * easing;
+
+      const margin = node.radius + 22;
+
+      node.x = Math.max(
+        margin,
+        Math.min(plotWidth - margin, node.x)
+      );
+
+      node.y = Math.max(
+        margin,
+        Math.min(plotHeight - margin, node.y)
+      );
+    }
+  }
+
+  // Final pass only separates circles.
+  // No geographic pull is applied during this pass.
+
+  for (
+    let iteration = 0;
+    iteration < 40;
+    iteration++
+  ) {
+    for (
+      let i = 0;
+      i < nodes.length;
+      i++
+    ) {
+      for (
+        let j = i + 1;
+        j < nodes.length;
+        j++
+      ) {
+        const a = nodes[i];
+        const b = nodes[j];
+
+        let dx = b.x - a.x;
+        let dy = b.y - a.y;
+
+        let distance = Math.hypot(dx, dy);
+
+        if (distance < .001) {
+          dx = 1;
+          dy = 0;
+          distance = 1;
+        }
+
+        const requiredDistance =
+          a.radius + b.radius + 10;
+
+        if (distance < requiredDistance) {
+          const shift =
+            (requiredDistance - distance) / 2;
+
+          a.x -= dx / distance * shift;
+          a.y -= dy / distance * shift;
+
+          b.x += dx / distance * shift;
+          b.y += dy / distance * shift;
+        }
+      }
+    }
+  }
+
+  return nodes.map((node) => ({
+    state: node.state,
+    name: node.name,
+    participants: node.participants,
+    rate: node.rate,
+
+    value: node.value,
+    area: node.area,
+
+    x: node.x,
+    y: node.y,
+
+    label_y:
+      node.y - node.radius - 18,
+
+    value_y:
+      node.radius >= 27
+        ? node.y + 4
+        : node.y + node.radius + 16,
+
+    value_label: isRate
+      ? `${node.rate.toFixed(2)}%`
+      : node.participants.toLocaleString('en-AU')
+  }));
+}
+
+// ============================================================
 // MAIN CHART LOADER
 // ============================================================
 
@@ -322,13 +583,11 @@ for (
   const id = card.dataset.chart;
 
   try {
-    // Load the independent Vega-Lite JSON specification.
-
     const response = await fetch(
       new URL(`specs/${id}.json`, root)
     );
 
-    // Future chart placeholders without JSON are skipped.
+    // Unbuilt chart placeholders are skipped.
 
     if (response.status === 404) continue;
 
@@ -363,45 +622,43 @@ for (
       })
     };
 
-    // --------------------------------------------------------
-    // CHART 6 — INTERACTIVE GEOGRAPHIC CARTOGRAM
-    // --------------------------------------------------------
+    // ========================================================
+    // CHART 6 — INTERACTIVE DORLING CARTOGRAM
+    // ========================================================
 
     if (id === 'ausplay-surf-ranking') {
+      const controls = document.createElement('div');
+
+      controls.className =
+        'participation-ranking-controls';
+
       const label = document.createElement('label');
 
       label.htmlFor = 'ausplay-metric';
-      label.textContent = 'Size circles by: ';
-
-      label.style.cssText =
-        'display:block;margin:4px 0 12px;' +
-        'font-weight:700;color:#244654';
+      label.textContent = 'Size circles by:';
 
       const selector = document.createElement('select');
 
       selector.id = 'ausplay-metric';
 
-      selector.style.cssText =
-        'font:inherit;margin-left:8px;padding:9px 12px;' +
-        'border:1px solid #bcd6d1;border-radius:8px;' +
-        'background:#fff;color:#123442;max-width:100%';
+      for (
+        const item of info.metricOptions || []
+      ) {
+        const option =
+          document.createElement('option');
 
-      for (const metric of info.metricOptions || []) {
-        const option = document.createElement('option');
-
-        option.value = metric.value;
+        option.value = item.value;
 
         option.textContent =
-          `${metric.label} (${metric.unit})`;
+          `${item.label} (${item.unit})`;
 
         selector.append(option);
       }
 
-      label.append(selector);
+      controls.append(label, selector);
+      card.insertBefore(controls, viz);
 
-      card.insertBefore(label, viz);
-
-      // Custom size legend appears above the geographic map.
+      // Custom six-value legend.
 
       const legendHost = document.createElement('div');
 
@@ -412,51 +669,63 @@ for (
       async function showMetric(metric) {
         const request = ++revision;
 
-        const selectedMetric =
+        const measure =
           metric === 'rate' ? 'rate' : 'count';
 
-        const isRate = selectedMetric === 'rate';
+        const isRate = measure === 'rate';
+
+        // Allow some horizontal room for the circles
+        // without affecting the other chart containers.
+
+        const plotWidth = Math.max(
+          670,
+          Math.min(
+            1000,
+            Math.floor(
+              viz.getBoundingClientRect().width || 760
+            ) - 20
+          )
+        );
+
+        const plotHeight = 450;
 
         const selected = structuredClone(spec);
 
-        // IMPORTANT:
-        // Only filter the actual participant-data layers.
-        // Do not filter the Australia basemap (layer 0).
+        selected.width = plotWidth;
+        selected.height = plotHeight;
 
-        for (const layer of selected.layer.slice(1)) {
-          layer.transform = [
-            ...(layer.transform || []),
-            {
-              filter: {
-                field: 'metric',
-                equal: selectedMetric
-              }
-            }
-          ];
-        }
+        // Unlike a proportional-symbol map, this
+        // specification contains no country geoshape layer.
 
-        // The cartogram uses longitude/latitude and size.
-        // Do NOT access copy.encoding.x, which does not exist.
-
-        const sizeEncoding =
-          selected.layer[1].encoding.size;
-
-        sizeEncoding.scale = {
-          domain: isRate
-            ? [0, 2]
-            : [0, 125000],
-
-          range: [36, 5200],
-          nice: false
+        selected.data = {
+          values: createDorlingData(
+            measure,
+            plotWidth,
+            plotHeight
+          )
         };
 
-        // Use a custom HTML legend, since Vega's automatic
-        // size legend can omit requested reference values.
+        selected.encoding.x.scale.domain = [
+          0,
+          plotWidth
+        ];
 
-        sizeEncoding.legend = null;
+        selected.encoding.y.scale.domain = [
+          plotHeight,
+          0
+        ];
 
-        const values = isRate
-          ? [0, 0.4, 0.8, 1.2, 1.6, 2]
+        viz.style.overflowX = 'auto';
+
+        const legendValues = isRate
+          ? [
+              0,
+              .4,
+              .8,
+              1.2,
+              1.6,
+              2
+            ]
           : [
               0,
               25000,
@@ -468,28 +737,25 @@ for (
 
         legendHost.replaceChildren(
           createSizeKey(
-            values,
+            legendValues,
 
             isRate
               ? 'Adult participation rate (%)'
               : 'Estimated adult participants (people)',
 
             isRate ? 2 : 125000,
-
             34
           )
         );
 
-        // Switch highlighting and explanation along with metric.
-
         setText(
-          story,
-          info.interpretations?.[selectedMetric]
+          callout,
+          info.highlights?.[measure]
         );
 
         setText(
-          callout,
-          info.highlights?.[selectedMetric]
+          story,
+          info.interpretations?.[measure]
         );
 
         if (request !== revision) return;
@@ -512,9 +778,9 @@ for (
 
       await showMetric(selector.value);
 
-    // --------------------------------------------------------
+    // ========================================================
     // CHART 5 — PARTICIPATION MAP
-    // --------------------------------------------------------
+    // ========================================================
 
     } else if (id === 'ausplay-surf-map') {
       setText(
@@ -529,8 +795,7 @@ for (
 
       const selected = structuredClone(spec);
 
-      // Remove the automatic vertical size legend.
-      // Keep the state/territory colour legend.
+      // Remove Vega-Lite's automatic vertical size legend.
 
       for (const layer of selected.layer || []) {
         if (layer.encoding?.size) {
@@ -544,7 +809,7 @@ for (
 
       if (existing) existing.remove();
 
-      // Insert a horizontal six-step size legend.
+      // Keep the six-reference horizontal size key.
 
       viz.insertAdjacentElement(
         'afterend',
@@ -571,9 +836,9 @@ for (
         options
       );
 
-    // --------------------------------------------------------
+    // ========================================================
     // EXISTING QUEENSLAND WAVE COMPARISON
-    // --------------------------------------------------------
+    // ========================================================
 
     } else if (id === 'qld-wave-dumbbell') {
       const label = document.createElement('label');
@@ -591,12 +856,15 @@ for (
 
       picker.style.cssText =
         'font:inherit;padding:9px 12px;' +
-        'border:1px solid #bcd6d1;border-radius:8px;' +
-        'background:#fff;color:#123442;' +
-        'max-width:100%;margin-left:8px';
+        'border:1px solid #bcd6d1;' +
+        'border-radius:8px;background:#fff;' +
+        'color:#123442;max-width:100%;margin-left:8px';
 
-      for (const item of info.metricOptions || []) {
-        const option = document.createElement('option');
+      for (
+        const item of info.metricOptions || []
+      ) {
+        const option =
+          document.createElement('option');
 
         option.value = item.value;
 
@@ -616,7 +884,6 @@ for (
         'color:#4f6972;font-size:.84rem;margin:0 0 10px';
 
       label.append(picker);
-
       card.insertBefore(label, viz);
       card.insertBefore(key, viz);
 
@@ -627,9 +894,7 @@ for (
 
         const option = (
           info.metricOptions || []
-        ).find(
-          item => item.value === metric
-        );
+        ).find(item => item.value === metric);
 
         if (!option) return;
 
@@ -655,9 +920,7 @@ for (
           `${option.label} (${option.unit})`;
 
         selected.layer[0].encoding.x.axis.format =
-          option.unit === '%'
-            ? '.0f'
-            : '.1f';
+          option.unit === '%' ? '.0f' : '.1f';
 
         selected.layer[1].encoding.x.axis = null;
         selected.layer[2].encoding.x.axis = null;
@@ -683,9 +946,9 @@ for (
 
       await renderMeasure(picker.value);
 
-    // --------------------------------------------------------
+    // ========================================================
     // CHART 1 — INTERACTIVE NATIONAL SURFING RESERVES
-    // --------------------------------------------------------
+    // ========================================================
 
     } else if (
       id === 'map-reserves' &&
@@ -728,7 +991,6 @@ for (
       analysisSide.append(callout, detail, story);
 
       layout.append(mapSide, analysisSide);
-
       card.insertBefore(layout, source);
 
       const buttons = [];
@@ -854,9 +1116,9 @@ for (
         info.defaultState || 'All'
       );
 
-    // --------------------------------------------------------
+    // ========================================================
     // OTHER CHARTS, INCLUDING CHART 7
-    // --------------------------------------------------------
+    // ========================================================
 
     } else {
       setText(
