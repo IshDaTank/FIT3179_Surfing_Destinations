@@ -1,12 +1,13 @@
+
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "A 2-degree geographic bin map counting Australia's 19 registered National Surfing Reserves.",
+  "description": "Geographic bin map of 19 Australian National Surfing Reserves, grouped into fixed 2-degree by 2-degree cells; counts are not coastline-normalised.",
   "usermeta": {
     "title": "Where Do Recognised Surfing Reserves Cluster?",
-    "annotation": "The Sydney and Central Coast grid cell contains six reserves, representing 32% of Australia's 19 listed reserves.",
-    "analysis": "Using the same 19 National Surfing Reserves as Chart 1, this map groups locations into fixed 2° longitude × 2° latitude cells. Ten cells contain at least one reserve. The strongest concentration is along the NSW coast between 150°–152°E and 34°–32°S, containing six listings (32% of the national register), including Maroubra, Bondi, Manly–Freshwater, North Narrabeen, Merewether and Norah Head. Another cell around the NSW–Queensland border contains Angourie, Lennox Head and Gold Coast, while Margaret River and Yallingup share a cell in southwestern Western Australia. Other recognised destinations, including Kalbarri, Noosa and Phillip Island, occupy more isolated cells. These results reveal clustering in formal surfing heritage recognition, rather than a ranking of Australia's best surf destinations. Importantly, equal 2° cells do not have identical ground areas or coastline lengths, and some extend offshore. The counts are therefore not normalised measures of surf quality, visitation or reserves per kilometre of coastline.",
+    "annotation": "Six reserves fall within the Sydney–Central Coast 2° cell: the largest cluster, accounting for 32% of all 19 listings.",
+    "analysis": "Grouping the 19 National Surfing Reserves into fixed 2° longitude × 2° latitude grid cells produces ten occupied cells. The strongest concentration is the Sydney–Central Coast cell (150°–152°E; 34°–32°S), containing six reserves: Maroubra, Bondi, North Narrabeen, Manly–Freshwater, Merewether and Norah Head. They represent 32% of all listed reserves. Another cell near the NSW–Queensland border groups three sites—Lennox Head, Angourie and Gold Coast—while Margaret River and Yallingup share a cell in southwest WA. Other reserves, including Kalbarri, Noosa and Phillip Island, lie in separate cells. This highlights the concentration of formal heritage recognition along parts of the east coast, alongside isolated locations elsewhere. The cells are equal in degrees rather than kilometres squared; they may include ocean and differ in coastline length. The chart therefore counts listed reserves per cell, not surf quality, surfer numbers or a coastline-normalised density.",
     "source": {
-      "label": "National Surfing Reserves — official register",
+      "label": "National Surfing Reserves — official register (19 localities; calculated 2° grid)",
       "url": "https://surfingreserves.org.au/national-surfing-reserves/"
     }
   },
@@ -28,7 +29,7 @@
       },
       "transform": [
         {
-          "filter": "datum.id == 36 || datum.id == '036'"
+          "filter": "datum.id == 36 || datum.id == \"036\""
         }
       ],
       "mark": {
@@ -40,131 +41,7 @@
     },
     {
       "data": {
-        "values": {
-          "type": "FeatureCollection",
-          "features": [
-            {
-              "type": "Feature",
-              "properties": {
-                "count": 6,
-                "cell": "150°–152°E, 32°–34°S",
-                "locations": "Maroubra, Merewether, North Narrabeen, Manly–Freshwater, Bondi, Norah Head"
-              },
-              "geometry": {
-                "type": "Polygon",
-                "coordinates": [[[150,-34],[152,-34],[152,-32],[150,-32],[150,-34]]]
-              }
-            },
-            {
-              "type": "Feature",
-              "properties": {
-                "count": 3,
-                "cell": "152°–154°E, 28°–30°S",
-                "locations": "Angourie, Lennox Head, Gold Coast"
-              },
-              "geometry": {
-                "type": "Polygon",
-                "coordinates": [[[152,-30],[154,-30],[154,-28],[152,-28],[152,-30]]]
-              }
-            },
-            {
-              "type": "Feature",
-              "properties": {
-                "count": 2,
-                "cell": "114°–116°E, 32°–34°S",
-                "locations": "Margaret River, Yallingup"
-              },
-              "geometry": {
-                "type": "Polygon",
-                "coordinates": [[[114,-34],[116,-34],[116,-32],[114,-32],[114,-34]]]
-              }
-            },
-            {
-              "type": "Feature",
-              "properties": {
-                "count": 2,
-                "cell": "150°–152°E, 34°–36°S",
-                "locations": "Cronulla, Killalea"
-              },
-              "geometry": {
-                "type": "Polygon",
-                "coordinates": [[[150,-36],[152,-36],[152,-34],[150,-34],[150,-36]]]
-              }
-            },
-            {
-              "type": "Feature",
-              "properties": {
-                "count": 1,
-                "cell": "114°–116°E, 26°–28°S",
-                "locations": "Kalbarri"
-              },
-              "geometry": {
-                "type": "Polygon",
-                "coordinates": [[[114,-28],[116,-28],[116,-26],[114,-26],[114,-28]]]
-              }
-            },
-            {
-              "type": "Feature",
-              "properties": {
-                "count": 1,
-                "cell": "132°–134°E, 32°–34°S",
-                "locations": "Point Sinclair"
-              },
-              "geometry": {
-                "type": "Polygon",
-                "coordinates": [[[132,-34],[134,-34],[134,-32],[132,-32],[132,-34]]]
-              }
-            },
-            {
-              "type": "Feature",
-              "properties": {
-                "count": 1,
-                "cell": "136°–138°E, 34°–36°S",
-                "locations": "Daly Head"
-              },
-              "geometry": {
-                "type": "Polygon",
-                "coordinates": [[[136,-36],[138,-36],[138,-34],[136,-34],[136,-36]]]
-              }
-            },
-            {
-              "type": "Feature",
-              "properties": {
-                "count": 1,
-                "cell": "144°–146°E, 38°–40°S",
-                "locations": "Phillip Island"
-              },
-              "geometry": {
-                "type": "Polygon",
-                "coordinates": [[[144,-40],[146,-40],[146,-38],[144,-38],[144,-40]]]
-              }
-            },
-            {
-              "type": "Feature",
-              "properties": {
-                "count": 1,
-                "cell": "152°–154°E, 30°–32°S",
-                "locations": "Crescent Head"
-              },
-              "geometry": {
-                "type": "Polygon",
-                "coordinates": [[[152,-32],[154,-32],[154,-30],[152,-30],[152,-32]]]
-              }
-            },
-            {
-              "type": "Feature",
-              "properties": {
-                "count": 1,
-                "cell": "152°–154°E, 26°–28°S",
-                "locations": "Noosa"
-              },
-              "geometry": {
-                "type": "Polygon",
-                "coordinates": [[[152,-28],[154,-28],[154,-26],[152,-26],[152,-28]]]
-              }
-            }
-          ]
-        },
+        "url": "data/reserve-bins.geojson",
         "format": {
           "type": "json",
           "property": "features"
@@ -173,7 +50,7 @@
       "mark": {
         "type": "geoshape",
         "stroke": "#ffffff",
-        "strokeWidth": 1.5,
+        "strokeWidth": 1.2,
         "opacity": 0.92
       },
       "encoding": {
@@ -207,7 +84,7 @@
           {
             "field": "properties.locations",
             "type": "nominal",
-            "title": "Locations"
+            "title": "Registered locations"
           }
         ]
       }
@@ -215,17 +92,13 @@
     {
       "data": {
         "values": [
-          {
-            "lon": 151,
-            "lat": -33,
-            "label": "6"
-          }
+          {"lon": 151, "lat": -33, "label": "6"}
         ]
       },
       "mark": {
         "type": "text",
         "fontWeight": "bold",
-        "fontSize": 15,
+        "fontSize": 14,
         "color": "#ffffff"
       },
       "encoding": {
