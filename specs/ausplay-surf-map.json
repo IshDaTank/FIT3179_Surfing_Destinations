@@ -18,23 +18,18 @@
   "description": "Proportional symbol map for estimated people aged 15+ who surfed in 2025, by Australian state or territory. ACT has no coastline; its symbol represents residents, not a surf site.",
   "usermeta": {
     "title": "Where Are Australia’s Surfers?",
-    "annotation": "NSW: 117,953 adult participants — the largest estimated total.",
-    "analysis": "New South Wales accounts for the largest estimated adult surfing population (117,953), followed by Queensland (63,787), Victoria (58,683) and Western Australia (43,496). The symbols show where participants reside by state or territory, not where surfing takes place. In particular, the ACT’s 2,272 participants reflect residents who surf, despite the territory having no coastline. Participation rates provide a different perspective: WA leads at 1.76%, slightly ahead of NSW at 1.67%. Estimates are survey-based, and small jurisdictions warrant care.",
+    "analysis": "New South Wales accounts for about 38% of the combined estimated adult surfing population across Australia’s eight states and territories (117,953 of 313,396). Queensland (63,787), Victoria (58,683) and Western Australia (43,496) follow. Yet the geographic pattern changes when population size is considered: WA records the highest estimated adult participation rate (1.76%), narrowly ahead of NSW (1.67%). Symbols indicate participants’ state or territory of residence—not where they surf—and therefore include the landlocked ACT. As AusPlay results are survey estimates, particularly small jurisdictions and narrow differences require caution.",
     "sources": [
       {
         "label": "Australian Sports Commission · AusPlay 2025, state and territory tables (30 Apr 2026)",
         "url": "https://www.ausport.gov.au/clearinghouse/research/ausplay/results"
       }
-    ]
-  },
-  "height": 450,
-  "projection": {
-    "type": "mercator",
-    "center": [
-      133.5,
-      -27.4
     ],
-    "scale": 720
+    "annotation": "NSW leads Australia with 117,953 estimated adult surfing participants in 2025."
+  },
+  "height": 540,
+  "projection": {
+    "type": "mercator"
   },
   "layer": [
     {
@@ -92,7 +87,18 @@
           },
           "legend": {
             "title": "Estimated surfers (15+)",
-            "format": ",.0f"
+            "format": ",.0f",
+            "values": [
+              20000,
+              60000,
+              100000
+            ],
+            "labelFontSize": 13,
+            "titleFontSize": 14,
+            "titleFontWeight": "bold",
+            "labelPadding": 9,
+            "symbolStrokeColor": "#596c73",
+            "offset": 15
           }
         },
         "color": {
@@ -124,7 +130,14 @@
             "title": "State / territory",
             "orient": "bottom",
             "columns": 4,
-            "symbolSize": 110
+            "symbolSize": 190,
+            "titleFontSize": 14,
+            "titleFontWeight": "bold",
+            "labelFontSize": 13,
+            "columnPadding": 18,
+            "rowPadding": 12,
+            "labelLimit": 150,
+            "offset": 17
           }
         },
         "tooltip": [
@@ -151,7 +164,7 @@
       },
       "mark": {
         "type": "text",
-        "fontSize": 11,
+        "fontSize": 13,
         "fontWeight": "bold",
         "dy": -14,
         "color": "#204551"
@@ -168,5 +181,11 @@
         }
       }
     }
-  ]
+  ],
+  "padding": {
+    "left": 20,
+    "right": 28,
+    "top": 25,
+    "bottom": 42
+  }
 }
