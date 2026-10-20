@@ -45,7 +45,7 @@ for (const card of document.querySelectorAll("[data-chart]")) {
     };
 
     // Both maps share the compact two-column layout.
-    if (id === "map-reserves" || id === "map-bins") {
+    if (id === "map-reserves" || id === "map-bar-chart") {
       card.classList.add("map-card");
 
       const layout = document.createElement("div");
