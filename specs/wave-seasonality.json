@@ -1,13 +1,13 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Month-by-year heatmap of median significant wave height at Bilinga, comparing 2022–2025.",
+  "description": "Month-by-year heatmap of Bilinga buoy median significant wave height across four complete years, highlighting the recurring June–July low-wave period.",
   "usermeta": {
     "title": "Do the Same Wave Patterns Return Each Year?",
-    "analysis": "A recurring June–July lull emerges across the four years. June records the lowest monthly median in 2022 (0.62 m), 2023 (0.55 m) and 2024 (0.54 m), while July is lowest in 2025 (0.58 m). In contrast, the strongest months shift between years: May leads in 2022 (1.32 m) and 2025 (1.20 m), April in 2023 (0.98 m), and March in 2024 (1.22 m). February also experiences relatively elevated medians across several years, suggesting that stronger typical conditions are not confined to one fixed season. Compared with the single-year view in Chart 5, the heatmap reveals a more consistent pattern of lower typical wave heights in early winter, alongside considerable variation in the timing of stronger conditions. This provides a basis for examining how occasional large swell events contribute to differences between months and years.",
-    "method": "Monthly medians of half-hourly significant wave height (Hs, metres) recorded by the Bilinga wave buoy. Only complete calendar years 2022–2025 are included. Invalid and missing readings, including -99.9, were excluded. Colour and cell labels represent monthly medians. Data completeness varies by month; coverage is available in the hover tooltip.",
+    "analysis": "The four-year heatmap reveals a recurring June–July lull in typical wave height at Bilinga. June had the lowest median in 2022 (0.62 m), 2023 (0.55 m) and 2024 (0.54 m), while July was lowest in 2025 (0.58 m). By comparison, the strongest month shifted: May in 2022 and 2025, April in 2023, and March in 2024. This combination suggests that quieter early-winter conditions recur more consistently than any single peak month. The 2025 pattern therefore belongs to a broader rhythm, rather than standing alone. At the same time, the differences between years point to changing swell events and weather conditions that shape each season. Chart 7 can examine those intense episodes directly, starting with the pronounced March 2025 swell.",
+    "method": "Monthly median significant wave height (Hs, metres) from the Bilinga buoy's half-hourly verified measurements for complete years 2022–2025. Missing or invalid observations were excluded. Each cell is a monthly median, and hover tooltips show observation counts and completeness. The orange outlines identify June–July; they do not denote a separate measurement scale.",
     "sources": [
       {
-        "label": "Queensland Government — Bilinga Verified Wave Data",
+        "label": "Queensland Government — Bilinga verified wave data",
         "url": "https://www.data.qld.gov.au/dataset/coastal-data-system-waves-bilinga"
       }
     ]
@@ -32,8 +32,8 @@
   "title": {
     "text": "Monthly Median Significant Wave Height",
     "subtitle": [
-      "Bilinga, Gold Coast · 2022–2025 · metres",
-      "Orange outlines highlight June–July"
+      "Bilinga, Gold Coast · 2022–2025 · median significant wave height (m)",
+      "June was lowest in 2022–24; July was lowest in 2025 (orange outlines)"
     ],
     "anchor": "start",
     "fontSize": 15,
@@ -56,9 +56,8 @@
           "field": "month",
           "type": "ordinal",
           "sort": [
-            "Jan", "Feb", "Mar", "Apr",
-            "May", "Jun", "Jul", "Aug",
-            "Sep", "Oct", "Nov", "Dec"
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
           ],
           "title": "Month",
           "axis": {
@@ -118,16 +117,8 @@
           }
         },
         "tooltip": [
-          {
-            "field": "year",
-            "type": "ordinal",
-            "title": "Year"
-          },
-          {
-            "field": "month",
-            "type": "nominal",
-            "title": "Month"
-          },
+          {"field": "year", "type": "ordinal", "title": "Year"},
+          {"field": "month", "type": "nominal", "title": "Month"},
           {
             "field": "median_hs",
             "type": "quantitative",
@@ -166,9 +157,8 @@
           "field": "month",
           "type": "ordinal",
           "sort": [
-            "Jan", "Feb", "Mar", "Apr",
-            "May", "Jun", "Jul", "Aug",
-            "Sep", "Oct", "Nov", "Dec"
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
           ]
         },
         "y": {
@@ -189,9 +179,8 @@
           "field": "month",
           "type": "ordinal",
           "sort": [
-            "Jan", "Feb", "Mar", "Apr",
-            "May", "Jun", "Jul", "Aug",
-            "Sep", "Oct", "Nov", "Dec"
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
           ]
         },
         "y": {
@@ -212,16 +201,8 @@
           "value": "#153B49"
         },
         "tooltip": [
-          {
-            "field": "year",
-            "type": "ordinal",
-            "title": "Year"
-          },
-          {
-            "field": "month",
-            "type": "nominal",
-            "title": "Month"
-          },
+          {"field": "year", "type": "ordinal", "title": "Year"},
+          {"field": "month", "type": "nominal", "title": "Month"},
           {
             "field": "median_hs",
             "type": "quantitative",
