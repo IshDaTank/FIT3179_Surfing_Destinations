@@ -1,6 +1,3 @@
-// FIT3179 — Australia: A Nation Built on Surf
-// Vega-Lite 6: shared loader, charts and interactions.
-
 const root = new URL('../', import.meta.url);
 
 const STATE_COLORS = {
@@ -13,10 +10,6 @@ const STATE_COLORS = {
   ACT: '#8C6D31',
   NT: '#666666'
 };
-
-// ============================================================
-// SHARED CHART STYLES
-// ============================================================
 
 const participationStyle = document.createElement('style');
 
@@ -117,25 +110,6 @@ participationStyle.textContent = `
     cursor: pointer;
   }
 
-  [data-chart="ausplay-surf-ranking"]
-  .participation-size-key {
-    max-width: 100%;
-    margin: 4px 0 7px;
-    padding: 8px 12px;
-  }
-
-  [data-chart="ausplay-surf-ranking"]
-  .participation-size-key strong {
-    margin-bottom: 5px;
-    font-size: .83rem;
-  }
-
-  [data-chart="ausplay-surf-ranking"]
-  .participation-size-key .key-step {
-    gap: 3px;
-    font-size: .78rem;
-  }
-
   @media (max-width: 520px) {
     .participation-size-key {
       padding: 9px 5px;
@@ -155,7 +129,7 @@ participationStyle.textContent = `
 document.head.append(participationStyle);
 
 // ============================================================
-// CHART 1 — STATE MAP PROJECTION
+// CHART 1 — PROJECTION
 // ============================================================
 
 const MAP_ZOOM_BOUNDS = {
@@ -168,21 +142,14 @@ const MAP_ZOOM_BOUNDS = {
 
 function mercatorY(latitude) {
   const radians = latitude * Math.PI / 180;
-
-  return Math.log(
-    Math.tan(Math.PI / 4 + radians / 2)
-  );
+  return Math.log(Math.tan(Math.PI / 4 + radians / 2));
 }
 
 function getStateProjection(state, width, height) {
-  const [west, south, east, north] =
-    MAP_ZOOM_BOUNDS[state];
+  const [west, south, east, north] = MAP_ZOOM_BOUNDS[state];
 
-  const longitudeSpan =
-    (east - west) * Math.PI / 180;
-
-  const latitudeSpan =
-    mercatorY(north) - mercatorY(south);
+  const longitudeSpan = (east - west) * Math.PI / 180;
+  const latitudeSpan = mercatorY(north) - mercatorY(south);
 
   const scale = Math.min(
     width * .88 / longitudeSpan,
@@ -199,10 +166,7 @@ function getStateProjection(state, width, height) {
       Math.atan(Math.sinh(centerY)) * 180 / Math.PI
     ],
     scale,
-    translate: [
-      width / 2,
-      height / 2
-    ]
+    translate: [width / 2, height / 2]
   };
 }
 
@@ -212,7 +176,6 @@ function getStateProjection(state, width, height) {
 
 function setText(element, content) {
   if (!element) return;
-
   element.textContent = content || '';
   element.hidden = !element.textContent;
 }
@@ -230,12 +193,9 @@ function renderSources(source, info) {
   for (const item of sources) {
     if (!item?.url || !item.label) continue;
 
-    source.append(
-      count++ ? ' · ' : 'Source: '
-    );
+    source.append(count++ ? ' · ' : 'Source: ');
 
     const link = document.createElement('a');
-
     link.href = item.url;
     link.textContent = item.label;
     link.target = '_blank';
@@ -248,7 +208,7 @@ function renderSources(source, info) {
 }
 
 // ============================================================
-// CUSTOM PROPORTIONAL CIRCLE SIZE LEGEND
+// CHART 5 — SIZE KEY
 // ============================================================
 
 function createSizeKey(
@@ -258,7 +218,6 @@ function createSizeKey(
   maxDiameter = 40
 ) {
   const key = document.createElement('div');
-
   key.className = 'participation-size-key';
   key.setAttribute('aria-label', title);
 
@@ -270,13 +229,10 @@ function createSizeKey(
 
   for (const value of values) {
     const step = document.createElement('div');
-
     step.className = 'key-step';
 
     const circle = document.createElement('span');
     circle.className = 'key-circle';
-
-    // Circle area, not diameter, scales with value.
 
     const diameter = value === 0
       ? 5
@@ -302,11 +258,8 @@ function createSizeKey(
 }
 
 // ============================================================
-// CHART 6 — DORLING CARTOGRAM SOURCE DATA
+// CHART 6 — DORLING CARTOGRAM DATA
 // ============================================================
-
-// Each state / territory has an approximate geographic anchor.
-// The final centre positions are calculated to avoid overlaps.
 
 const DORLING_STATES = [
   {
@@ -376,76 +329,55 @@ const DORLING_STATES = [
 ];
 
 // ============================================================
-// CHART 6 — COLLISION-FREE DORLING LAYOUT
+// CHART 6 — NON-OVERLAPPING CIRCLE LAYOUT
 // ============================================================
 
 function createDorlingData(
   metric,
   plotWidth = 760,
-  plotHeight = 440
+  plotHeight = 460
 ) {
   const isRate = metric === 'rate';
-
   const maxValue = isRate ? 2 : 125000;
 
-  // Vega symbol area is measured in square pixels.
-
-  const maxArea = 10500;
-  const minRadius = 4;
+  // Provide enough space for every numeric label.
+  const minRadius = 31;
+  const maxRadius = Math.min(68, plotWidth * .088);
 
   const nodes = DORLING_STATES.map((state) => {
     const value = isRate
       ? state.rate
       : state.participants;
 
-    const area =
-      maxArea * value / maxValue;
-
-    const radius = Math.max(
-      minRadius,
-      Math.sqrt(area / Math.PI)
+    // Minimum radius ensures the smallest values fit.
+    // Circle area then increases linearly with the measure.
+    const radius = Math.sqrt(
+      minRadius ** 2 +
+      (value / maxValue) *
+      (maxRadius ** 2 - minRadius ** 2)
     );
 
     return {
       ...state,
       value,
-      area,
       radius,
-
+      area: Math.PI * radius * radius,
       x: state.ax * plotWidth,
       y: state.ay * plotHeight,
-
       targetX: state.ax * plotWidth,
       targetY: state.ay * plotHeight
     };
   });
 
-  // Iteratively separate overlapping circles while gently
-  // pulling them towards their approximate geographic anchors.
-
-  for (
-    let iteration = 0;
-    iteration < 300;
-    iteration++
-  ) {
-    let overlaps = 0;
-
-    for (
-      let i = 0;
-      i < nodes.length;
-      i++
-    ) {
-      for (
-        let j = i + 1;
-        j < nodes.length;
-        j++
-      ) {
+  // Move colliding circles apart while keeping approximate geography.
+  for (let iteration = 0; iteration < 350; iteration++) {
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
         const a = nodes[i];
         const b = nodes[j];
 
         let dx = b.x - a.x;
         let dy = b.y - a.y;
-
         let distance = Math.hypot(dx, dy);
 
         if (distance < .001) {
@@ -454,37 +386,25 @@ function createDorlingData(
           distance = 1;
         }
 
-        const requiredDistance =
-          a.radius + b.radius + 13;
+        const overlap =
+          a.radius + b.radius + 18 - distance;
 
-        if (distance < requiredDistance) {
-          const shift =
-            (requiredDistance - distance) / 2;
+        if (overlap > 0) {
+          const movement = overlap / 2;
 
-          a.x -= dx / distance * shift;
-          a.y -= dy / distance * shift;
-
-          b.x += dx / distance * shift;
-          b.y += dy / distance * shift;
-
-          overlaps++;
+          a.x -= dx / distance * movement;
+          a.y -= dy / distance * movement;
+          b.x += dx / distance * movement;
+          b.y += dy / distance * movement;
         }
       }
     }
 
     for (const node of nodes) {
-      const easing =
-        overlaps ? .045 : .01;
+      node.x += (node.targetX - node.x) * .026;
+      node.y += (node.targetY - node.y) * .026;
 
-      node.x += (
-        node.targetX - node.x
-      ) * easing;
-
-      node.y += (
-        node.targetY - node.y
-      ) * easing;
-
-      const margin = node.radius + 22;
+      const margin = node.radius + 24;
 
       node.x = Math.max(
         margin,
@@ -492,36 +412,21 @@ function createDorlingData(
       );
 
       node.y = Math.max(
-        margin,
+        margin + 18,
         Math.min(plotHeight - margin, node.y)
       );
     }
   }
 
-  // Final pass only separates circles.
-  // No geographic pull is applied during this pass.
-
-  for (
-    let iteration = 0;
-    iteration < 40;
-    iteration++
-  ) {
-    for (
-      let i = 0;
-      i < nodes.length;
-      i++
-    ) {
-      for (
-        let j = i + 1;
-        j < nodes.length;
-        j++
-      ) {
+  // Final collision-only pass.
+  for (let iteration = 0; iteration < 90; iteration++) {
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
         const a = nodes[i];
         const b = nodes[j];
 
         let dx = b.x - a.x;
         let dy = b.y - a.y;
-
         let distance = Math.hypot(dx, dy);
 
         if (distance < .001) {
@@ -530,18 +435,16 @@ function createDorlingData(
           distance = 1;
         }
 
-        const requiredDistance =
-          a.radius + b.radius + 10;
+        const overlap =
+          a.radius + b.radius + 16 - distance;
 
-        if (distance < requiredDistance) {
-          const shift =
-            (requiredDistance - distance) / 2;
+        if (overlap > 0) {
+          const movement = overlap / 2;
 
-          a.x -= dx / distance * shift;
-          a.y -= dy / distance * shift;
-
-          b.x += dx / distance * shift;
-          b.y += dy / distance * shift;
+          a.x -= dx / distance * movement;
+          a.y -= dy / distance * movement;
+          b.x += dx / distance * movement;
+          b.y += dy / distance * movement;
         }
       }
     }
@@ -552,21 +455,14 @@ function createDorlingData(
     name: node.name,
     participants: node.participants,
     rate: node.rate,
-
-    value: node.value,
     area: node.area,
-
     x: node.x,
     y: node.y,
 
-    label_y:
-      node.y - node.radius - 18,
+    // State name always above the circle.
+    label_y: node.y - node.radius - 16,
 
-    value_y:
-      node.radius >= 27
-        ? node.y + 4
-        : node.y + node.radius + 16,
-
+    // Numeric value always inside the circle.
     value_label: isRate
       ? `${node.rate.toFixed(2)}%`
       : node.participants.toLocaleString('en-AU')
@@ -574,20 +470,16 @@ function createDorlingData(
 }
 
 // ============================================================
-// MAIN CHART LOADER
+// LOAD ALL CHARTS
 // ============================================================
 
-for (
-  const card of document.querySelectorAll('[data-chart]')
-) {
+for (const card of document.querySelectorAll('[data-chart]')) {
   const id = card.dataset.chart;
 
   try {
     const response = await fetch(
       new URL(`specs/${id}.json`, root)
     );
-
-    // Unbuilt chart placeholders are skipped.
 
     if (response.status === 404) continue;
 
@@ -622,33 +514,25 @@ for (
       })
     };
 
-    // ========================================================
-    // CHART 6 — INTERACTIVE DORLING CARTOGRAM
-    // ========================================================
+    // --------------------------------------------------------
+    // CHART 6 — DORLING CARTOGRAM
+    // --------------------------------------------------------
 
     if (id === 'ausplay-surf-ranking') {
       const controls = document.createElement('div');
-
-      controls.className =
-        'participation-ranking-controls';
+      controls.className = 'participation-ranking-controls';
 
       const label = document.createElement('label');
-
       label.htmlFor = 'ausplay-metric';
       label.textContent = 'Size circles by:';
 
       const selector = document.createElement('select');
-
       selector.id = 'ausplay-metric';
 
-      for (
-        const item of info.metricOptions || []
-      ) {
-        const option =
-          document.createElement('option');
+      for (const item of info.metricOptions || []) {
+        const option = document.createElement('option');
 
         option.value = item.value;
-
         option.textContent =
           `${item.label} (${item.unit})`;
 
@@ -658,44 +542,25 @@ for (
       controls.append(label, selector);
       card.insertBefore(controls, viz);
 
-      // Custom six-value legend.
-
-      const legendHost = document.createElement('div');
-
-      card.insertBefore(legendHost, viz);
-
       let revision = 0;
 
       async function showMetric(metric) {
         const request = ++revision;
-
-        const measure =
-          metric === 'rate' ? 'rate' : 'count';
-
-        const isRate = measure === 'rate';
-
-        // Allow some horizontal room for the circles
-        // without affecting the other chart containers.
+        const measure = metric === 'rate' ? 'rate' : 'count';
 
         const plotWidth = Math.max(
-          670,
-          Math.min(
-            1000,
-            Math.floor(
-              viz.getBoundingClientRect().width || 760
-            ) - 20
-          )
+          440,
+          Math.floor(
+            viz.getBoundingClientRect().width || 760
+          ) - 16
         );
 
-        const plotHeight = 450;
+        const plotHeight = 470;
 
         const selected = structuredClone(spec);
 
         selected.width = plotWidth;
         selected.height = plotHeight;
-
-        // Unlike a proportional-symbol map, this
-        // specification contains no country geoshape layer.
 
         selected.data = {
           values: createDorlingData(
@@ -705,97 +570,42 @@ for (
           )
         };
 
-        selected.encoding.x.scale.domain = [
-          0,
-          plotWidth
-        ];
+        selected.encoding.x.scale.domain = [0, plotWidth];
+        selected.encoding.y.scale.domain = [plotHeight, 0];
 
-        selected.encoding.y.scale.domain = [
-          plotHeight,
-          0
-        ];
+        // Remove any existing Chart 6 size legend.
+        card.querySelectorAll('.participation-size-key')
+          .forEach(element => element.remove());
 
-        viz.style.overflowX = 'auto';
+        viz.style.overflowX =
+          plotWidth > viz.clientWidth ? 'auto' : 'visible';
 
-        const legendValues = isRate
-          ? [
-              0,
-              .4,
-              .8,
-              1.2,
-              1.6,
-              2
-            ]
-          : [
-              0,
-              25000,
-              50000,
-              75000,
-              100000,
-              125000
-            ];
-
-        legendHost.replaceChildren(
-          createSizeKey(
-            legendValues,
-
-            isRate
-              ? 'Adult participation rate (%)'
-              : 'Estimated adult participants (people)',
-
-            isRate ? 2 : 125000,
-            34
-          )
-        );
-
-        setText(
-          callout,
-          info.highlights?.[measure]
-        );
-
-        setText(
-          story,
-          info.interpretations?.[measure]
-        );
+        setText(callout, info.highlights?.[measure]);
+        setText(story, info.interpretations?.[measure]);
 
         if (request !== revision) return;
 
-        await vegaEmbed(
-          viz,
-          selected,
-          options
-        );
+        await vegaEmbed(viz, selected, options);
       }
 
-      selector.value =
-        info.defaultMetric || 'count';
+      selector.value = info.defaultMetric || 'count';
 
       selector.addEventListener('change', () => {
         void showMetric(selector.value);
       });
 
       card.hidden = false;
-
       await showMetric(selector.value);
 
-    // ========================================================
-    // CHART 5 — PARTICIPATION MAP
-    // ========================================================
+    // --------------------------------------------------------
+    // CHART 5 — AUSTRALIAN PARTICIPATION MAP
+    // --------------------------------------------------------
 
     } else if (id === 'ausplay-surf-map') {
-      setText(
-        callout,
-        info.annotation
-      );
-
-      setText(
-        story,
-        info.analysis
-      );
+      setText(callout, info.annotation);
+      setText(story, info.analysis);
 
       const selected = structuredClone(spec);
-
-      // Remove Vega-Lite's automatic vertical size legend.
 
       for (const layer of selected.layer || []) {
         if (layer.encoding?.size) {
@@ -809,19 +619,10 @@ for (
 
       if (existing) existing.remove();
 
-      // Keep the six-reference horizontal size key.
-
       viz.insertAdjacentElement(
         'afterend',
         createSizeKey(
-          [
-            0,
-            25000,
-            50000,
-            75000,
-            100000,
-            125000
-          ],
+          [0, 25000, 50000, 75000, 100000, 125000],
           'Estimated surfers aged 15+',
           125000,
           43
@@ -829,48 +630,34 @@ for (
       );
 
       card.hidden = false;
+      await vegaEmbed(viz, selected, options);
 
-      await vegaEmbed(
-        viz,
-        selected,
-        options
-      );
-
-    // ========================================================
+    // --------------------------------------------------------
     // EXISTING QUEENSLAND WAVE COMPARISON
-    // ========================================================
+    // --------------------------------------------------------
 
     } else if (id === 'qld-wave-dumbbell') {
       const label = document.createElement('label');
-
       label.textContent = 'Compare measure: ';
       label.htmlFor = 'qld-wave-metric';
 
       label.style.cssText =
-        'display:block;font-weight:700;' +
-        'margin:2px 0 12px;color:#244654';
+        'display:block;font-weight:700;margin:2px 0 12px;' +
+        'color:#244654';
 
       const picker = document.createElement('select');
-
       picker.id = 'qld-wave-metric';
 
       picker.style.cssText =
         'font:inherit;padding:9px 12px;' +
-        'border:1px solid #bcd6d1;' +
-        'border-radius:8px;background:#fff;' +
-        'color:#123442;max-width:100%;margin-left:8px';
+        'border:1px solid #bcd6d1;border-radius:8px;' +
+        'background:#fff;color:#123442;' +
+        'max-width:100%;margin-left:8px';
 
-      for (
-        const item of info.metricOptions || []
-      ) {
-        const option =
-          document.createElement('option');
-
+      for (const item of info.metricOptions || []) {
+        const option = document.createElement('option');
         option.value = item.value;
-
-        option.textContent =
-          `${item.label} (${item.unit})`;
-
+        option.textContent = `${item.label} (${item.unit})`;
         picker.append(option);
       }
 
@@ -892,17 +679,12 @@ for (
       async function renderMeasure(metric) {
         const version = ++revision;
 
-        const option = (
-          info.metricOptions || []
-        ).find(item => item.value === metric);
+        const option = (info.metricOptions || [])
+          .find(item => item.value === metric);
 
         if (!option) return;
 
-        setText(
-          story,
-          info.interpretations?.[metric]
-        );
-
+        setText(story, info.interpretations?.[metric]);
         setText(callout, '');
 
         const selected = structuredClone(spec);
@@ -927,11 +709,7 @@ for (
 
         if (version !== revision) return;
 
-        await vegaEmbed(
-          viz,
-          selected,
-          options
-        );
+        await vegaEmbed(viz, selected, options);
       }
 
       picker.value =
@@ -943,12 +721,11 @@ for (
       });
 
       card.hidden = false;
-
       await renderMeasure(picker.value);
 
-    // ========================================================
-    // CHART 1 — INTERACTIVE NATIONAL SURFING RESERVES
-    // ========================================================
+    // --------------------------------------------------------
+    // CHART 1 — INTERACTIVE SURFING RESERVES MAP
+    // --------------------------------------------------------
 
     } else if (
       id === 'map-reserves' &&
@@ -965,20 +742,12 @@ for (
 
       const analysisSide = document.createElement('aside');
       analysisSide.className = 'map-analysis';
-
-      analysisSide.setAttribute(
-        'aria-live',
-        'polite'
-      );
+      analysisSide.setAttribute('aria-live', 'polite');
 
       const filters = document.createElement('div');
       filters.className = 'state-filters';
 
-      filters.setAttribute(
-        'role',
-        'group'
-      );
-
+      filters.setAttribute('role', 'group');
       filters.setAttribute(
         'aria-label',
         'Filter surfing reserves by state'
@@ -989,8 +758,8 @@ for (
 
       mapSide.append(filters, viz);
       analysisSide.append(callout, detail, story);
-
       layout.append(mapSide, analysisSide);
+
       card.insertBefore(layout, source);
 
       const buttons = [];
@@ -998,25 +767,15 @@ for (
 
       async function selectState(state) {
         const request = ++requestNumber;
-
-        const result =
-          info.interpretations[state];
+        const result = info.interpretations[state];
 
         if (!result) return;
 
         for (const button of buttons) {
-          const active =
-            button.dataset.state === state;
+          const active = button.dataset.state === state;
 
-          button.classList.toggle(
-            'is-active',
-            active
-          );
-
-          button.setAttribute(
-            'aria-pressed',
-            String(active)
-          );
+          button.classList.toggle('is-active', active);
+          button.setAttribute('aria-pressed', String(active));
         }
 
         const highlightHeading =
@@ -1026,17 +785,10 @@ for (
           info.annotationTargets?.[state]?.name ||
           'Map finding';
 
-        const finding =
-          document.createElement('span');
+        const finding = document.createElement('span');
+        finding.textContent = result.callout || '';
 
-        finding.textContent =
-          result.callout || '';
-
-        callout.replaceChildren(
-          highlightHeading,
-          finding
-        );
-
+        callout.replaceChildren(highlightHeading, finding);
         callout.hidden = false;
 
         setText(detail, result.detail);
@@ -1057,43 +809,30 @@ for (
 
           const width = Math.max(
             280,
-            Math.floor(
-              viz.getBoundingClientRect().width
-            )
+            Math.floor(viz.getBoundingClientRect().width)
           );
 
           selected.width = width;
           selected.height = 350;
 
           selected.projection =
-            getStateProjection(
-              state,
-              width,
-              350
-            );
+            getStateProjection(state, width, 350);
         }
 
         if (request !== requestNumber) return;
 
-        await vegaEmbed(
-          viz,
-          selected,
-          options
-        );
+        await vegaEmbed(viz, selected, options);
       }
 
       for (const state of info.stateOrder) {
-        const button =
-          document.createElement('button');
+        const button = document.createElement('button');
 
         button.type = 'button';
         button.dataset.state = state;
         button.className = 'state-filter';
 
         button.textContent =
-          state === 'All'
-            ? 'All states'
-            : state;
+          state === 'All' ? 'All states' : state;
 
         if (STATE_COLORS[state]) {
           button.style.setProperty(
@@ -1111,40 +850,22 @@ for (
       }
 
       card.hidden = false;
+      await selectState(info.defaultState || 'All');
 
-      await selectState(
-        info.defaultState || 'All'
-      );
-
-    // ========================================================
-    // OTHER CHARTS, INCLUDING CHART 7
-    // ========================================================
+    // --------------------------------------------------------
+    // ALL OTHER CHARTS, INCLUDING THE CHART 7 MOSAIC
+    // --------------------------------------------------------
 
     } else {
-      setText(
-        callout,
-        info.annotation
-      );
-
-      setText(
-        story,
-        info.analysis
-      );
+      setText(callout, info.annotation);
+      setText(story, info.analysis);
 
       card.hidden = false;
-
-      await vegaEmbed(
-        viz,
-        spec,
-        options
-      );
+      await vegaEmbed(viz, spec, options);
     }
 
   } catch (error) {
-    console.error(
-      `Could not render ${id}:`,
-      error
-    );
+    console.error(`Could not render ${id}:`, error);
 
     const viz = card.querySelector('.viz');
 
