@@ -1,13 +1,73 @@
+
 const root = new URL("../", import.meta.url);
 
+// Geographic views for the state filters.
+// Each range is [west, south, east, north].
+const zoomBounds = {
+  NSW: [148.5, -37, 155, -27.5],
+  QLD: [150, -30, 155, -24],
+  VIC: [140, -41, 150, -35],
+  SA: [128, -38, 140, -30],
+  WA: [111, -36.5, 118, -25]
+};
+
+// Convert latitude to Mercator coordinates.
+function mercatorY(latitude) {
+  const radians = latitude * Math.PI / 180;
+
+  return Math.log(
+    Math.tan(Math.PI / 4 + radians / 2)
+  );
+}
+
+// Calculate an appropriate zoom for a selected state.
+function getStateProjection(state, width, height) {
+  const [west, south, east, north] = zoomBounds[state];
+
+  const radians = Math.PI / 180;
+
+  const longitudeSpan = (east - west) * radians;
+  const latitudeSpan =
+    mercatorY(north) - mercatorY(south);
+
+  // Fit the selected region with a little padding.
+  const scale = Math.min(
+    width * 0.88 / longitudeSpan,
+    height * 0.84 / latitudeSpan
+  );
+
+  const centerLongitude = (west + east) / 2;
+
+  // Centre vertically in Mercator space.
+  const centreY =
+    (mercatorY(south) + mercatorY(north)) / 2;
+
+  const centerLatitude =
+    Math.atan(Math.sinh(centreY)) * 180 / Math.PI;
+
+  return {
+    type: "mercator",
+    center: [centerLongitude, centerLatitude],
+    scale: scale,
+    translate: [width / 2, height / 2]
+  };
+}
+
+// Load every chart defined in index.html.
 for (const card of document.querySelectorAll("[data-chart]")) {
   const id = card.dataset.chart;
 
   try {
-    const response = await fetch(new URL(`specs/${id}.json`, root));
+    const response = await fetch(
+      new URL(`specs/${id}.json`, root)
+    );
 
+    // Keep unbuilt charts hidden.
     if (response.status === 404) continue;
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
 
     const spec = await response.json();
     const info = spec.usermeta || {};
@@ -24,17 +84,16 @@ for (const card of document.querySelectorAll("[data-chart]")) {
 
     title.textContent = info.title || id.replaceAll("-", " ");
 
-    const sources = info.sources || (info.source ? [info.source] : []);
+    // Read source citations from each chart's JSON.
+    const sources = info.sources ||
+      (info.source ? [info.source] : []);
+
     source.replaceChildren();
 
     sources.forEach((item, index) => {
       if (!item.url || !item.label) return;
 
-      if (index > 0) {
-        source.append(" · ");
-      } else {
-        source.append("Source: ");
-      }
+      source.append(index === 0 ? "Source: " : " · ");
 
       const link = document.createElement("a");
       link.href = item.url;
@@ -55,143 +114,198 @@ for (const card of document.querySelectorAll("[data-chart]")) {
       })
     };
 
-    // Only Chart 1 uses the two-column map layout and state filter interaction.
-    if (id === "map-reserves") {
+    /* CHART 1: INTERACTIVE SURFING RESERVE MAP */
+
+    if (
+      id === "map-reserves" &&
+      info.interpretations &&
+      info.stateOrder
+    ) {
       card.classList.add("map-card");
 
       const layout = document.createElement("div");
       layout.className = "map-layout";
 
-      const chartSide = document.createElement("div");
-      chartSide.className = "map-side";
+      const mapSide = document.createElement("div");
+      mapSide.className = "map-side";
 
       const analysisSide = document.createElement("aside");
       analysisSide.className = "map-analysis";
+      analysisSide.setAttribute("aria-live", "polite");
 
-      chartSide.append(viz);
-      analysisSide.append(story);
+      // State filter buttons.
+      const filters = document.createElement("div");
+      filters.className = "state-filters";
+      filters.setAttribute("role", "group");
+      filters.setAttribute(
+        "aria-label",
+        "Filter surfing reserves by state"
+      );
 
-      layout.append(chartSide, analysisSide);
+      // Detailed state statistics.
+      const detail = document.createElement("p");
+      detail.className = "state-detail";
+
+      // Left: filters and map.
+      mapSide.append(filters, viz);
+
+      // Right: annotation, statistics and analysis.
+      analysisSide.append(callout, detail, story);
+
+      layout.append(mapSide, analysisSide);
       card.insertBefore(layout, source);
 
-      if (info.interpretations && info.stateOrder) {
-        const filters = document.createElement("div");
-        filters.className = "state-filters";
-        filters.setAttribute("role", "group");
-        filters.setAttribute("aria-label", "Filter surfing reserves by state");
+      // The old context line is deliberately removed.
+      // No extra text will appear between the map and source.
 
-        chartSide.prepend(filters);
-        analysisSide.prepend(callout);
+      const palette = {
+        NSW: "#117989",
+        QLD: "#E3A049",
+        VIC: "#7D6BA3",
+        SA: "#B96A75",
+        WA: "#568C69"
+      };
 
-        const detail = document.createElement("p");
-        detail.className = "state-detail";
-        analysisSide.insertBefore(detail, story);
+      const buttons = [];
+      let currentState = info.defaultState || "All";
+      let rendering = false;
 
-        const context = document.createElement("p");
-        context.className = "state-context";
-        chartSide.append(context);
+      async function selectState(state) {
+        const result = info.interpretations[state];
 
-        const palette = {
-          NSW: "#117989",
-          QLD: "#E3A049",
-          VIC: "#7D6BA3",
-          SA: "#B96A75",
-          WA: "#568C69"
-        };
+        if (!result || rendering) return;
 
-        const buttons = [];
+        rendering = true;
+        currentState = state;
 
-        async function selectState(state) {
-          const result = info.interpretations[state];
-          if (!result) return;
+        // Update the active state button.
+        for (const button of buttons) {
+          const active = button.dataset.state === state;
 
-          for (const button of buttons) {
-            const active = button.dataset.state === state;
-            button.classList.toggle("is-active", active);
-            button.setAttribute("aria-pressed", String(active));
-          }
+          button.classList.toggle("is-active", active);
+          button.setAttribute(
+            "aria-pressed",
+            String(active)
+          );
+        }
 
-          const heading = document.createElement("strong");
-          heading.textContent =
-            info.annotationTargets?.[state]?.name || "Map finding";
+        // Read state-specific text from the chart JSON.
+        const heading = document.createElement("strong");
 
-          const finding = document.createElement("span");
-          finding.textContent = result.callout || "";
+        heading.textContent =
+          info.annotationTargets?.[state]?.name ||
+          "Map finding";
 
-          callout.replaceChildren(heading, finding);
-          callout.hidden = false;
+        const finding = document.createElement("span");
+        finding.textContent = result.callout || "";
 
-          detail.textContent = result.detail || "";
-          story.textContent = result.analysis || "";
-          story.hidden = !result.analysis;
+        callout.replaceChildren(heading, finding);
+        callout.hidden = false;
 
-          context.textContent =
-            state === "All"
-              ? "All 19 nationally listed reserves · equal-sized location markers"
-              : `${state} only · national map extent unchanged`;
+        detail.textContent = result.detail || "";
+        detail.hidden = !result.detail;
 
-          const selectedSpec = structuredClone(spec);
+        story.textContent = result.analysis || "";
+        story.hidden = !result.analysis;
 
-          if (state !== "All") {
-            selectedSpec.layer[1].transform = [
-              ...(selectedSpec.layer[1].transform || []),
-              {
-                filter: {
-                  field: "state",
-                  equal: state
-                }
+        // Copy the original Vega-Lite specification.
+        const selectedSpec = structuredClone(spec);
+
+        if (state !== "All") {
+          // Filter only the location markers.
+          // Australia's coastline remains the base layer.
+          selectedSpec.layer[1].transform = [
+            ...(selectedSpec.layer[1].transform || []),
+            {
+              filter: {
+                field: "state",
+                equal: state
               }
-            ];
-          }
+            }
+          ];
 
-          try {
-            await vegaEmbed(viz, selectedSpec, options);
-          } catch (error) {
-            console.error(error);
-            viz.textContent = `Map could not load: ${error.message}`;
-          }
+          // Use the available width of the map column.
+          const width = Math.max(
+            280,
+            Math.floor(viz.getBoundingClientRect().width)
+          );
+
+          const height = 350;
+
+          selectedSpec.width = width;
+          selectedSpec.height = height;
+
+          // Zoom into the selected state's coastal region.
+          selectedSpec.projection = getStateProjection(
+            state,
+            width,
+            height
+          );
+        } else {
+          // Restore Chart 1's original full-Australia map.
+          selectedSpec.projection = structuredClone(
+            spec.projection
+          );
         }
 
-        for (const state of info.stateOrder) {
-          const button = document.createElement("button");
+        try {
+          await vegaEmbed(viz, selectedSpec, options);
+        } catch (error) {
+          console.error("Could not render map:", error);
 
-          button.type = "button";
-          button.dataset.state = state;
-          button.className = "state-filter";
-          button.textContent = state === "All" ? "All states" : state;
-
-          if (palette[state]) {
-            button.style.setProperty("--state-color", palette[state]);
-          }
-
-          button.addEventListener("click", () => {
-            selectState(state);
-          });
-
-          filters.append(button);
-          buttons.push(button);
+          viz.textContent =
+            `Map could not load: ${error.message}`;
+        } finally {
+          rendering = false;
         }
-
-        card.hidden = false;
-        await selectState(info.defaultState || "All");
-      } else {
-        callout.hidden = !info.annotation;
-        callout.textContent = info.annotation || "";
-        story.textContent = info.analysis || "";
-        story.hidden = !info.analysis;
-
-        card.hidden = false;
-        await vegaEmbed(viz, spec, options);
       }
+
+      // Create all six state buttons.
+      for (const state of info.stateOrder) {
+        const button = document.createElement("button");
+
+        button.type = "button";
+        button.dataset.state = state;
+        button.className = "state-filter";
+
+        button.textContent =
+          state === "All" ? "All states" : state;
+
+        if (palette[state]) {
+          button.style.setProperty(
+            "--state-color",
+            palette[state]
+          );
+        }
+
+        button.addEventListener("click", () => {
+          selectState(state);
+        });
+
+        filters.append(button);
+        buttons.push(button);
+      }
+
+      card.hidden = false;
+
+      // Display the national view on initial load.
+      await selectState(currentState);
+
     } else {
-      // Standard single-column layout for Chart 2 and later charts.
+      /* CHART 2 AND FUTURE VISUALISATIONS */
+
+      // All other charts use the standard layout.
+      // Chart 2's annotations are drawn inside its JSON.
       callout.hidden = true;
+
       story.textContent = info.analysis || "";
       story.hidden = !info.analysis;
 
       card.hidden = false;
+
       await vegaEmbed(viz, spec, options);
     }
+
   } catch (error) {
     console.error(`Could not render ${id}:`, error);
 
