@@ -4,10 +4,7 @@ for (const card of document.querySelectorAll("[data-chart]")) {
   const id = card.dataset.chart;
 
   try {
-    // Load the chart JSON.
-    const response = await fetch(
-      new URL(`specs/${id}.json`, root)
-    );
+    const response = await fetch(new URL(`specs/${id}.json`, root));
 
     if (response.status === 404) continue;
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -27,11 +24,7 @@ for (const card of document.querySelectorAll("[data-chart]")) {
 
     title.textContent = info.title || id.replaceAll("-", " ");
 
-    // Sources from the chart's JSON.
-    const sources = info.sources || (
-      info.source ? [info.source] : []
-    );
-
+    const sources = info.sources || (info.source ? [info.source] : []);
     source.replaceChildren();
 
     sources.forEach((item, index) => {
@@ -62,8 +55,8 @@ for (const card of document.querySelectorAll("[data-chart]")) {
       })
     };
 
-    // Charts 1 and 2 have a shared two-column layout.
-    if (id === "map-reserves" || id === "map-bar-chart") {
+    // Only Chart 1 uses the two-column map layout and state filter interaction.
+    if (id === "map-reserves") {
       card.classList.add("map-card");
 
       const layout = document.createElement("div");
@@ -81,19 +74,11 @@ for (const card of document.querySelectorAll("[data-chart]")) {
       layout.append(chartSide, analysisSide);
       card.insertBefore(layout, source);
 
-      // Chart 1: state filters and changing interpretations.
-      if (
-        id === "map-reserves" &&
-        info.interpretations &&
-        info.stateOrder
-      ) {
+      if (info.interpretations && info.stateOrder) {
         const filters = document.createElement("div");
         filters.className = "state-filters";
         filters.setAttribute("role", "group");
-        filters.setAttribute(
-          "aria-label",
-          "Filter surfing reserves by state"
-        );
+        filters.setAttribute("aria-label", "Filter surfing reserves by state");
 
         chartSide.prepend(filters);
         analysisSide.prepend(callout);
@@ -120,21 +105,15 @@ for (const card of document.querySelectorAll("[data-chart]")) {
           const result = info.interpretations[state];
           if (!result) return;
 
-          // Update active buttons.
           for (const button of buttons) {
             const active = button.dataset.state === state;
-
             button.classList.toggle("is-active", active);
-            button.setAttribute(
-              "aria-pressed",
-              String(active)
-            );
+            button.setAttribute("aria-pressed", String(active));
           }
 
           const heading = document.createElement("strong");
           heading.textContent =
-            info.annotationTargets?.[state]?.name ||
-            "Map finding";
+            info.annotationTargets?.[state]?.name || "Map finding";
 
           const finding = document.createElement("span");
           finding.textContent = result.callout || "";
@@ -146,11 +125,11 @@ for (const card of document.querySelectorAll("[data-chart]")) {
           story.textContent = result.analysis || "";
           story.hidden = !result.analysis;
 
-          context.textContent = state === "All"
-            ? "All 19 nationally listed reserves · equal-sized location markers"
-            : `${state} only · national map extent unchanged`;
+          context.textContent =
+            state === "All"
+              ? "All 19 nationally listed reserves · equal-sized location markers"
+              : `${state} only · national map extent unchanged`;
 
-          // Keep Australian outline and filter the markers.
           const selectedSpec = structuredClone(spec);
 
           if (state !== "All") {
@@ -169,26 +148,20 @@ for (const card of document.querySelectorAll("[data-chart]")) {
             await vegaEmbed(viz, selectedSpec, options);
           } catch (error) {
             console.error(error);
-            viz.textContent =
-              `Map could not load: ${error.message}`;
+            viz.textContent = `Map could not load: ${error.message}`;
           }
         }
 
-        // Create filter buttons.
         for (const state of info.stateOrder) {
           const button = document.createElement("button");
 
           button.type = "button";
           button.dataset.state = state;
           button.className = "state-filter";
-          button.textContent =
-            state === "All" ? "All states" : state;
+          button.textContent = state === "All" ? "All states" : state;
 
           if (palette[state]) {
-            button.style.setProperty(
-              "--state-color",
-              palette[state]
-            );
+            button.style.setProperty("--state-color", palette[state]);
           }
 
           button.addEventListener("click", () => {
@@ -201,30 +174,24 @@ for (const card of document.querySelectorAll("[data-chart]")) {
 
         card.hidden = false;
         await selectState(info.defaultState || "All");
-
       } else {
-        // Chart 2: bar chart with annotations inside the JSON.
-        callout.remove();
-
+        callout.hidden = !info.annotation;
+        callout.textContent = info.annotation || "";
         story.textContent = info.analysis || "";
         story.hidden = !info.analysis;
 
         card.hidden = false;
         await vegaEmbed(viz, spec, options);
       }
-
     } else {
-      // Standard loading for future charts.
-      callout.textContent = info.annotation || "";
-      callout.hidden = !info.annotation;
-
+      // Standard single-column layout for Chart 2 and later charts.
+      callout.hidden = true;
       story.textContent = info.analysis || "";
       story.hidden = !info.analysis;
 
       card.hidden = false;
       await vegaEmbed(viz, spec, options);
     }
-
   } catch (error) {
     console.error(`Could not render ${id}:`, error);
 
