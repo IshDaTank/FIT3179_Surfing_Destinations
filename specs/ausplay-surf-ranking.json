@@ -1,12 +1,19 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Non-overlapping Dorling cartogram of Australian states and territories: circle area proportional to estimated adult surfing participants, switchable to participation rate.",
   "background": "#ffffff",
   "width": "container",
-  "height": 425,
-  "data": {
-    "values": []
+  "height": 560,
+  "config": {
+    "view": { "stroke": null },
+    "legend": {
+      "labelColor": "#244654",
+      "titleColor": "#244654"
+    },
+    "text": {
+      "font": "Arial"
+    }
   },
+  "description": "Dorling-style cartogram for Australian surfing participation by state and territory, using approximate geographic positions and circle size to show the selected measure.",
   "usermeta": {
     "title": "How Do States and Territories Compare in Surfing Participation?",
     "defaultMetric": "count",
@@ -22,169 +29,181 @@
         "unit": "%"
       }
     ],
-    "highlights": {
-      "count": "NSW leads in absolute participation: an estimated 117,953 adult surfers.",
-      "rate": "WA leads in participation rate: an estimated 1.76% of adults surfed in 2025."
-    },
     "interpretations": {
-      "count": "NSW has the largest estimated adult surfing population (117,953), followed by Queensland (63,787), Victoria (58,683) and Western Australia (43,496). Together these four states account for approximately 91% of the summed state and territory estimates. Circle area represents estimated participants, not physical land area. The distribution reflects population size as well as surfing participation, so the largest circle does not necessarily indicate the greatest prevalence of surfing.",
-      "rate": "WA has the highest estimated adult surfing participation rate (1.76%), narrowly ahead of NSW (1.67%). Queensland (1.38%) and Tasmania (1.36%) follow. Comparing this cartogram with the participant-count view shows how population adjustment changes the apparent distribution: WA becomes the largest circle despite ranking fourth by absolute participants. Small differences between rates should be interpreted cautiously because AusPlay figures are survey estimates."
+      "count": "New South Wales has the largest estimated adult surfing population (117,953), followed by Queensland (63,787), Victoria (58,683) and Western Australia (43,496). Together, these four states account for about 91% of the combined state and territory total. The map-like placement shows that the largest surfing populations are concentrated in the eastern seaboard states, especially NSW and Queensland, while smaller jurisdictions such as the ACT, Tasmania and the Northern Territory contribute far fewer participants in absolute terms.",
+      "rate": "When adjusted for population size, the ranking changes. Western Australia records the highest adult participation rate (1.76%), narrowly ahead of New South Wales (1.67%), followed by Queensland (1.38%) and Tasmania (1.36%). This indicates that although NSW dominates in sheer participant numbers, surfing is slightly more prevalent among adults in WA. The rate view therefore complements the participant-count view by revealing differences in surfing intensity rather than total scale."
     },
     "sources": [
       {
-        "label": "Australian Sports Commission · AusPlay 2025 state and territory tables (released 30 Apr 2026)",
+        "label": "Australian Sports Commission · AusPlay 2025, state and territory tables (30 Apr 2026)",
         "url": "https://www.ausport.gov.au/clearinghouse/research/ausplay/results"
       }
-    ]
+    ],
+    "highlights": {
+      "count": "NSW leads in absolute participation: an estimated 117,953 adult surfers.",
+      "rate": "WA leads in participation rate: 1.76% of adults."
+    }
   },
-  "encoding": {
-    "x": {
-      "field": "x",
-      "type": "quantitative",
-      "scale": {
-        "domain": [0, 760],
-        "nice": false,
-        "zero": false
-      },
-      "axis": null
-    },
-    "y": {
-      "field": "y",
-      "type": "quantitative",
-      "scale": {
-        "domain": [485, 0],
-        "nice": false,
-        "zero": false
-      },
-      "axis": null
-    },
-    "tooltip": [
-      {
-        "field": "state_name",
-        "type": "nominal",
-        "title": "State / territory"
-      },
-      {
-        "field": "participants",
-        "type": "quantitative",
-        "title": "Estimated participants",
-        "format": ",.0f"
-      },
-      {
-        "field": "rate",
-        "type": "quantitative",
-        "title": "Participation rate (%)",
-        "format": ".2f"
+  "data": {
+    "url": "data/ausplay_surf_cartogram_2025.csv"
+  },
+  "transform": [
+    {
+      "filter": {
+        "field": "metric",
+        "equal": "count"
       }
-    ]
+    }
+  ],
+  "projection": {
+    "type": "mercator"
   },
   "layer": [
     {
+      "data": {
+        "url": "https://vega.github.io/vega-datasets/data/world-110m.json",
+        "format": {
+          "type": "topojson",
+          "feature": "countries"
+        }
+      },
+      "transform": [
+        {
+          "filter": "datum.id == 36 || datum.id == '036'"
+        }
+      ],
+      "mark": {
+        "type": "geoshape",
+        "fill": "#eef5f3",
+        "stroke": "#a6bcbc",
+        "strokeWidth": 1.4
+      }
+    },
+    {
       "mark": {
         "type": "circle",
-        "opacity": 0.87,
+        "opacity": 0.9,
         "stroke": "#ffffff",
-        "strokeWidth": 2.1
+        "strokeWidth": 1.6
       },
       "encoding": {
+        "longitude": {
+          "field": "longitude",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "latitude",
+          "type": "quantitative"
+        },
         "size": {
           "field": "value",
           "type": "quantitative",
           "scale": {
             "domain": [0, 125000],
-            "range": [0, 11500],
-            "nice": false
+            "range": [30, 5200]
           },
-          "legend": null
+          "legend": {
+            "title": "Estimated participants (people)",
+            "orient": "top",
+            "direction": "horizontal",
+            "values": [0, 25000, 50000, 75000, 100000, 125000],
+            "format": "~s",
+            "labelFontSize": 13,
+            "titleFontSize": 14,
+            "titleFontWeight": "bold",
+            "labelPadding": 10,
+            "offset": 8,
+            "symbolStrokeColor": "#35626d",
+            "symbolFillColor": "#5c959e"
+          }
         },
         "color": {
           "field": "state",
           "type": "nominal",
           "scale": {
-            "domain": [
-              "NSW",
-              "QLD",
-              "VIC",
-              "WA",
-              "SA",
-              "TAS",
-              "ACT",
-              "NT"
-            ],
-            "range": [
-              "#0072B2",
-              "#E69F00",
-              "#CC79A7",
-              "#D55E00",
-              "#009E73",
-              "#7B61A8",
-              "#8C6D31",
-              "#666666"
-            ]
+            "domain": ["NSW", "QLD", "VIC", "WA", "SA", "TAS", "ACT", "NT"],
+            "range": ["#0072B2", "#E69F00", "#CC79A7", "#D55E00", "#009E73", "#7B61A8", "#8C6D31", "#666666"]
           },
-          "legend": null
-        }
+          "legend": {
+            "title": "State / territory",
+            "orient": "right",
+            "direction": "vertical",
+            "columns": 1,
+            "symbolSize": 180,
+            "titleFontSize": 14,
+            "titleFontWeight": "bold",
+            "labelFontSize": 13,
+            "labelLimit": 140,
+            "offset": 10
+          }
+        },
+        "tooltip": [
+          {
+            "field": "state",
+            "title": "State / territory"
+          },
+          {
+            "field": "participants",
+            "title": "Estimated participants",
+            "format": ","
+          },
+          {
+            "field": "participation_rate_pct",
+            "title": "Adult participation rate (%)",
+            "format": ".2f"
+          }
+        ]
       }
     },
     {
       "mark": {
         "type": "text",
-        "font": "Arial",
-        "fontSize": 15,
+        "fontSize": 13,
         "fontWeight": "bold",
-        "color": "#173a48",
-        "baseline": "middle"
+        "dy": -26,
+        "color": "#173946"
       },
       "encoding": {
-        "x": {
-          "field": "x",
+        "longitude": {
+          "field": "longitude",
           "type": "quantitative"
         },
-        "y": {
-          "field": "label_y",
+        "latitude": {
+          "field": "latitude",
           "type": "quantitative"
         },
         "text": {
-          "field": "state",
-          "type": "nominal"
+          "field": "state"
         }
       }
     },
     {
       "mark": {
         "type": "text",
-        "font": "Arial",
         "fontSize": 12,
         "fontWeight": "bold",
-        "color": "#173a48",
-        "baseline": "middle"
+        "dy": 8,
+        "color": "#173946"
       },
       "encoding": {
-        "x": {
-          "field": "x",
+        "longitude": {
+          "field": "longitude",
           "type": "quantitative"
         },
-        "y": {
-          "field": "value_y",
+        "latitude": {
+          "field": "latitude",
           "type": "quantitative"
         },
         "text": {
-          "field": "value_label",
-          "type": "nominal"
+          "field": "value_label"
         }
       }
     }
   ],
-  "config": {
-    "view": {
-      "stroke": null
-    },
-    "font": "Arial"
-  },
   "padding": {
-    "left": 14,
-    "right": 14,
-    "top": 8,
-    "bottom": 8
+    "left": 20,
+    "right": 140,
+    "top": 60,
+    "bottom": 20
   }
 }
