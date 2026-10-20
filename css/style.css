@@ -1,4 +1,3 @@
-
 :root {
   --ink: #123442;
   --muted: #4f6972;
@@ -43,8 +42,8 @@ header {
 header .eyebrow,
 .section-label {
   text-transform: uppercase;
-  letter-spacing: .15em;
-  font-size: .75rem;
+  letter-spacing: 0.15em;
+  font-size: 0.75rem;
   font-weight: 700;
 }
 
@@ -52,7 +51,7 @@ h1,
 h2,
 h3 {
   font-family: Arial, Helvetica, sans-serif;
-  letter-spacing: -.035em;
+  letter-spacing: -0.035em;
   line-height: 1.15;
 }
 
@@ -76,7 +75,7 @@ nav {
 }
 
 nav a {
-  font-size: .83rem;
+  font-size: 0.83rem;
   text-decoration: none;
   color: #c3e4e2;
 }
@@ -85,7 +84,7 @@ nav a:hover {
   text-decoration: underline;
 }
 
-/* General section layout */
+/* Section layout */
 
 section {
   padding: 52px 0 42px;
@@ -121,7 +120,7 @@ h2 {
   margin: 0;
 }
 
-/* Chart containers */
+/* Chart cards */
 
 .chart-card {
   background: #fff;
@@ -154,7 +153,7 @@ h3 {
   max-width: 100%;
 }
 
-/* General annotations and analysis */
+/* Standard analysis and source */
 
 .chart-callout {
   position: relative;
@@ -189,23 +188,10 @@ h3 {
 .chart-source {
   margin: 10px 0 0;
   color: var(--muted);
-  font-size: .8rem;
+  font-size: 0.8rem;
 }
 
-/* Footer */
-
-footer {
-  background: var(--deep);
-  color: #d3e6e9;
-  padding: 25px 0;
-  font-size: .83rem;
-}
-
-footer p {
-  margin: 5px 0;
-}
-
-/* Chart 1: Interactive reserve map */
+/* Chart 1: interactive map */
 
 .map-card {
   padding: 22px 24px 20px;
@@ -217,7 +203,8 @@ footer p {
 
 .map-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 1fr);
+  grid-template-columns:
+    minmax(0, 1.35fr) minmax(300px, 1fr);
   gap: 24px;
   align-items: stretch;
 }
@@ -228,6 +215,8 @@ footer p {
   flex-direction: column;
 }
 
+/* State selection buttons */
+
 .state-filters {
   display: flex;
   flex-wrap: wrap;
@@ -237,7 +226,7 @@ footer p {
 
 .state-filter {
   font: inherit;
-  font-size: .82rem;
+  font-size: 0.82rem;
   font-weight: 700;
   line-height: 1.2;
   cursor: pointer;
@@ -246,7 +235,9 @@ footer p {
   border: 1px solid #c8dcda;
   border-radius: 999px;
   padding: 8px 12px;
-  transition: background .15s, border-color .15s;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
 }
 
 .state-filter:hover {
@@ -280,7 +271,7 @@ footer p {
   border: 1px solid #fff;
 }
 
-/* Map dimensions */
+/* Map rendering */
 
 .map-card .viz {
   width: 100%;
@@ -294,13 +285,7 @@ footer p {
   display: block;
 }
 
-.state-context {
-  font-size: .77rem;
-  color: var(--muted);
-  margin: 4px 0 0;
-}
-
-/* Right-hand analysis panel */
+/* State-specific analysis panel */
 
 .map-analysis {
   display: flex;
@@ -314,8 +299,6 @@ footer p {
   border-radius: 12px;
 }
 
-/* Distinct annotation box */
-
 .map-card .chart-callout {
   display: flex;
   flex-direction: column;
@@ -328,7 +311,7 @@ footer p {
   border-left: 4px solid #117989;
   border-radius: 8px;
   line-height: 1.4;
-  font-size: .92rem;
+  font-size: 0.92rem;
   font-weight: 400;
   max-width: none;
   color: #124552;
@@ -354,22 +337,17 @@ footer p {
 }
 
 .map-card .chart-callout span {
-  font-size: .91rem;
+  font-size: 0.91rem;
   color: #264e57;
 }
 
-/* State details */
-
 .map-card .state-detail {
-  font-size: .78rem;
+  font-size: 0.78rem;
   color: #426773;
   margin: 0 0 2px;
   line-height: 1.4;
-  letter-spacing: .01em;
   font-weight: 700;
 }
-
-/* Detailed analytical interpretation */
 
 .map-card .chart-story {
   border: 0;
@@ -377,35 +355,46 @@ footer p {
   padding: 11px 0 0;
   margin: 0;
   max-width: none;
-  font-size: .9rem;
+  font-size: 0.9rem;
   line-height: 1.58;
   color: #294b56;
-}
-
-.map-card .map-side .state-context {
-  margin: 3px 0 0;
 }
 
 .map-card .chart-source {
   margin: 11px 0 0;
 }
 
-/* Section 1: single-line Title Case heading */
+/* Consistent Section 1 and Section 2 headings */
 
-#geography .section-head {
+#geography .section-head,
+#history .section-head {
   display: block;
   margin-bottom: 20px;
 }
 
-#geography h2 {
+#geography h2,
+#history h2 {
   font-size: clamp(1.85rem, 3.2vw, 3rem);
   font-weight: 800;
   line-height: 1.15;
-  letter-spacing: -.035em;
+  letter-spacing: -0.035em;
   white-space: nowrap;
 }
 
-/* Responsive adjustments */
+/* Footer */
+
+footer {
+  background: var(--deep);
+  color: #d3e6e9;
+  padding: 25px 0;
+  font-size: 0.83rem;
+}
+
+footer p {
+  margin: 5px 0;
+}
+
+/* Responsive layout */
 
 @media (max-width: 860px) {
   .map-layout {
@@ -426,7 +415,15 @@ footer p {
   }
 
   .map-card .chart-story {
-    font-size: .95rem;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 760px) {
+  #geography h2,
+  #history h2 {
+    font-size: clamp(1.45rem, 5vw, 2rem);
+    white-space: normal;
   }
 }
 
@@ -453,13 +450,6 @@ footer p {
   }
 }
 
-@media (max-width: 600px) {
-  #geography h2 {
-    font-size: clamp(1.45rem, 5vw, 2rem);
-    white-space: normal;
-  }
-}
-
 @media (max-width: 480px) {
   .map-card {
     padding: 16px;
@@ -467,6 +457,6 @@ footer p {
 
   .state-filter {
     padding: 7px 10px;
-    font-size: .76rem;
+    font-size: 0.76rem;
   }
 }
