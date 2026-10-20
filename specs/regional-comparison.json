@@ -1,0 +1,358 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Monthly significant wave height at Bilinga in 2025, showing the median and the 25th–75th percentile range.",
+  "usermeta": {
+    "title": "How Did Wave Conditions Change at Bilinga in 2025?",
+    "analysis": "Bilinga's 2025 measurements reveal substantial variation in wave conditions throughout the year. May recorded the highest monthly median significant wave height at 1.20 m, compared with July's low of 0.58 m. This indicates that typical wave heights in May were more than twice those in July. March presents a different pattern: while its median was 1.15 m, its upper quartile reached 2.30 m, revealing a particularly wide spread of elevated wave conditions. Of the 521 valid half-hourly readings at or above 2 m during 2025, 452 (87%) occurred in March. This concentration coincides with Tropical Cyclone Alfred, which generated prolonged large easterly swell along southeast Queensland in early March. By contrast, May's higher median and narrower middle range suggest more consistently elevated conditions. The contrast demonstrates how both sustained wave activity and occasional powerful swell events contribute to the diversity of conditions experienced along Australia's coastline. The next chart examines whether these monthly patterns recur across multiple years.",
+    "method": "Bilinga wave buoy, Queensland. Half-hourly observations in AEST during 2025. Significant wave height (Hs) is measured in metres. Of 17,520 records, 515 contained missing-value codes (-99.9), leaving 17,005 valid observations. The line represents monthly medians and the shaded area represents the 25th–75th percentile range.",
+    "sources": [
+      {
+        "label": "Queensland Government — Bilinga Verified Wave Data",
+        "url": "https://www.data.qld.gov.au/dataset/coastal-data-system-waves-bilinga/resource/f4a7339d-1e9a-464b-a780-f4e98c6cec8c"
+      },
+      {
+        "label": "Bureau of Meteorology — Tropical Cyclone Alfred",
+        "url": "https://www.bom.gov.au/cyclone/history/Alfred2025.shtml"
+      }
+    ]
+  },
+  "width": "container",
+  "height": 370,
+  "background": "#ffffff",
+  "padding": {
+    "left": 8,
+    "right": 10,
+    "top": 14,
+    "bottom": 8
+  },
+  "layer": [
+    {
+      "data": {
+        "url": "data/bilinga-monthly-2025.csv"
+      },
+      "mark": {
+        "type": "area",
+        "color": "#9CCFC9",
+        "opacity": 0.43,
+        "interpolate": "linear"
+      },
+      "encoding": {
+        "x": {
+          "field": "month",
+          "type": "quantitative",
+          "title": "Month (2025)",
+          "scale": {
+            "domain": [0.65, 12.4],
+            "nice": false
+          },
+          "axis": {
+            "values": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+            "labelExpr": "timeFormat(datetime(2025, datum.value - 1, 1), '%b')",
+            "labelFontSize": 12,
+            "titleFontSize": 12,
+            "titleFontWeight": "bold",
+            "labelColor": "#48636c",
+            "titleColor": "#173b48",
+            "grid": false,
+            "domain": false,
+            "tickSize": 0,
+            "labelPadding": 9,
+            "titlePadding": 13
+          }
+        },
+        "y": {
+          "field": "q3",
+          "type": "quantitative",
+          "title": "Significant Wave Height (m)",
+          "scale": {
+            "domain": [0, 3.05],
+            "nice": false
+          },
+          "axis": {
+            "values": [0, 0.5, 1, 1.5, 2, 2.5, 3],
+            "format": ".1f",
+            "grid": true,
+            "gridColor": "#e4eeeb",
+            "domain": false,
+            "titleFontWeight": "bold",
+            "labelColor": "#48636c",
+            "titleColor": "#173b48",
+            "titlePadding": 12
+          }
+        },
+        "y2": {
+          "field": "q1"
+        },
+        "tooltip": [
+          {
+            "field": "month_name",
+            "type": "nominal",
+            "title": "Month"
+          },
+          {
+            "field": "median",
+            "type": "quantitative",
+            "format": ".2f",
+            "title": "Median Hs (m)"
+          },
+          {
+            "field": "q1",
+            "type": "quantitative",
+            "format": ".2f",
+            "title": "25th percentile (m)"
+          },
+          {
+            "field": "q3",
+            "type": "quantitative",
+            "format": ".2f",
+            "title": "75th percentile (m)"
+          },
+          {
+            "field": "n",
+            "type": "quantitative",
+            "title": "Valid records"
+          },
+          {
+            "field": "high2",
+            "type": "quantitative",
+            "title": "Records Hs ≥ 2 m"
+          }
+        ]
+      }
+    },
+    {
+      "data": {
+        "url": "data/bilinga-monthly-2025.csv"
+      },
+      "mark": {
+        "type": "line",
+        "stroke": "#08768B",
+        "strokeWidth": 3,
+        "point": {
+          "filled": true,
+          "size": 82,
+          "stroke": "#FFFFFF",
+          "strokeWidth": 1.7,
+          "fill": "#08768B"
+        }
+      },
+      "encoding": {
+        "x": {
+          "field": "month",
+          "type": "quantitative",
+          "scale": {
+            "domain": [0.65, 12.4],
+            "nice": false
+          }
+        },
+        "y": {
+          "field": "median",
+          "type": "quantitative",
+          "scale": {
+            "domain": [0, 3.05],
+            "nice": false
+          }
+        },
+        "tooltip": [
+          {
+            "field": "month_name",
+            "type": "nominal",
+            "title": "Month"
+          },
+          {
+            "field": "median",
+            "type": "quantitative",
+            "format": ".2f",
+            "title": "Median Hs (m)"
+          },
+          {
+            "field": "q1",
+            "type": "quantitative",
+            "format": ".2f",
+            "title": "25th percentile (m)"
+          },
+          {
+            "field": "q3",
+            "type": "quantitative",
+            "format": ".2f",
+            "title": "75th percentile (m)"
+          }
+        ]
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "x1": 1.1,
+            "x2": 4.65,
+            "y1": 2.63,
+            "y2": 2.94,
+            "tone": "storm"
+          },
+          {
+            "x1": 5.45,
+            "x2": 8.85,
+            "y1": 1.78,
+            "y2": 2.09,
+            "tone": "high"
+          },
+          {
+            "x1": 8.15,
+            "x2": 11.65,
+            "y1": 0.12,
+            "y2": 0.43,
+            "tone": "low"
+          }
+        ]
+      },
+      "mark": {
+        "type": "rect",
+        "cornerRadius": 5,
+        "strokeWidth": 1
+      },
+      "encoding": {
+        "x": {
+          "field": "x1",
+          "type": "quantitative"
+        },
+        "x2": {
+          "field": "x2"
+        },
+        "y": {
+          "field": "y1",
+          "type": "quantitative"
+        },
+        "y2": {
+          "field": "y2"
+        },
+        "fill": {
+          "field": "tone",
+          "type": "nominal",
+          "scale": {
+            "domain": ["storm", "high", "low"],
+            "range": ["#FDEFE2", "#E3F3EE", "#E8F1F8"]
+          },
+          "legend": null
+        },
+        "stroke": {
+          "field": "tone",
+          "type": "nominal",
+          "scale": {
+            "domain": ["storm", "high", "low"],
+            "range": ["#D7A274", "#6BAC99", "#91B7CE"]
+          },
+          "legend": null
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "x1": 3,
+            "x2": 3,
+            "y1": 2.302,
+            "y2": 2.63,
+            "tone": "storm"
+          },
+          {
+            "x1": 5,
+            "x2": 5.45,
+            "y1": 1.201,
+            "y2": 1.78,
+            "tone": "high"
+          },
+          {
+            "x1": 7,
+            "x2": 8.15,
+            "y1": 0.576,
+            "y2": 0.43,
+            "tone": "low"
+          }
+        ]
+      },
+      "mark": {
+        "type": "rule",
+        "strokeWidth": 1.5
+      },
+      "encoding": {
+        "x": {
+          "field": "x1",
+          "type": "quantitative"
+        },
+        "x2": {
+          "field": "x2"
+        },
+        "y": {
+          "field": "y1",
+          "type": "quantitative"
+        },
+        "y2": {
+          "field": "y2"
+        },
+        "color": {
+          "field": "tone",
+          "type": "nominal",
+          "scale": {
+            "domain": ["storm", "high", "low"],
+            "range": ["#C07835", "#178365", "#397DAB"]
+          },
+          "legend": null
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "x": 2.9,
+            "y": 2.785,
+            "label": "March: 75th pct 2.30 m"
+          },
+          {
+            "x": 7.12,
+            "y": 1.935,
+            "label": "May: highest median 1.20 m"
+          },
+          {
+            "x": 9.88,
+            "y": 0.275,
+            "label": "July: lowest median 0.58 m"
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "fontWeight": "bold",
+        "fontSize": 11,
+        "color": "#173b48",
+        "align": "center",
+        "baseline": "middle"
+      },
+      "encoding": {
+        "x": {
+          "field": "x",
+          "type": "quantitative"
+        },
+        "y": {
+          "field": "y",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "label",
+          "type": "nominal"
+        }
+      }
+    }
+  ],
+  "config": {
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelFont": "Arial",
+      "titleFont": "Arial"
+    }
+  }
+}
