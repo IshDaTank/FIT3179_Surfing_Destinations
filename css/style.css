@@ -1,3 +1,8 @@
+/* ==========================================
+   FIT3179 — SURFING DESTINATIONS DASHBOARD
+   Main Stylesheet
+   ========================================== */
+
 :root {
   --ink: #123442;
   --muted: #4f6972;
@@ -7,9 +12,17 @@
   --line: #d9e7e3;
 }
 
-* { box-sizing: border-box; }
+/* ==========================================
+   GLOBAL STYLING
+   ========================================== */
 
-html { scroll-behavior: smooth; }
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
 
 body {
   margin: 0;
@@ -19,13 +32,19 @@ body {
   background: white;
 }
 
-a { color: inherit; }
+a {
+  color: inherit;
+}
 
 .wrap {
   max-width: 1120px;
   margin: auto;
   padding: 0 24px;
 }
+
+/* ==========================================
+   WEBSITE HEADER
+   ========================================== */
 
 header {
   background: var(--deep);
@@ -36,14 +55,16 @@ header {
 header .eyebrow,
 .section-label {
   text-transform: uppercase;
-  letter-spacing: .15em;
-  font-size: .75rem;
+  letter-spacing: 0.15em;
+  font-size: 0.75rem;
   font-weight: 700;
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   font-family: Arial, Helvetica, sans-serif;
-  letter-spacing: -.035em;
+  letter-spacing: -0.035em;
   line-height: 1.15;
 }
 
@@ -67,12 +88,18 @@ nav {
 }
 
 nav a {
-  font-size: .83rem;
+  font-size: 0.83rem;
   text-decoration: none;
   color: #c3e4e2;
 }
 
-nav a:hover { text-decoration: underline; }
+nav a:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================
+   SECTION LAYOUT
+   ========================================== */
 
 section {
   padding: 52px 0 42px;
@@ -108,8 +135,49 @@ h2 {
   margin: 0;
 }
 
+/* ==========================================
+   CONSISTENT SECTION HEADINGS
+
+   Sections 1, 2 and 3 use the same
+   full-width, single-line heading layout.
+   ========================================== */
+
+#geography .section-head,
+#history .section-head,
+#hotspots .section-head {
+  display: block;
+  grid-template-columns: none;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+#geography .section-head > div,
+#history .section-head > div,
+#hotspots .section-head > div {
+  display: block;
+  width: 100%;
+  max-width: none;
+}
+
+#geography .section-head h2,
+#history .section-head h2,
+#hotspots .section-head h2 {
+  display: block;
+  width: 100%;
+  max-width: none;
+  font-size: clamp(1.85rem, 3.2vw, 3rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+  white-space: nowrap;
+}
+
+/* ==========================================
+   CHART CARDS
+   ========================================== */
+
 .chart-card {
-  background: #fff;
+  background: #ffffff;
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 22px 24px;
@@ -129,6 +197,10 @@ h3 {
   margin: 0 0 14px;
 }
 
+/* ==========================================
+   VEGA-LITE VISUALISATIONS
+   ========================================== */
+
 .viz {
   width: 100%;
   overflow-x: auto;
@@ -138,6 +210,10 @@ h3 {
 .viz .vega-embed {
   max-width: 100%;
 }
+
+/* ==========================================
+   STANDARD CHART ANNOTATIONS
+   ========================================== */
 
 .chart-callout {
   position: relative;
@@ -160,6 +236,10 @@ h3 {
   line-height: 1;
 }
 
+/* ==========================================
+   ANALYTICAL PARAGRAPHS
+   ========================================== */
+
 .chart-story {
   margin: 0 0 10px;
   padding-left: 15px;
@@ -169,32 +249,33 @@ h3 {
   line-height: 1.68;
 }
 
+/* ==========================================
+   DATA SOURCES
+   ========================================== */
+
 .chart-source {
   margin: 10px 0 0;
   color: var(--muted);
-  font-size: .8rem;
+  font-size: 0.8rem;
 }
 
-footer {
-  background: var(--deep);
-  color: #d3e6e9;
-  padding: 25px 0;
-  font-size: .83rem;
-}
-
-footer p { margin: 5px 0; }
-
-/* Chart 1: interactive map */
+/* ==========================================
+   CHART 1 — INTERACTIVE MAP
+   ========================================== */
 
 .map-card {
   padding: 22px 24px 20px;
 }
 
-.map-card h3 { margin: 0 0 16px; }
+.map-card h3 {
+  margin: 0 0 16px;
+}
 
 .map-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 1fr);
+  grid-template-columns:
+    minmax(0, 1.35fr)
+    minmax(300px, 1fr);
   gap: 24px;
   align-items: stretch;
 }
@@ -205,6 +286,10 @@ footer p { margin: 5px 0; }
   flex-direction: column;
 }
 
+/* ==========================================
+   STATE FILTER BUTTONS
+   ========================================== */
+
 .state-filters {
   display: flex;
   flex-wrap: wrap;
@@ -214,7 +299,7 @@ footer p { margin: 5px 0; }
 
 .state-filter {
   font: inherit;
-  font-size: .82rem;
+  font-size: 0.82rem;
   font-weight: 700;
   line-height: 1.2;
   cursor: pointer;
@@ -223,7 +308,9 @@ footer p { margin: 5px 0; }
   border: 1px solid #c8dcda;
   border-radius: 999px;
   padding: 8px 12px;
-  transition: background .15s, border-color .15s;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
 }
 
 .state-filter:hover {
@@ -238,7 +325,7 @@ footer p { margin: 5px 0; }
 
 .state-filter.is-active {
   background: #0e5967;
-  color: #fff;
+  color: #ffffff;
   border-color: #0e5967;
 }
 
@@ -254,8 +341,12 @@ footer p { margin: 5px 0; }
 }
 
 .state-filter.is-active:not(:first-child)::before {
-  border: 1px solid #fff;
+  border: 1px solid #ffffff;
 }
+
+/* ==========================================
+   MAP RENDERING
+   ========================================== */
 
 .map-card .viz {
   width: 100%;
@@ -270,10 +361,14 @@ footer p { margin: 5px 0; }
 }
 
 .state-context {
-  font-size: .77rem;
+  font-size: 0.77rem;
   color: var(--muted);
   margin: 4px 0 0;
 }
+
+/* ==========================================
+   CHART 1 — RIGHT ANALYSIS PANEL
+   ========================================== */
 
 .map-analysis {
   display: flex;
@@ -299,7 +394,7 @@ footer p { margin: 5px 0; }
   border-left: 4px solid #117989;
   border-radius: 8px;
   line-height: 1.4;
-  font-size: .92rem;
+  font-size: 0.92rem;
   font-weight: 400;
   max-width: none;
   color: #124552;
@@ -325,12 +420,12 @@ footer p { margin: 5px 0; }
 }
 
 .map-card .chart-callout span {
-  font-size: .91rem;
+  font-size: 0.91rem;
   color: #264e57;
 }
 
 .map-card .state-detail {
-  font-size: .78rem;
+  font-size: 0.78rem;
   color: #426773;
   margin: 0 0 2px;
   line-height: 1.4;
@@ -343,7 +438,7 @@ footer p { margin: 5px 0; }
   border: 0;
   border-top: 1px solid #d5e5e0;
   max-width: none;
-  font-size: .9rem;
+  font-size: 0.9rem;
   line-height: 1.58;
   color: #294b56;
 }
@@ -352,28 +447,27 @@ footer p { margin: 5px 0; }
   margin: 11px 0 0;
 }
 
-/* Consistent single-line chapter headings */
+/* ==========================================
+   WEBSITE FOOTER
+   ========================================== */
 
-#geography .section-head,
-#history .section-head,
-#hotspots .section-head {
-  display: block;
-  margin-bottom: 20px;
+footer {
+  background: var(--deep);
+  color: #d3e6e9;
+  padding: 25px 0;
+  font-size: 0.83rem;
 }
 
-#geography h2,
-#history h2,
-#hotspots h2 {
-  font-size: clamp(1.85rem, 3.2vw, 3rem);
-  font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -.035em;
-  white-space: nowrap;
+footer p {
+  margin: 5px 0;
 }
 
-/* Responsive */
+/* ==========================================
+   RESPONSIVE DESIGN
+   ========================================== */
 
 @media (max-width: 860px) {
+
   .map-layout {
     grid-template-columns: 1fr;
     gap: 12px;
@@ -392,39 +486,58 @@ footer p { margin: 5px 0; }
   }
 
   .map-card .chart-story {
-    font-size: .95rem;
+    font-size: 0.95rem;
   }
+
 }
 
+/* Section titles may wrap on smaller screens */
+
 @media (max-width: 760px) {
-  #geography h2,
-  #history h2,
-  #hotspots h2 {
+
+  #geography .section-head h2,
+  #history .section-head h2,
+  #hotspots .section-head h2 {
     font-size: clamp(1.45rem, 5vw, 2rem);
     white-space: normal;
   }
+
 }
 
 @media (max-width: 700px) {
-  header { padding: 48px 0; }
 
-  section { padding: 38px 0 28px; }
+  header {
+    padding: 48px 0;
+  }
+
+  section {
+    padding: 38px 0 28px;
+  }
 
   .section-head {
     grid-template-columns: 1fr;
     gap: 10px;
   }
 
-  .chart-card { padding: 16px; }
+  .chart-card {
+    padding: 16px;
+  }
 
-  .wrap { padding: 0 16px; }
+  .wrap {
+    padding: 0 16px;
+  }
+
 }
 
 @media (max-width: 480px) {
-  .map-card { padding: 16px; }
+
+  .map-card {
+    padding: 16px;
+  }
 
   .state-filter {
     padding: 7px 10px;
-    font-size: .76rem;
+    font-size: 0.76rem;
   }
+
 }
