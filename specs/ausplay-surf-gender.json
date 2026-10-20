@@ -1,9 +1,7 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Marimekko (mosaic) chart of Australian adult surfing participation by state or territory and gender: widths encode combined male/female counts, vertical subdivisions encode within-state gender shares. Northern Territory omitted because its female subgroup is reported as zero.",
+  "description": "Marimekko chart of Australian adult surfing participation by gender, with a complete state and territory gender-share reference.",
   "background": "#ffffff",
-  "width": "container",
-  "height": 385,
   "data": {
     "url": "data/ausplay-surf-mosaic-2025.csv",
     "format": {
@@ -12,8 +10,8 @@
   },
   "usermeta": {
     "title": "Who Makes Up Australia’s Surfing Community?",
-    "annotation": "Victoria has a higher estimated female share (43.2%) than WA (34.7%), despite WA’s substantial surfing population.",
-    "analysis": "The mosaic chart combines two comparisons: column width represents each state or territory’s combined published male and female surfing estimates, while the height of each coloured segment represents that gender’s share within the state. NSW accounts for the widest column, with 117,953 estimated male and female participants combined. However, the mix is not uniform: women represent about 43.2% of Victoria’s combined estimates, compared with 34.7% in WA. The narrow Tasmania and ACT columns are retained to preserve proportional widths; their detailed values are available by hovering. The Northern Territory is excluded because its published female subgroup estimate is zero, not proof that no women surf there. Subgroup sums may differ slightly from separately published state totals because they are survey estimates.",
+    "annotation": "ACT has the closest estimated gender balance (46.9% women), while WA has the lowest female share (34.7%) — a 12.2 percentage-point difference.",
+    "analysis": "Column width represents each state or territory’s share of the combined published male and female surfing estimates, while the height of each coloured segment shows the gender composition within that jurisdiction. NSW occupies the widest column with 117,953 estimated participants, but women account for only 36.5% of that total. The ACT has the highest estimated female share among the seven jurisdictions shown (46.9%), compared with WA’s 34.7%, a difference of 12.2 percentage points. This illustrates how the size of a surfing community and its gender composition reveal different patterns. The gender-share reference beneath the mosaic makes the smaller Tasmanian and ACT categories readable without distorting their proportional widths. Figures are residence-based survey estimates, and differences involving small subgroups warrant caution. NT is excluded because its published female subgroup estimate is zero, which does not establish that no women surf there.",
     "sources": [
       {
         "label": "Australian Sports Commission · AusPlay 2025 state and territory tables (30 Apr 2026)",
@@ -21,90 +19,271 @@
       }
     ]
   },
-  "layer": [
+  "spacing": 18,
+  "vconcat": [
     {
+      "width": "container",
+      "height": 320,
+      "layer": [
+        {
+          "mark": {
+            "type": "rect",
+            "stroke": "#ffffff",
+            "strokeWidth": 1.6
+          },
+          "encoding": {
+            "x": {
+              "field": "x0",
+              "type": "quantitative",
+              "scale": {
+                "domain": [0, 100],
+                "nice": false
+              },
+              "axis": {
+                "title": "States/Territories (column width represents total participants)",
+                "values": [
+                  18.8680121,
+                  47.9396879,
+                  67.5302488,
+                  83.8748584,
+                  94.0618861
+                ],
+                "labelExpr": "datum.value < 30 ? 'NSW' : datum.value < 60 ? 'QLD' : datum.value < 75 ? 'VIC' : datum.value < 90 ? 'WA' : 'SA'",
+                "labelFontSize": 13,
+                "labelFontWeight": "bold",
+                "labelPadding": 9,
+                "titleFontSize": 13,
+                "titlePadding": 16,
+                "ticks": false,
+                "domain": false,
+                "grid": false
+              }
+            },
+            "x2": {
+              "field": "x1"
+            },
+            "y": {
+              "field": "y0",
+              "type": "quantitative",
+              "scale": {
+                "domain": [0, 100],
+                "nice": false
+              },
+              "axis": {
+                "title": "Gender share within state (%)",
+                "values": [0, 20, 40, 60, 80, 100],
+                "labelExpr": "datum.value + '%'",
+                "grid": true,
+                "gridColor": "#e4eeec",
+                "labelFontSize": 12,
+                "titleFontSize": 13,
+                "titlePadding": 13
+              }
+            },
+            "y2": {
+              "field": "y1"
+            },
+            "color": {
+              "field": "sex",
+              "type": "nominal",
+              "scale": {
+                "domain": ["Men", "Women"],
+                "range": ["#0072B2", "#CC79A7"]
+              },
+              "legend": {
+                "title": "Gender",
+                "orient": "top",
+                "direction": "horizontal",
+                "symbolType": "square",
+                "symbolSize": 200,
+                "labelFontSize": 14,
+                "titleFontSize": 14,
+                "titleFontWeight": "bold",
+                "columnPadding": 24,
+                "offset": 12
+              }
+            },
+            "tooltip": [
+              {
+                "field": "state",
+                "type": "nominal",
+                "title": "State / territory"
+              },
+              {
+                "field": "sex",
+                "type": "nominal",
+                "title": "Gender"
+              },
+              {
+                "field": "participants",
+                "type": "quantitative",
+                "title": "Estimated participants",
+                "format": ",.0f"
+              },
+              {
+                "field": "gender_share_pct",
+                "type": "quantitative",
+                "title": "Share within state (%)",
+                "format": ".1f"
+              },
+              {
+                "field": "state_total",
+                "type": "quantitative",
+                "title": "Combined male/female total",
+                "format": ",.0f"
+              },
+              {
+                "field": "national_share_pct",
+                "type": "quantitative",
+                "title": "Share of included total (%)",
+                "format": ".1f"
+              }
+            ]
+          }
+        },
+        {
+          "transform": [
+            {
+              "filter": "datum.sex === 'Women' && datum.state !== 'TAS' && datum.state !== 'ACT'"
+            }
+          ],
+          "mark": {
+            "type": "text",
+            "fontSize": 12,
+            "fontWeight": "bold",
+            "color": "#173946",
+            "align": "center",
+            "baseline": "middle"
+          },
+          "encoding": {
+            "x": {
+              "field": "xmid",
+              "type": "quantitative",
+              "scale": {
+                "domain": [0, 100]
+              },
+              "axis": null
+            },
+            "y": {
+              "field": "ymid",
+              "type": "quantitative",
+              "scale": {
+                "domain": [0, 100]
+              },
+              "axis": null
+            },
+            "text": {
+              "field": "gender_label",
+              "type": "nominal"
+            }
+          }
+        },
+        {
+          "transform": [
+            {
+              "filter": "datum.sex === 'Men' && datum.state !== 'TAS' && datum.state !== 'ACT'"
+            }
+          ],
+          "mark": {
+            "type": "text",
+            "fontSize": 12,
+            "fontWeight": "bold",
+            "color": "#ffffff",
+            "align": "center",
+            "baseline": "middle"
+          },
+          "encoding": {
+            "x": {
+              "field": "xmid",
+              "type": "quantitative",
+              "scale": {
+                "domain": [0, 100]
+              },
+              "axis": null
+            },
+            "y": {
+              "field": "ymid",
+              "type": "quantitative",
+              "scale": {
+                "domain": [0, 100]
+              },
+              "axis": null
+            },
+            "text": {
+              "field": "gender_label",
+              "type": "nominal"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "title": {
+        "text": "Gender-share comparison — all States/Territories",
+        "anchor": "start",
+        "fontSize": 14,
+        "fontWeight": "bold",
+        "color": "#244654",
+        "offset": 10
+      },
+      "width": "container",
+      "height": 76,
       "mark": {
-        "type": "rect",
-        "stroke": "#ffffff",
-        "strokeWidth": 1.5
+        "type": "text",
+        "fontSize": 13,
+        "fontWeight": "bold"
       },
       "encoding": {
         "x": {
-          "field": "x0",
-          "type": "quantitative",
-          "scale": {
-            "domain": [0, 100],
-            "nice": false
-          },
+          "field": "state",
+          "type": "nominal",
+          "sort": [
+            "NSW",
+            "QLD",
+            "VIC",
+            "WA",
+            "SA",
+            "TAS",
+            "ACT"
+          ],
           "axis": {
-            "title": "States/Territories (column width = estimated surfing participants)",
-            "titleFontSize": 13,
-            "titlePadding": 17,
-            "labelFontSize": 12,
+            "orient": "top",
+            "title": null,
+            "labelAngle": 0,
+            "labelFontSize": 13,
             "labelFontWeight": "bold",
-            "labelPadding": 9,
-            "values": [
-              18.86801,
-              47.93969,
-              67.53025,
-              83.87486,
-              94.06189
-            ],
-            "labelExpr": "datum.value < 30 ? 'NSW' : datum.value < 60 ? 'QLD' : datum.value < 75 ? 'VIC' : datum.value < 90 ? 'WA' : 'SA'",
+            "labelPadding": 8,
             "ticks": false,
-            "domain": false,
-            "grid": false
+            "domain": false
           }
-        },
-        "x2": {
-          "field": "x1"
         },
         "y": {
-          "field": "y0",
-          "type": "quantitative",
-          "scale": {
-            "domain": [0, 100],
-            "nice": false
-          },
+          "field": "sex",
+          "type": "nominal",
+          "sort": [
+            "Women",
+            "Men"
+          ],
           "axis": {
-            "title": "Within-state gender share (%)",
-            "values": [0, 20, 40, 60, 80, 100],
-            "labelExpr": "datum.value + '%'",
-            "grid": true,
-            "gridColor": "#e4eeec",
+            "title": null,
             "labelFontSize": 12,
-            "titleFontSize": 13,
-            "titlePadding": 14
+            "labelPadding": 9,
+            "ticks": false,
+            "domain": false
           }
         },
-        "y2": {
-          "field": "y1"
+        "text": {
+          "field": "gender_label",
+          "type": "nominal"
         },
         "color": {
           "field": "sex",
           "type": "nominal",
           "scale": {
-            "domain": [
-              "Men",
-              "Women"
-            ],
-            "range": [
-              "#0072B2",
-              "#CC79A7"
-            ]
+            "domain": ["Men", "Women"],
+            "range": ["#0072B2", "#B05285"]
           },
-          "legend": {
-            "title": "Gender",
-            "orient": "top",
-            "direction": "horizontal",
-            "symbolType": "square",
-            "symbolSize": 200,
-            "labelFontSize": 14,
-            "titleFontSize": 14,
-            "titleFontWeight": "bold",
-            "columnPadding": 24,
-            "offset": 12
-          }
+          "legend": null
         },
         "tooltip": [
           {
@@ -118,123 +297,43 @@
             "title": "Gender"
           },
           {
+            "field": "gender_share_pct",
+            "type": "quantitative",
+            "title": "Share (%)",
+            "format": ".1f"
+          },
+          {
             "field": "participants",
             "type": "quantitative",
             "title": "Estimated participants",
             "format": ",.0f"
-          },
-          {
-            "field": "gender_share_pct",
-            "type": "quantitative",
-            "title": "Share within state (%)",
-            "format": ".1f"
-          },
-          {
-            "field": "state_total",
-            "type": "quantitative",
-            "title": "Combined male/female total",
-            "format": ",.0f"
-          },
-          {
-            "field": "national_share_pct",
-            "type": "quantitative",
-            "title": "Share of included total (%)",
-            "format": ".1f"
           }
         ]
       }
-    },
-    {
-      "transform": [
-        {
-          "filter": "datum.sex === 'Women' && datum.state !== 'TAS' && datum.state !== 'ACT'"
-        }
-      ],
-      "mark": {
-        "type": "text",
-        "fontSize": 12,
-        "fontWeight": "bold",
-        "color": "#173946",
-        "baseline": "middle",
-        "align": "center"
-      },
-      "encoding": {
-        "x": {
-          "field": "xmid",
-          "type": "quantitative",
-          "scale": {
-            "domain": [0, 100]
-          },
-          "axis": null
-        },
-        "y": {
-          "field": "ymid",
-          "type": "quantitative",
-          "scale": {
-            "domain": [0, 100],
-            "nice": false
-          },
-          "axis": null
-        },
-        "text": {
-          "field": "gender_label",
-          "type": "nominal"
-        }
-      }
-    },
-    {
-      "transform": [
-        {
-          "filter": "datum.sex === 'Men' && datum.state !== 'TAS' && datum.state !== 'ACT'"
-        }
-      ],
-      "mark": {
-        "type": "text",
-        "fontSize": 12,
-        "fontWeight": "bold",
-        "color": "#ffffff",
-        "baseline": "middle",
-        "align": "center"
-      },
-      "encoding": {
-        "x": {
-          "field": "xmid",
-          "type": "quantitative",
-          "scale": {
-            "domain": [0, 100]
-          },
-          "axis": null
-        },
-        "y": {
-          "field": "ymid",
-          "type": "quantitative",
-          "scale": {
-            "domain": [0, 100],
-            "nice": false
-          },
-          "axis": null
-        },
-        "text": {
-          "field": "gender_label",
-          "type": "nominal"
-        }
-      }
     }
   ],
+  "resolve": {
+    "scale": {
+      "x": "independent",
+      "y": "independent",
+      "color": "independent"
+    }
+  },
   "config": {
     "view": {
       "stroke": null
     },
     "axis": {
       "labelColor": "#31535f",
-      "titleColor": "#31535f"
+      "titleColor": "#31535f",
+      "gridColor": "#e4eeec"
     },
     "font": "Arial"
   },
   "padding": {
-    "left": 10,
-    "right": 15,
+    "left": 12,
+    "right": 12,
     "top": 8,
-    "bottom": 15
+    "bottom": 12
   }
 }
