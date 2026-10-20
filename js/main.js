@@ -1,249 +1,208 @@
-/* Load each chart and its analysis from its Vega-Lite JSON file */
-const root = new URL("../", import.meta.url);
+// Each chart's Vega-Lite JSON stores its chart and explanatory text.
+const root = new URL('../', import.meta.url);
 
-for (const card of document.querySelectorAll("[data-chart]")) {
+for (const card of document.querySelectorAll('[data-chart]')) {
   const id = card.dataset.chart;
 
   try {
-    // Load the chart JSON
     const response = await fetch(new URL(`specs/${id}.json`, root));
-
-    // Hide charts that have not been created yet
     if (response.status === 404) continue;
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
     const spec = await response.json();
     const info = spec.usermeta || {};
 
-    // Ensure the chart uses Vega-Lite 6
-    if (!spec.$schema?.includes("vega-lite/v6")) {
-      throw new Error("Expected Vega-Lite 6");
+    if (!spec.$schema?.includes('vega-lite/v6')) {
+      throw new Error('Expected Vega-Lite 6');
     }
 
-    // Chart heading
-    card.querySelector("h3").textContent =
-      info.title || id.replaceAll("-", " ");
+    const title = card.querySelector('h3');
+    const viz = card.querySelector('.viz');
+    const callout = card.querySelector('.chart-callout');
+    const story = card.querySelector('.chart-story');
+    const source = card.querySelector('.chart-source');
 
-    const viz = card.querySelector(".viz");
-    const callout = card.querySelector(".chart-callout");
-    const story = card.querySelector(".chart-story");
-    const source = card.querySelector(".chart-source");
+    title.textContent = info.title || id.replaceAll('-', ' ');
 
     // Source attribution
     if (info.source?.url && info.source?.label) {
-      const link = document.createElement("a");
-
+      const link = document.createElement('a');
       link.href = info.source.url;
       link.textContent = info.source.label;
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-
-      source.replaceChildren("Source: ", link);
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+      source.replaceChildren('Source: ', link);
     }
-
     source.hidden = !source.childNodes.length;
 
-    // Vega-Lite rendering settings
     const options = {
       actions: false,
-      renderer: "svg",
-      loader: vega.loader({
-        baseURL: root.href
-      })
+      renderer: 'svg',
+      loader: vega.loader({ baseURL: root.href })
     };
 
-    /* CHART 1: INTERACTIVE SURFING RESERVES MAP */
+    // Both geographic charts use a two-column layout.
+    if (id === 'map-reserves' || id === 'map-bins') {
+      card.classList.add('map-card');
 
-    if (
-      id === "map-reserves" &&
-      info.interpretations &&
-      info.stateOrder
-    ) {
-      card.classList.add("map-card");
+      const layout = document.createElement('div');
+      layout.className = 'map-layout';
 
-      // Create the two-column layout
-      const layout = document.createElement("div");
-      layout.className = "map-layout";
+      const mapSide = document.createElement('div');
+      mapSide.className = 'map-side';
 
-      const mapSide = document.createElement("div");
-      mapSide.className = "map-side";
+      const analysisSide = document.createElement('aside');
+      analysisSide.className = 'map-analysis';
 
-      const analysisSide = document.createElement("aside");
-      analysisSide.className = "map-analysis";
-      analysisSide.setAttribute("aria-live", "polite");
-
-      // State filter buttons
-      const filters = document.createElement("div");
-      filters.className = "state-filters";
-
-      filters.setAttribute("role", "group");
-      filters.setAttribute(
-        "aria-label",
-        "Filter surfing reserves by state"
-      );
-
-      // Supporting map information
-      const context = document.createElement("p");
-      context.className = "state-context";
-
-      // State-specific figures
-      const detail = document.createElement("p");
-      detail.className = "state-detail";
-
-      // Left side: filters and map
-      mapSide.append(filters, viz, context);
-
-      // Right side: annotation and analysis
-      analysisSide.append(callout, detail, story);
-
+      mapSide.append(viz);
+      analysisSide.append(callout, story);
       layout.append(mapSide, analysisSide);
       card.insertBefore(layout, source);
 
-      // Consistent state colours
-      const palette = {
-        NSW: "#117989",
-        QLD: "#E3A049",
-        VIC: "#7D6BA3",
-        SA: "#B96A75",
-        WA: "#568C69"
-      };
+      // Chart 1: Interactive state filters
+      if (
+        id === 'map-reserves' &&
+        info.interpretations &&
+        info.stateOrder
+      ) {
+        const filters = document.createElement('div');
+        filters.className = 'state-filters';
+        filters.setAttribute('role', 'group');
+        filters.setAttribute(
+          'aria-label',
+          'Filter surfing reserves by state'
+        );
+        mapSide.prepend(filters);
 
-      const buttons = [];
-      let latestRequest = 0;
+        const context = document.createElement('p');
+        context.className = 'state-context';
+        mapSide.append(context);
 
-      // Update the map and analysis when a state is selected
-      async function selectState(state) {
-        const request = ++latestRequest;
+        const detail = document.createElement('p');
+        detail.className = 'state-detail';
+        analysisSide.insertBefore(detail, story);
 
-        // Update active filter button
-        for (const button of buttons) {
-          const active = button.dataset.state === state;
+        const palette = {
+          NSW: '#117989',
+          QLD: '#E3A049',
+          VIC: '#7D6BA3',
+          SA: '#B96A75',
+          WA: '#568C69'
+        };
 
-          button.classList.toggle("is-active", active);
-          button.setAttribute("aria-pressed", String(active));
-        }
+        const buttons = [];
+        let activeRequest = 0;
 
-        // Get the selected state's interpretation
-        const result = info.interpretations[state];
+        async function selectState(state) {
+          const result = info.interpretations[state];
+          if (!result) return;
 
-        if (!result) return;
+          const request = ++activeRequest;
 
-        const target = info.annotationTargets?.[state];
+          // Highlight the selected filter.
+          for (const button of buttons) {
+            const active = button.dataset.state === state;
+            button.classList.toggle('is-active', active);
+            button.setAttribute('aria-pressed', String(active));
+          }
 
-        // Display the short annotation on the right
-        callout.replaceChildren();
+          // Annotation and interpretation come from Chart 1 JSON.
+          const annotationTitle = document.createElement('strong');
+          annotationTitle.textContent =
+            info.annotationTargets?.[state]?.name || 'Map finding';
 
-        const annotationTitle = document.createElement("strong");
-        annotationTitle.textContent =
-          target?.name || "Map finding";
+          const annotationText = document.createElement('span');
+          annotationText.textContent = result.callout;
 
-        const annotationText = document.createElement("span");
-        annotationText.textContent = result.callout;
+          callout.replaceChildren(annotationTitle, annotationText);
+          callout.hidden = false;
 
-        callout.append(annotationTitle, annotationText);
+          detail.textContent = result.detail || '';
+          story.textContent = result.analysis || '';
+          story.hidden = !result.analysis;
 
-        // Display the separate analytical paragraph
-        story.textContent = result.analysis;
-        detail.textContent = result.detail || "";
-
-        callout.hidden = false;
-        story.hidden = false;
-        detail.hidden = false;
-
-        // Update the map context
-        context.textContent =
-          state === "All"
-            ? "All 19 nationally listed reserves · equal-sized location markers"
+          context.textContent = state === 'All'
+            ? 'All 19 nationally listed reserves · equal-sized location markers'
             : `${state} only · national map extent unchanged`;
 
-        // Copy the original chart specification
-        const selected = structuredClone(spec);
+          // Filter only the location markers, not the base map.
+          const selectedSpec = structuredClone(spec);
 
-        // Filter the reserve markers by state
-        if (state !== "All") {
-          selected.layer[1].transform = [
-            ...(selected.layer[1].transform || []),
-            {
-              filter: {
-                field: "state",
-                equal: state
+          if (state !== 'All') {
+            selectedSpec.layer[1].transform = [
+              ...(selectedSpec.layer[1].transform || []),
+              {
+                filter: {
+                  field: 'state',
+                  equal: state
+                }
               }
-            }
-          ];
+            ];
+          }
+
+          // No dashed leader lines or outlined circles.
+          try {
+            if (request !== activeRequest) return;
+            await vegaEmbed(viz, selectedSpec, options);
+          } catch (error) {
+            viz.textContent =
+              `Map could not load: ${error.message}`;
+          }
         }
 
-        // No dashed lines or outlined circles are added.
-        // Only the Australia map and reserve markers remain.
+        // Create the six filter buttons.
+        for (const state of info.stateOrder) {
+          const button = document.createElement('button');
 
-        try {
-          if (request !== latestRequest) return;
+          button.type = 'button';
+          button.dataset.state = state;
+          button.className = 'state-filter';
+          button.textContent =
+            state === 'All' ? 'All states' : state;
 
-          await vegaEmbed(viz, selected, options);
-        } catch (error) {
-          console.error("Could not render state map:", error);
+          if (palette[state]) {
+            button.style.setProperty(
+              '--state-color',
+              palette[state]
+            );
+          }
 
-          viz.textContent =
-            `Map could not load: ${error.message}`;
+          button.addEventListener('click', () => selectState(state));
+          filters.append(button);
+          buttons.push(button);
         }
+
+        card.hidden = false;
+        await selectState(info.defaultState || 'All');
+
+      } else {
+        // Chart 2: Geographic bin map
+        callout.textContent = info.annotation || '';
+        callout.hidden = !info.annotation;
+
+        story.textContent = info.analysis || '';
+        story.hidden = !info.analysis;
+
+        await vegaEmbed(viz, spec, options);
+        card.hidden = false;
       }
-
-      // Create state filter buttons
-      for (const state of info.stateOrder) {
-        const button = document.createElement("button");
-
-        button.type = "button";
-        button.dataset.state = state;
-        button.className = "state-filter";
-
-        if (palette[state]) {
-          button.style.setProperty(
-            "--state-color",
-            palette[state]
-          );
-        }
-
-        button.textContent =
-          state === "All" ? "All states" : state;
-
-        button.addEventListener("click", () => {
-          selectState(state);
-        });
-
-        filters.append(button);
-        buttons.push(button);
-      }
-
-      // Display Chart 1
-      card.hidden = false;
-
-      // Show all states by default
-      await selectState(info.defaultState || "All");
 
     } else {
-
-      /* ALL OTHER CHARTS */
-
-      // Chart-specific annotation from JSON
-      callout.textContent = info.annotation || "";
+      // Other charts retain the standard loader.
+      callout.textContent = info.annotation || '';
       callout.hidden = !info.annotation;
 
-      // Chart-specific analysis from JSON
-      story.textContent = info.analysis || "";
+      story.textContent = info.analysis || '';
       story.hidden = !info.analysis;
 
-      // Render the chart
       await vegaEmbed(viz, spec, options);
-
       card.hidden = false;
     }
 
   } catch (error) {
     console.error(`Could not render ${id}:`, error);
 
-    card.querySelector(".viz").textContent =
+    card.querySelector('.viz').textContent =
       `Chart could not load: ${error.message}`;
 
     card.hidden = false;
