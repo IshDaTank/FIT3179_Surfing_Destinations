@@ -1,22 +1,25 @@
 
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Geographic bin map of 19 Australian National Surfing Reserves, grouped into fixed 2-degree by 2-degree cells; counts are not coastline-normalised.",
+  "description": "A geographic bin map showing the number of Australia's 19 National Surfing Reserves within 2-degree longitude by 2-degree latitude cells.",
   "usermeta": {
     "title": "Where Do Recognised Surfing Reserves Cluster?",
-    "annotation": "Six reserves fall within the Sydney–Central Coast 2° cell: the largest cluster, accounting for 32% of all 19 listings.",
-    "analysis": "Grouping the 19 National Surfing Reserves into fixed 2° longitude × 2° latitude grid cells produces ten occupied cells. The strongest concentration is the Sydney–Central Coast cell (150°–152°E; 34°–32°S), containing six reserves: Maroubra, Bondi, North Narrabeen, Manly–Freshwater, Merewether and Norah Head. They represent 32% of all listed reserves. Another cell near the NSW–Queensland border groups three sites—Lennox Head, Angourie and Gold Coast—while Margaret River and Yallingup share a cell in southwest WA. Other reserves, including Kalbarri, Noosa and Phillip Island, lie in separate cells. This highlights the concentration of formal heritage recognition along parts of the east coast, alongside isolated locations elsewhere. The cells are equal in degrees rather than kilometres squared; they may include ocean and differ in coastline length. The chart therefore counts listed reserves per cell, not surf quality, surfer numbers or a coastline-normalised density.",
+    "annotation": "Six reserves occupy the Sydney–Central Coast cell, accounting for 32% of the 19 registered National Surfing Reserves.",
+    "analysis": "Australia's 19 listed National Surfing Reserves occupy ten geographic grid cells of 2° longitude × 2° latitude. The largest concentration is between 150°–152°E and 34°–32°S, where six reserves—Maroubra, Bondi, North Narrabeen, Manly–Freshwater, Merewether and Norah Head—account for approximately 32% of the national register. A second cluster near the NSW–Queensland border includes Gold Coast, Lennox Head and Angourie, while Margaret River and Yallingup share a cell in southwest Western Australia. Other reserves are more geographically isolated, demonstrating that recognised surfing heritage extends beyond the main eastern coastal clusters. This distribution provides evidence of where formal recognition is concentrated, but does not establish which destinations have the best waves or attract the most visitors. Because the bins are equal in degrees rather than physical area or coastline length, their counts should not be interpreted as a normalised measure of surfing activity.",
     "source": {
-      "label": "National Surfing Reserves — official register (19 localities; calculated 2° grid)",
+      "label": "National Surfing Reserves — official register (19 locations, calculated 2° grid)",
       "url": "https://surfingreserves.org.au/national-surfing-reserves/"
     }
   },
-  "width": "container",
+  "width": 500,
   "height": 350,
-  "padding": 8,
+  "padding": 5,
   "background": "#ffffff",
   "projection": {
-    "type": "mercator"
+    "type": "mercator",
+    "center": [134, -26],
+    "scale": 440,
+    "translate": [250, 175]
   },
   "layer": [
     {
@@ -29,14 +32,14 @@
       },
       "transform": [
         {
-          "filter": "datum.id == 36 || datum.id == \"036\""
+          "filter": "datum.id == 36 || datum.id == '036'"
         }
       ],
       "mark": {
         "type": "geoshape",
         "fill": "#e8f1ee",
         "stroke": "#97b6b6",
-        "strokeWidth": 1
+        "strokeWidth": 1.1
       }
     },
     {
@@ -50,10 +53,14 @@
       "mark": {
         "type": "geoshape",
         "stroke": "#ffffff",
-        "strokeWidth": 1.2,
-        "opacity": 0.92
+        "strokeWidth": 1.4,
+        "opacity": 0.9
       },
       "encoding": {
+        "shape": {
+          "field": "geometry",
+          "type": "geojson"
+        },
         "color": {
           "field": "properties.count",
           "type": "quantitative",
@@ -61,25 +68,30 @@
           "scale": {
             "type": "threshold",
             "domain": [2, 4],
-            "range": ["#9accc6", "#318d96", "#075668"]
+            "range": [
+              "#9accc6",
+              "#318d96",
+              "#075668"
+            ]
           },
           "legend": {
             "orient": "bottom",
             "direction": "horizontal",
+            "titleFontSize": 11,
             "labelFontSize": 11,
-            "titleFontSize": 11
+            "gradientLength": 180
           }
         },
         "tooltip": [
           {
             "field": "properties.cell",
             "type": "nominal",
-            "title": "Grid cell"
+            "title": "Geographic cell"
           },
           {
             "field": "properties.count",
             "type": "quantitative",
-            "title": "Reserves"
+            "title": "Number of reserves"
           },
           {
             "field": "properties.locations",
@@ -92,26 +104,30 @@
     {
       "data": {
         "values": [
-          {"lon": 151, "lat": -33, "label": "6"}
+          {
+            "longitude": 151,
+            "latitude": -33,
+            "count": "6"
+          }
         ]
       },
       "mark": {
         "type": "text",
-        "fontWeight": "bold",
+        "color": "#ffffff",
         "fontSize": 14,
-        "color": "#ffffff"
+        "fontWeight": "bold"
       },
       "encoding": {
         "longitude": {
-          "field": "lon",
+          "field": "longitude",
           "type": "quantitative"
         },
         "latitude": {
-          "field": "lat",
+          "field": "latitude",
           "type": "quantitative"
         },
         "text": {
-          "field": "label",
+          "field": "count",
           "type": "nominal"
         }
       }
