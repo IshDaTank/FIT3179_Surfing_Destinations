@@ -1,20 +1,22 @@
-
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Mirrored bar chart comparing estimated adult women and men participating in surfing across Australian states and territories in 2025.",
+  "description": "Mirrored bar chart showing estimated adult surfing participants by gender across seven Australian states and territories, using AusPlay 2025 data.",
   "background": "#ffffff",
   "width": "container",
-  "height": 410,
+  "height": 415,
   "data": {
-    "url": "data/ausplay-surf-gender-2025.csv"
+    "url": "data/ausplay-surf-gender-2025.csv",
+    "format": {
+      "type": "csv"
+    }
   },
   "usermeta": {
     "title": "Who Surfs in Australia?",
-    "annotation": "NSW leads both groups, with 74,892 estimated male and 43,061 estimated female adult surfing participants.",
-    "analysis": "Men have higher estimated adult surfing participation counts than women in all seven jurisdictions shown. NSW records the highest numbers for both groups, although its larger population contributes to this difference. The relative gender composition provides another perspective: women represent approximately 43% of Victoria's combined male and female estimates, compared with approximately 35% in Western Australia. This suggests that surfing participation differs not only in scale but also in demographic composition across Australia. These estimates measure people aged 15+ who surfed at least once in 2025, rather than their surfing frequency or visits to specific beaches. The Northern Territory is excluded because its published female subgroup estimate is zero and should not be interpreted as evidence that no women surf there.",
+    "annotation": "NSW has the largest estimated surfing population among both men (74,892) and women (43,061).",
+    "analysis": "Men outnumber women among estimated adult surfing participants in all seven jurisdictions shown. NSW leads both groups, reflecting its substantial surfing population, but absolute numbers only tell part of the story. Women account for approximately 43% of Victoria's combined male and female estimates, compared with about 35% in Western Australia, suggesting differences in the demographic composition of surfing participation across states. This distinction is important because a large surfing population does not necessarily imply an equally broad participation base across demographic groups. Figures represent residents aged 15 and over who surfed at least once during 2025, not surfing frequency or attendance at individual beaches. The Northern Territory is omitted because its published female subgroup estimate is zero; this should not be interpreted as evidence that no women surf there. Small subgroup estimates should be interpreted cautiously.",
     "sources": [
       {
-        "label": "Australian Sports Commission · AusPlay 2025, state and territory tables (30 Apr 2026)",
+        "label": "Australian Sports Commission · AusPlay 2025 state and territory data tables (released 30 April 2026)",
         "url": "https://www.ausport.gov.au/clearinghouse/research/ausplay/results"
       }
     ]
@@ -52,10 +54,11 @@
       "type": "quantitative",
       "scale": {
         "domain": [
-          -82000,
-          82000
+          -85000,
+          85000
         ],
-        "nice": false
+        "nice": false,
+        "zero": true
       },
       "axis": {
         "title": "Estimated adult surfing participants (15+), 2025",
@@ -72,27 +75,33 @@
           80000
         ],
         "grid": true,
+        "gridColor": "#e4eeec",
         "labelFontSize": 12,
         "titleFontSize": 13,
-        "labelPadding": 8
+        "labelPadding": 8,
+        "titlePadding": 16
       }
     },
     "tooltip": [
       {
         "field": "state",
+        "type": "ordinal",
         "title": "State / territory"
       },
       {
         "field": "sex",
+        "type": "nominal",
         "title": "Gender"
       },
       {
         "field": "estimated_participants",
+        "type": "quantitative",
         "title": "Estimated participants",
         "format": ",.0f"
       },
       {
         "field": "year",
+        "type": "ordinal",
         "title": "Year"
       }
     ]
@@ -101,8 +110,8 @@
     {
       "mark": {
         "type": "bar",
-        "height": 23,
-        "cornerRadius": 3
+        "height": 25,
+        "cornerRadiusEnd": 3
       },
       "encoding": {
         "x2": {
@@ -126,12 +135,33 @@
             "orient": "top",
             "direction": "horizontal",
             "labelFontSize": 14,
+            "labelFontWeight": "bold",
             "symbolSize": 220,
             "symbolType": "square",
             "labelPadding": 9,
             "columnPadding": 35,
-            "offset": 16
+            "offset": 18
           }
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "position": 0
+          }
+        ]
+      },
+      "mark": {
+        "type": "rule",
+        "stroke": "#80999e",
+        "strokeWidth": 1.2,
+        "opacity": 0.8
+      },
+      "encoding": {
+        "x": {
+          "datum": 0
         }
       }
     },
@@ -144,8 +174,8 @@
       "mark": {
         "type": "text",
         "align": "right",
-        "dx": -9,
         "baseline": "middle",
+        "dx": -10,
         "fontSize": 13,
         "fontWeight": "bold",
         "color": "#244654"
@@ -167,8 +197,8 @@
       "mark": {
         "type": "text",
         "align": "left",
-        "dx": 9,
         "baseline": "middle",
+        "dx": 10,
         "fontSize": 13,
         "fontWeight": "bold",
         "color": "#244654"
@@ -191,15 +221,15 @@
       "titleColor": "#31535f",
       "gridColor": "#e4eeec"
     },
+    "font": "Arial",
     "text": {
       "font": "Arial"
-    },
-    "font": "Arial"
+    }
   },
   "padding": {
-    "left": 6,
-    "right": 28,
-    "top": 6,
-    "bottom": 12
+    "left": 10,
+    "right": 35,
+    "top": 10,
+    "bottom": 16
   }
 }
