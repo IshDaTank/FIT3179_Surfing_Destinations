@@ -4,8 +4,10 @@ for (const card of document.querySelectorAll("[data-chart]")) {
   const id = card.dataset.chart;
 
   try {
-    // Load each chart specification.
-    const response = await fetch(new URL(`specs/${id}.json`, root));
+    // Load the chart JSON.
+    const response = await fetch(
+      new URL(`specs/${id}.json`, root)
+    );
 
     if (response.status === 404) continue;
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -25,45 +27,61 @@ for (const card of document.querySelectorAll("[data-chart]")) {
 
     title.textContent = info.title || id.replaceAll("-", " ");
 
-    // Create the source link.
-    if (info.source?.url && info.source?.label) {
+    // Sources from the chart's JSON.
+    const sources = info.sources || (
+      info.source ? [info.source] : []
+    );
+
+    source.replaceChildren();
+
+    sources.forEach((item, index) => {
+      if (!item.url || !item.label) return;
+
+      if (index > 0) {
+        source.append(" · ");
+      } else {
+        source.append("Source: ");
+      }
+
       const link = document.createElement("a");
-      link.href = info.source.url;
-      link.textContent = info.source.label;
+      link.href = item.url;
+      link.textContent = item.label;
       link.target = "_blank";
       link.rel = "noopener noreferrer";
 
-      source.replaceChildren("Source: ", link);
-    }
+      source.append(link);
+    });
 
     source.hidden = !source.childNodes.length;
 
     const options = {
       actions: false,
       renderer: "svg",
-      loader: vega.loader({ baseURL: root.href })
+      loader: vega.loader({
+        baseURL: root.href
+      })
     };
 
-    // Both maps share the compact two-column layout.
+    // Charts 1 and 2 have a shared two-column layout.
     if (id === "map-reserves" || id === "map-bar-chart") {
       card.classList.add("map-card");
 
       const layout = document.createElement("div");
       layout.className = "map-layout";
 
-      const mapSide = document.createElement("div");
-      mapSide.className = "map-side";
+      const chartSide = document.createElement("div");
+      chartSide.className = "map-side";
 
       const analysisSide = document.createElement("aside");
       analysisSide.className = "map-analysis";
 
-      mapSide.append(viz);
-      analysisSide.append(callout, story);
-      layout.append(mapSide, analysisSide);
+      chartSide.append(viz);
+      analysisSide.append(story);
 
+      layout.append(chartSide, analysisSide);
       card.insertBefore(layout, source);
 
-      // Chart 1: interactive state filtering.
+      // Chart 1: state filters and changing interpretations.
       if (
         id === "map-reserves" &&
         info.interpretations &&
@@ -77,15 +95,16 @@ for (const card of document.querySelectorAll("[data-chart]")) {
           "Filter surfing reserves by state"
         );
 
-        mapSide.prepend(filters);
-
-        const context = document.createElement("p");
-        context.className = "state-context";
-        mapSide.append(context);
+        chartSide.prepend(filters);
+        analysisSide.prepend(callout);
 
         const detail = document.createElement("p");
         detail.className = "state-detail";
         analysisSide.insertBefore(detail, story);
+
+        const context = document.createElement("p");
+        context.className = "state-context";
+        chartSide.append(context);
 
         const palette = {
           NSW: "#117989",
@@ -96,36 +115,33 @@ for (const card of document.querySelectorAll("[data-chart]")) {
         };
 
         const buttons = [];
-        let activeRequest = 0;
 
         async function selectState(state) {
           const result = info.interpretations[state];
           if (!result) return;
 
-          const request = ++activeRequest;
-
+          // Update active buttons.
           for (const button of buttons) {
             const active = button.dataset.state === state;
 
             button.classList.toggle("is-active", active);
-            button.setAttribute("aria-pressed", String(active));
+            button.setAttribute(
+              "aria-pressed",
+              String(active)
+            );
           }
 
-          // State-specific annotation.
-          const annotationTitle = document.createElement("strong");
-          annotationTitle.textContent =
-            info.annotationTargets?.[state]?.name || "Map finding";
+          const heading = document.createElement("strong");
+          heading.textContent =
+            info.annotationTargets?.[state]?.name ||
+            "Map finding";
 
-          const annotationText = document.createElement("span");
-          annotationText.textContent = result.callout;
+          const finding = document.createElement("span");
+          finding.textContent = result.callout || "";
 
-          callout.replaceChildren(
-            annotationTitle,
-            annotationText
-          );
+          callout.replaceChildren(heading, finding);
           callout.hidden = false;
 
-          // Separate analytical interpretation.
           detail.textContent = result.detail || "";
           story.textContent = result.analysis || "";
           story.hidden = !result.analysis;
@@ -134,7 +150,7 @@ for (const card of document.querySelectorAll("[data-chart]")) {
             ? "All 19 nationally listed reserves · equal-sized location markers"
             : `${state} only · national map extent unchanged`;
 
-          // Keep the background map; filter only markers.
+          // Keep Australian outline and filter the markers.
           const selectedSpec = structuredClone(spec);
 
           if (state !== "All") {
@@ -150,8 +166,6 @@ for (const card of document.querySelectorAll("[data-chart]")) {
           }
 
           try {
-            if (request !== activeRequest) return;
-
             await vegaEmbed(viz, selectedSpec, options);
           } catch (error) {
             console.error(error);
@@ -160,14 +174,13 @@ for (const card of document.querySelectorAll("[data-chart]")) {
           }
         }
 
-        // State filter buttons.
+        // Create filter buttons.
         for (const state of info.stateOrder) {
           const button = document.createElement("button");
 
           button.type = "button";
           button.dataset.state = state;
           button.className = "state-filter";
-
           button.textContent =
             state === "All" ? "All states" : state;
 
@@ -190,9 +203,8 @@ for (const card of document.querySelectorAll("[data-chart]")) {
         await selectState(info.defaultState || "All");
 
       } else {
-        // Chart 2: geographic bin map.
-        callout.textContent = info.annotation || "";
-        callout.hidden = !info.annotation;
+        // Chart 2: bar chart with annotations inside the JSON.
+        callout.remove();
 
         story.textContent = info.analysis || "";
         story.hidden = !info.analysis;
@@ -202,7 +214,7 @@ for (const card of document.querySelectorAll("[data-chart]")) {
       }
 
     } else {
-      // Standard layout for future charts.
+      // Standard loading for future charts.
       callout.textContent = info.annotation || "";
       callout.hidden = !info.annotation;
 
