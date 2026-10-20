@@ -1,0 +1,205 @@
+
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Mirrored bar chart comparing estimated adult women and men participating in surfing across Australian states and territories in 2025.",
+  "background": "#ffffff",
+  "width": "container",
+  "height": 410,
+  "data": {
+    "url": "data/ausplay-surf-gender-2025.csv"
+  },
+  "usermeta": {
+    "title": "Who Surfs in Australia?",
+    "annotation": "NSW leads both groups, with 74,892 estimated male and 43,061 estimated female adult surfing participants.",
+    "analysis": "Men have higher estimated adult surfing participation counts than women in all seven jurisdictions shown. NSW records the highest numbers for both groups, although its larger population contributes to this difference. The relative gender composition provides another perspective: women represent approximately 43% of Victoria's combined male and female estimates, compared with approximately 35% in Western Australia. This suggests that surfing participation differs not only in scale but also in demographic composition across Australia. These estimates measure people aged 15+ who surfed at least once in 2025, rather than their surfing frequency or visits to specific beaches. The Northern Territory is excluded because its published female subgroup estimate is zero and should not be interpreted as evidence that no women surf there.",
+    "sources": [
+      {
+        "label": "Australian Sports Commission · AusPlay 2025, state and territory tables (30 Apr 2026)",
+        "url": "https://www.ausport.gov.au/clearinghouse/research/ausplay/results"
+      }
+    ]
+  },
+  "transform": [
+    {
+      "calculate": "datum.sex === 'Women' ? -datum.estimated_participants : datum.estimated_participants",
+      "as": "signed_value"
+    }
+  ],
+  "encoding": {
+    "y": {
+      "field": "state",
+      "type": "ordinal",
+      "sort": [
+        "NSW",
+        "QLD",
+        "VIC",
+        "WA",
+        "SA",
+        "TAS",
+        "ACT"
+      ],
+      "axis": {
+        "title": null,
+        "labelFontSize": 14,
+        "labelFontWeight": "bold",
+        "labelPadding": 12,
+        "ticks": false,
+        "domain": false
+      }
+    },
+    "x": {
+      "field": "signed_value",
+      "type": "quantitative",
+      "scale": {
+        "domain": [
+          -82000,
+          82000
+        ],
+        "nice": false
+      },
+      "axis": {
+        "title": "Estimated adult surfing participants (15+), 2025",
+        "labelExpr": "format(abs(datum.value), ',.0f')",
+        "values": [
+          -80000,
+          -60000,
+          -40000,
+          -20000,
+          0,
+          20000,
+          40000,
+          60000,
+          80000
+        ],
+        "grid": true,
+        "labelFontSize": 12,
+        "titleFontSize": 13,
+        "labelPadding": 8
+      }
+    },
+    "tooltip": [
+      {
+        "field": "state",
+        "title": "State / territory"
+      },
+      {
+        "field": "sex",
+        "title": "Gender"
+      },
+      {
+        "field": "estimated_participants",
+        "title": "Estimated participants",
+        "format": ",.0f"
+      },
+      {
+        "field": "year",
+        "title": "Year"
+      }
+    ]
+  },
+  "layer": [
+    {
+      "mark": {
+        "type": "bar",
+        "height": 23,
+        "cornerRadius": 3
+      },
+      "encoding": {
+        "x2": {
+          "datum": 0
+        },
+        "color": {
+          "field": "sex",
+          "type": "nominal",
+          "scale": {
+            "domain": [
+              "Women",
+              "Men"
+            ],
+            "range": [
+              "#CC79A7",
+              "#0072B2"
+            ]
+          },
+          "legend": {
+            "title": null,
+            "orient": "top",
+            "direction": "horizontal",
+            "labelFontSize": 14,
+            "symbolSize": 220,
+            "symbolType": "square",
+            "labelPadding": 9,
+            "columnPadding": 35,
+            "offset": 16
+          }
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.state === 'NSW' && datum.sex === 'Women'"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "right",
+        "dx": -9,
+        "baseline": "middle",
+        "fontSize": 13,
+        "fontWeight": "bold",
+        "color": "#244654"
+      },
+      "encoding": {
+        "text": {
+          "field": "estimated_participants",
+          "type": "quantitative",
+          "format": ",.0f"
+        }
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.state === 'NSW' && datum.sex === 'Men'"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "dx": 9,
+        "baseline": "middle",
+        "fontSize": 13,
+        "fontWeight": "bold",
+        "color": "#244654"
+      },
+      "encoding": {
+        "text": {
+          "field": "estimated_participants",
+          "type": "quantitative",
+          "format": ",.0f"
+        }
+      }
+    }
+  ],
+  "config": {
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelColor": "#31535f",
+      "titleColor": "#31535f",
+      "gridColor": "#e4eeec"
+    },
+    "text": {
+      "font": "Arial"
+    },
+    "font": "Arial"
+  },
+  "padding": {
+    "left": 6,
+    "right": 28,
+    "top": 6,
+    "bottom": 12
+  }
+}
