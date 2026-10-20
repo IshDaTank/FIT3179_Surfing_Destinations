@@ -1,9 +1,9 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Rank Australian states and territories by estimated adult surfing participation count or participation rate.",
+  "description": "Bubble map of estimated adult surfing participants by Australian state and territory in 2025.",
   "background": "#ffffff",
   "width": "container",
-  "height": 340,
+  "height": 500,
   "config": {
     "view": {
       "stroke": null
@@ -19,116 +19,81 @@
     "font": "Arial"
   },
   "usermeta": {
-    "title": "Which States Lead in Surfing Participation?",
-    "defaultMetric": "count",
-    "metricOptions": [
-      {
-        "value": "count",
-        "label": "Estimated participants",
-        "unit": "people"
-      },
-      {
-        "value": "rate",
-        "label": "Adult participation rate",
-        "unit": "%"
-      }
-    ],
-    "interpretations": {
-      "count": "New South Wales leads in estimated adult surfers (117,953), followed by Queensland (63,787), Victoria (58,683) and Western Australia (43,496). The ranking shows a clear concentration in the two largest east-coast surfing states, while South Australia, Tasmania, the ACT and the Northern Territory form a much smaller second tier. This structure suggests that surfing participation is nationally distributed but strongly anchored in a few major population centres.",
-      "rate": "Western Australia ranks first in adult surfing participation rate (1.76%), narrowly ahead of New South Wales (1.67%). Queensland (1.38%) and Tasmania (1.36%) follow. Once population size is taken into account, the ranking changes noticeably: WA rises from fourth by total volume to first by rate, indicating that surfing forms a particularly strong part of everyday sporting participation there."
-    },
-    "highlights": {
-      "count": "NSW leads by volume: 117,953 estimated adult surfers.",
-      "rate": "WA leads by participation rate: 1.76% of adults."
-    },
+    "title": "Where Are Australia’s Surfers?",
+    "analysis": "New South Wales contains the largest estimated adult surfing population in Australia (117,953), followed by Queensland (63,787), Victoria (58,683) and Western Australia (43,496). This pattern highlights how strongly Australia’s surfing community is concentrated in the larger eastern coastal states, while still maintaining a clear national footprint across all eight states and territories. Western Australia stands out as a substantial surfing population centre despite its greater distance from the dense east-coast corridor, reinforcing the breadth of Australia’s surfing identity.",
     "sources": [
       {
         "label": "Australian Sports Commission · AusPlay 2025, state and territory tables (30 Apr 2026)",
         "url": "https://www.ausport.gov.au/clearinghouse/research/ausplay/results"
       }
-    ]
+    ],
+    "annotation": "NSW leads Australia with 117,953 estimated adult surfing participants in 2025."
   },
-  "data": {
-    "url": "data/ausplay_surf_ranking_2025.csv"
-  },
-  "transform": [
-    {
-      "filter": {
-        "field": "metric",
-        "equal": "count"
-      }
-    }
-  ],
-  "encoding": {
-    "y": {
-      "field": "state",
-      "type": "nominal",
-      "sort": ["NSW", "QLD", "VIC", "WA", "SA", "TAS", "ACT", "NT"],
-      "axis": {
-        "title": null,
-        "labelFontSize": 14,
-        "labelFontWeight": "bold",
-        "labelPadding": 10
-      }
-    },
-    "x": {
-      "field": "value",
-      "type": "quantitative",
-      "scale": {
-        "domain": [0, 125000],
-        "nice": false,
-        "zero": true
-      },
-      "axis": {
-        "title": "Estimated adult surfing participants (people)",
-        "grid": true,
-        "labelFontSize": 12,
-        "titleFontSize": 13,
-        "values": [0, 25000, 50000, 75000, 100000, 125000],
-        "format": ",.0f"
-      }
-    },
-    "tooltip": [
-      {
-        "field": "state",
-        "title": "State / territory"
-      },
-      {
-        "field": "participants",
-        "title": "Estimated participants",
-        "format": ",.0f"
-      },
-      {
-        "field": "participation_rate_pct",
-        "title": "Participation rate (%)",
-        "format": ".2f"
-      }
-    ]
+  "projection": {
+    "type": "mercator"
   },
   "layer": [
     {
-      "mark": {
-        "type": "rule",
-        "stroke": "#9bb9bb",
-        "strokeWidth": 2.5
-      },
-      "encoding": {
-        "x": {
-          "datum": 0
-        },
-        "x2": {
-          "field": "value"
+      "data": {
+        "url": "https://vega.github.io/vega-datasets/data/world-110m.json",
+        "format": {
+          "type": "topojson",
+          "feature": "countries"
         }
+      },
+      "transform": [
+        {
+          "filter": "datum.id == 36 || datum.id == '036'"
+        }
+      ],
+      "mark": {
+        "type": "geoshape",
+        "fill": "#eef5f3",
+        "stroke": "#a6bcbc",
+        "strokeWidth": 1.35
       }
     },
     {
+      "data": {
+        "url": "data/ausplay_surf_map_2025.csv"
+      },
       "mark": {
         "type": "circle",
-        "size": 190,
-        "stroke": "white",
+        "opacity": 0.86,
+        "stroke": "#ffffff",
         "strokeWidth": 1.5
       },
       "encoding": {
+        "longitude": {
+          "field": "longitude",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "latitude",
+          "type": "quantitative"
+        },
+        "size": {
+          "field": "participants",
+          "type": "quantitative",
+          "scale": {
+            "domain": [0, 125000],
+            "range": [36, 3000]
+          },
+          "legend": {
+            "title": "Estimated surfers aged 15+",
+            "format": ",.0f",
+            "values": [0, 25000, 50000, 75000, 100000, 125000],
+            "labelFontSize": 14,
+            "titleFontSize": 14,
+            "titleFontWeight": "bold",
+            "labelPadding": 8,
+            "symbolStrokeColor": "#35626d",
+            "symbolFillColor": "#5c959e",
+            "symbolOpacity": 0.95,
+            "offset": 14,
+            "orient": "bottom-right"
+          }
+        },
         "color": {
           "field": "state",
           "type": "nominal",
@@ -138,40 +103,67 @@
           },
           "legend": {
             "title": "State / territory",
-            "orient": "top-right",
-            "direction": "vertical",
-            "symbolSize": 180,
+            "orient": "bottom",
+            "columns": 4,
+            "symbolSize": 200,
             "titleFontSize": 14,
             "titleFontWeight": "bold",
             "labelFontSize": 13,
-            "offset": 8,
-            "padding": 6
+            "columnPadding": 18,
+            "rowPadding": 12,
+            "offset": 16
           }
-        }
+        },
+        "tooltip": [
+          {
+            "field": "state",
+            "title": "State / territory"
+          },
+          {
+            "field": "participants",
+            "title": "Estimated participants aged 15+",
+            "format": ",.0f"
+          },
+          {
+            "field": "participation_rate_pct",
+            "title": "Adult participation rate (%)",
+            "format": ".2f"
+          }
+        ]
       }
     },
     {
+      "data": {
+        "url": "data/ausplay_surf_map_2025.csv"
+      },
       "mark": {
         "type": "text",
-        "align": "left",
-        "baseline": "middle",
-        "dx": 10,
         "fontSize": 13,
         "fontWeight": "bold",
-        "color": "#244654"
+        "color": "#204551"
       },
       "encoding": {
+        "longitude": {
+          "field": "longitude",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "latitude",
+          "type": "quantitative"
+        },
         "text": {
-          "field": "value_label",
-          "type": "nominal"
+          "field": "state"
+        },
+        "yOffset": {
+          "value": -16
         }
       }
     }
   ],
   "padding": {
-    "left": 8,
-    "right": 20,
-    "top": 10,
-    "bottom": 10
+    "left": 12,
+    "right": 24,
+    "top": 18,
+    "bottom": 28
   }
 }
