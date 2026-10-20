@@ -7,13 +7,9 @@
   --line: #d9e7e3;
 }
 
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 body {
   margin: 0;
@@ -23,9 +19,7 @@ body {
   background: white;
 }
 
-a {
-  color: inherit;
-}
+a { color: inherit; }
 
 .wrap {
   max-width: 1120px;
@@ -42,16 +36,14 @@ header {
 header .eyebrow,
 .section-label {
   text-transform: uppercase;
-  letter-spacing: 0.15em;
-  font-size: 0.75rem;
+  letter-spacing: .15em;
+  font-size: .75rem;
   font-weight: 700;
 }
 
-h1,
-h2,
-h3 {
+h1, h2, h3 {
   font-family: Arial, Helvetica, sans-serif;
-  letter-spacing: -0.035em;
+  letter-spacing: -.035em;
   line-height: 1.15;
 }
 
@@ -75,16 +67,12 @@ nav {
 }
 
 nav a {
-  font-size: 0.83rem;
+  font-size: .83rem;
   text-decoration: none;
   color: #c3e4e2;
 }
 
-nav a:hover {
-  text-decoration: underline;
-}
-
-/* Section layout */
+nav a:hover { text-decoration: underline; }
 
 section {
   padding: 52px 0 42px;
@@ -120,8 +108,6 @@ h2 {
   margin: 0;
 }
 
-/* Chart cards */
-
 .chart-card {
   background: #fff;
   border: 1px solid var(--line);
@@ -152,8 +138,6 @@ h3 {
 .viz .vega-embed {
   max-width: 100%;
 }
-
-/* Standard analysis and source */
 
 .chart-callout {
   position: relative;
@@ -188,8 +172,17 @@ h3 {
 .chart-source {
   margin: 10px 0 0;
   color: var(--muted);
-  font-size: 0.8rem;
+  font-size: .8rem;
 }
+
+footer {
+  background: var(--deep);
+  color: #d3e6e9;
+  padding: 25px 0;
+  font-size: .83rem;
+}
+
+footer p { margin: 5px 0; }
 
 /* Chart 1: interactive map */
 
@@ -197,14 +190,11 @@ h3 {
   padding: 22px 24px 20px;
 }
 
-.map-card h3 {
-  margin: 0 0 16px;
-}
+.map-card h3 { margin: 0 0 16px; }
 
 .map-layout {
   display: grid;
-  grid-template-columns:
-    minmax(0, 1.35fr) minmax(300px, 1fr);
+  grid-template-columns: minmax(0, 1.35fr) minmax(300px, 1fr);
   gap: 24px;
   align-items: stretch;
 }
@@ -215,8 +205,6 @@ h3 {
   flex-direction: column;
 }
 
-/* State selection buttons */
-
 .state-filters {
   display: flex;
   flex-wrap: wrap;
@@ -226,7 +214,7 @@ h3 {
 
 .state-filter {
   font: inherit;
-  font-size: 0.82rem;
+  font-size: .82rem;
   font-weight: 700;
   line-height: 1.2;
   cursor: pointer;
@@ -235,9 +223,7 @@ h3 {
   border: 1px solid #c8dcda;
   border-radius: 999px;
   padding: 8px 12px;
-  transition:
-    background 0.15s,
-    border-color 0.15s;
+  transition: background .15s, border-color .15s;
 }
 
 .state-filter:hover {
@@ -271,8 +257,6 @@ h3 {
   border: 1px solid #fff;
 }
 
-/* Map rendering */
-
 .map-card .viz {
   width: 100%;
   overflow: visible;
@@ -285,7 +269,11 @@ h3 {
   display: block;
 }
 
-/* State-specific analysis panel */
+.state-context {
+  font-size: .77rem;
+  color: var(--muted);
+  margin: 4px 0 0;
+}
 
 .map-analysis {
   display: flex;
@@ -311,7 +299,7 @@ h3 {
   border-left: 4px solid #117989;
   border-radius: 8px;
   line-height: 1.4;
-  font-size: 0.92rem;
+  font-size: .92rem;
   font-weight: 400;
   max-width: none;
   color: #124552;
@@ -337,12 +325,12 @@ h3 {
 }
 
 .map-card .chart-callout span {
-  font-size: 0.91rem;
+  font-size: .91rem;
   color: #264e57;
 }
 
 .map-card .state-detail {
-  font-size: 0.78rem;
+  font-size: .78rem;
   color: #426773;
   margin: 0 0 2px;
   line-height: 1.4;
@@ -350,12 +338,12 @@ h3 {
 }
 
 .map-card .chart-story {
+  margin: 0;
+  padding: 11px 0 0;
   border: 0;
   border-top: 1px solid #d5e5e0;
-  padding: 11px 0 0;
-  margin: 0;
   max-width: none;
-  font-size: 0.9rem;
+  font-size: .9rem;
   line-height: 1.58;
   color: #294b56;
 }
@@ -364,37 +352,26 @@ h3 {
   margin: 11px 0 0;
 }
 
-/* Consistent Section 1 and Section 2 headings */
+/* Consistent single-line chapter headings */
 
 #geography .section-head,
-#history .section-head {
+#history .section-head,
+#hotspots .section-head {
   display: block;
   margin-bottom: 20px;
 }
 
 #geography h2,
-#history h2 {
+#history h2,
+#hotspots h2 {
   font-size: clamp(1.85rem, 3.2vw, 3rem);
   font-weight: 800;
   line-height: 1.15;
-  letter-spacing: -0.035em;
+  letter-spacing: -.035em;
   white-space: nowrap;
 }
 
-/* Footer */
-
-footer {
-  background: var(--deep);
-  color: #d3e6e9;
-  padding: 25px 0;
-  font-size: 0.83rem;
-}
-
-footer p {
-  margin: 5px 0;
-}
-
-/* Responsive layout */
+/* Responsive */
 
 @media (max-width: 860px) {
   .map-layout {
@@ -415,48 +392,39 @@ footer p {
   }
 
   .map-card .chart-story {
-    font-size: 0.95rem;
+    font-size: .95rem;
   }
 }
 
 @media (max-width: 760px) {
   #geography h2,
-  #history h2 {
+  #history h2,
+  #hotspots h2 {
     font-size: clamp(1.45rem, 5vw, 2rem);
     white-space: normal;
   }
 }
 
 @media (max-width: 700px) {
-  header {
-    padding: 48px 0;
-  }
+  header { padding: 48px 0; }
 
-  section {
-    padding: 38px 0 28px;
-  }
+  section { padding: 38px 0 28px; }
 
   .section-head {
     grid-template-columns: 1fr;
     gap: 10px;
   }
 
-  .chart-card {
-    padding: 16px;
-  }
+  .chart-card { padding: 16px; }
 
-  .wrap {
-    padding: 0 16px;
-  }
+  .wrap { padding: 0 16px; }
 }
 
 @media (max-width: 480px) {
-  .map-card {
-    padding: 16px;
-  }
+  .map-card { padding: 16px; }
 
   .state-filter {
     padding: 7px 10px;
-    font-size: 0.76rem;
+    font-size: .76rem;
   }
 }
