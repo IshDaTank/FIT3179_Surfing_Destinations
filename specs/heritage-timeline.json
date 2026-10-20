@@ -1,0 +1,354 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Cumulative step chart of Australian National Surfing Reserve dedications, 2006–2022, with three annotated milestones.",
+  "usermeta": {
+    "title": "When Did Australia's Surfing Reserves Gain Recognition?",
+    "analysis": "Formal recognition began with Maroubra in 2006 and reached eight listed reserves by the end of 2009; all eight were in New South Wales. The total doubled to 16 by 2013 as recognition expanded into Western Australia, Queensland, South Australia and Victoria. Eleven reserves had already been recognised by 2010, including three dedicated that year. Subsequent additions were less frequent: Noosa in 2015, Bondi in 2017 and Norah Head in 2022 brought the current register to 19. The flat stretches indicate years without a new listing in this register, not a decline in surfing activity or the disappearance of surfing heritage. Similarly, a dedication date marks official recognition of an established surfing community, not the date surfing began there. The early NSW concentration may reflect the history of the recognition program and local nomination activity, but these totals alone cannot establish its causes. The chart counts the 19 entries on the official register and should not be interpreted as a comprehensive timeline of Australian surf breaks or tourism demand.",
+    "source": {
+      "label": "National Surfing Reserves — official dedication register",
+      "url": "https://surfingreserves.org.au/national-surfing-reserves/"
+    }
+  },
+  "width": "container",
+  "height": 350,
+  "background": "#ffffff",
+  "padding": {
+    "left": 8,
+    "right": 10,
+    "top": 10,
+    "bottom": 5
+  },
+  "layer": [
+    {
+      "data": {
+        "url": "data/reserves.csv"
+      },
+      "transform": [
+        {
+          "aggregate": [
+            {
+              "op": "count",
+              "as": "new_reserves"
+            }
+          ],
+          "groupby": ["year"]
+        },
+        {
+          "window": [
+            {
+              "op": "sum",
+              "field": "new_reserves",
+              "as": "total"
+            }
+          ],
+          "sort": [
+            {
+              "field": "year",
+              "order": "ascending"
+            }
+          ],
+          "frame": [null, 0]
+        }
+      ],
+      "mark": {
+        "type": "line",
+        "interpolate": "step-after",
+        "strokeWidth": 3.5,
+        "color": "#087789",
+        "point": {
+          "filled": true,
+          "size": 85,
+          "fill": "#087789",
+          "stroke": "#ffffff",
+          "strokeWidth": 1.5
+        }
+      },
+      "encoding": {
+        "x": {
+          "field": "year",
+          "type": "quantitative",
+          "title": "Year of dedication",
+          "scale": {
+            "domain": [2005.5, 2026],
+            "nice": false
+          },
+          "axis": {
+            "values": [2006, 2009, 2013, 2017, 2022, 2025],
+            "format": "d",
+            "grid": false,
+            "labelColor": "#4f6972",
+            "titleColor": "#244654",
+            "titleFontWeight": "bold",
+            "labelFontSize": 12,
+            "titleFontSize": 12,
+            "titlePadding": 12
+          }
+        },
+        "y": {
+          "field": "total",
+          "type": "quantitative",
+          "title": "Cumulative recognised reserves",
+          "scale": {
+            "domain": [0, 22],
+            "nice": false
+          },
+          "axis": {
+            "values": [0, 4, 8, 12, 16, 20],
+            "grid": true,
+            "gridColor": "#e4efed",
+            "domain": false,
+            "labelColor": "#4f6972",
+            "titleColor": "#244654",
+            "titleFontWeight": "bold",
+            "labelFontSize": 12,
+            "titleFontSize": 12,
+            "titlePadding": 12
+          }
+        },
+        "tooltip": [
+          {
+            "field": "year",
+            "type": "quantitative",
+            "format": "d",
+            "title": "Year"
+          },
+          {
+            "field": "new_reserves",
+            "type": "quantitative",
+            "title": "Newly dedicated"
+          },
+          {
+            "field": "total",
+            "type": "quantitative",
+            "title": "Cumulative total"
+          }
+        ]
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "left": 2006,
+            "right": 2011.1,
+            "bottom": 10.6,
+            "top": 13,
+            "phase": "early"
+          },
+          {
+            "left": 2010.2,
+            "right": 2016.3,
+            "bottom": 19.1,
+            "top": 21.5,
+            "phase": "middle"
+          },
+          {
+            "left": 2018.2,
+            "right": 2025.7,
+            "bottom": 12.8,
+            "top": 15.2,
+            "phase": "late"
+          }
+        ]
+      },
+      "mark": {
+        "type": "rect",
+        "cornerRadius": 6,
+        "strokeWidth": 1.2
+      },
+      "encoding": {
+        "x": {
+          "field": "left",
+          "type": "quantitative"
+        },
+        "x2": {
+          "field": "right"
+        },
+        "y": {
+          "field": "bottom",
+          "type": "quantitative"
+        },
+        "y2": {
+          "field": "top"
+        },
+        "fill": {
+          "field": "phase",
+          "type": "nominal",
+          "scale": {
+            "domain": ["early", "middle", "late"],
+            "range": ["#e3f2f7", "#e3f3ea", "#fff0dd"]
+          },
+          "legend": null
+        },
+        "stroke": {
+          "field": "phase",
+          "type": "nominal",
+          "scale": {
+            "domain": ["early", "middle", "late"],
+            "range": ["#89c6da", "#9cccb4", "#ebc28c"]
+          },
+          "legend": null
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "year": 2009,
+            "from": 9,
+            "to": 10.6,
+            "phase": "early"
+          },
+          {
+            "year": 2013,
+            "from": 16.9,
+            "to": 19.1,
+            "phase": "middle"
+          },
+          {
+            "year": 2022,
+            "from": 15.2,
+            "to": 18.1,
+            "phase": "late"
+          }
+        ]
+      },
+      "mark": {
+        "type": "rule",
+        "strokeWidth": 1.8
+      },
+      "encoding": {
+        "x": {
+          "field": "year",
+          "type": "quantitative"
+        },
+        "y": {
+          "field": "from",
+          "type": "quantitative"
+        },
+        "y2": {
+          "field": "to"
+        },
+        "color": {
+          "field": "phase",
+          "type": "nominal",
+          "scale": {
+            "domain": ["early", "middle", "late"],
+            "range": ["#0072B2", "#009E73", "#D55E00"]
+          },
+          "legend": null
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "year": 2009,
+            "arrowY": 8.9,
+            "direction": "down",
+            "phase": "early"
+          },
+          {
+            "year": 2013,
+            "arrowY": 16.8,
+            "direction": "down",
+            "phase": "middle"
+          },
+          {
+            "year": 2022,
+            "arrowY": 18.3,
+            "direction": "up",
+            "phase": "late"
+          }
+        ]
+      },
+      "mark": {
+        "type": "point",
+        "filled": true,
+        "size": 115
+      },
+      "encoding": {
+        "x": {
+          "field": "year",
+          "type": "quantitative"
+        },
+        "y": {
+          "field": "arrowY",
+          "type": "quantitative"
+        },
+        "shape": {
+          "field": "direction",
+          "type": "nominal",
+          "scale": {
+            "domain": ["down", "up"],
+            "range": ["triangle-down", "triangle-up"]
+          },
+          "legend": null
+        },
+        "color": {
+          "field": "phase",
+          "type": "nominal",
+          "scale": {
+            "domain": ["early", "middle", "late"],
+            "range": ["#0072B2", "#009E73", "#D55E00"]
+          },
+          "legend": null
+        }
+      }
+    },
+    {
+      "data": {
+        "values": [
+          {
+            "x": 2008.55,
+            "y": 11.8,
+            "label": "8 in NSW by 2009"
+          },
+          {
+            "x": 2013.25,
+            "y": 20.3,
+            "label": "16 across 5 states"
+          },
+          {
+            "x": 2021.95,
+            "y": 14,
+            "label": "19th: Norah Head"
+          }
+        ]
+      },
+      "mark": {
+        "type": "text",
+        "fontWeight": "bold",
+        "fontSize": 12,
+        "color": "#214653",
+        "align": "center",
+        "baseline": "middle"
+      },
+      "encoding": {
+        "x": {
+          "field": "x",
+          "type": "quantitative"
+        },
+        "y": {
+          "field": "y",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "label",
+          "type": "nominal"
+        }
+      }
+    }
+  ],
+  "config": {
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelFont": "Arial",
+      "titleFont": "Arial"
+    }
+  }
+}
