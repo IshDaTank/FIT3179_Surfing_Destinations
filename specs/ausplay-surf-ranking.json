@@ -1,21 +1,15 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Rank Australian jurisdictions by adult surfing participant estimates or participation rates, AusPlay 2025.",
   "background": "#ffffff",
   "width": "container",
-  "config": {
-    "view": {
-      "stroke": null
-    },
-    "axis": {
-      "labelColor": "#31535f",
-      "titleColor": "#31535f",
-      "gridColor": "#e4eeec"
-    },
-    "text": {
-      "font": "Arial"
+  "height": 390,
+  "data": {
+    "url": "data/ausplay_surf_ranking_2025.csv",
+    "format": {
+      "type": "csv"
     }
   },
-  "description": "State or territory adult surfing participation, switch between estimated number of participants and estimated percent of adult residents.",
   "usermeta": {
     "title": "Which States Lead in Surfing Participation?",
     "defaultMetric": "count",
@@ -27,28 +21,24 @@
       },
       {
         "value": "rate",
-        "label": "Adult participation rate",
+        "label": "Participation rate",
         "unit": "%"
-      }
-    ],
-    "interpretations": {
-      "count": "NSW has the largest estimated adult surfing population (117,953), followed by Queensland (63,787), Victoria (58,683) and WA (43,496). Together these four states contribute about 91% of the total across all jurisdictions. However, raw counts are influenced by population size and do not measure how frequently individuals surf.",
-      "rate": "Western Australia leads in estimated adult surfing participation rate (1.76%), narrowly ahead of NSW (1.67%). Queensland (1.38%) and Tasmania (1.36%) follow. WA therefore rises from fourth by number of surfers to first by rate, underscoring the difference between absolute participation and prevalence. Narrow gaps may fall within survey uncertainty."
-    },
-    "sources": [
-      {
-        "label": "Australian Sports Commission · AusPlay 2025, state and territory tables (30 Apr 2026)",
-        "url": "https://www.ausport.gov.au/clearinghouse/research/ausplay/results"
       }
     ],
     "highlights": {
       "count": "NSW leads by volume: 117,953 estimated adult surfers.",
       "rate": "WA leads by participation rate: 1.76% of adults."
-    }
-  },
-  "height": 360,
-  "data": {
-    "url": "data/ausplay_surf_ranking_2025.csv"
+    },
+    "interpretations": {
+      "count": "New South Wales has the largest estimated adult surfing population (117,953), followed by Queensland (63,787), Victoria (58,683) and Western Australia (43,496). These four states account for approximately 91% of the summed estimates. Larger populations contribute to higher absolute numbers, so participant counts alone cannot measure the prevalence of surfing.",
+      "rate": "Western Australia has the highest estimated adult surfing participation rate (1.76%), narrowly ahead of New South Wales (1.67%). Queensland (1.38%) and Tasmania (1.36%) follow. WA rises from fourth by participant count to first by rate, showing the importance of population-adjusted comparisons. Small gaps should not be interpreted as statistically significant without uncertainty estimates."
+    },
+    "sources": [
+      {
+        "label": "Australian Sports Commission · AusPlay 2025 state and territory tables (30 Apr 2026)",
+        "url": "https://www.ausport.gov.au/clearinghouse/research/ausplay/results"
+      }
+    ]
   },
   "transform": [
     {
@@ -63,25 +53,14 @@
       "field": "rank",
       "type": "quantitative",
       "scale": {
-        "domain": [
-          8.5,
-          0.5
-        ],
-        "nice": false
+        "domain": [8.5, 0.5],
+        "nice": false,
+        "zero": false
       },
       "axis": {
         "title": null,
-        "values": [
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8
-        ],
-        "labelExpr": "[\"NSW\",\"QLD\",\"VIC\",\"WA\",\"SA\",\"TAS\",\"ACT\",\"NT\"][datum.value-1]",
+        "values": [1, 2, 3, 4, 5, 6, 7, 8],
+        "labelExpr": "['NSW','QLD','VIC','WA','SA','TAS','ACT','NT'][datum.value - 1]",
         "labelFontSize": 14,
         "labelFontWeight": "bold",
         "labelPadding": 10,
@@ -94,41 +73,35 @@
       "field": "value",
       "type": "quantitative",
       "scale": {
-        "domain": [
-          0,
-          125000
-        ],
+        "domain": [0, 125000],
         "nice": false
       },
       "axis": {
-        "title": "Estimated surfing participants aged 15+",
-        "tickCount": 5,
+        "title": "Estimated adult surfing participants (people)",
+        "values": [
+          0, 25000, 50000, 75000, 100000, 125000
+        ],
+        "format": ",.0f",
         "grid": true,
         "labelFontSize": 12,
-        "titleFontSize": 13,
-        "values": [
-          0,
-          25000,
-          50000,
-          75000,
-          100000,
-          125000
-        ],
-        "format": ",.0f"
+        "titleFontSize": 13
       }
     },
     "tooltip": [
       {
         "field": "state",
+        "type": "nominal",
         "title": "State / territory"
       },
       {
         "field": "participants",
+        "type": "quantitative",
         "title": "Estimated participants",
-        "format": ","
+        "format": ",.0f"
       },
       {
         "field": "participation_rate_pct",
+        "type": "quantitative",
         "title": "Participation rate (%)",
         "format": ".2f"
       }
@@ -138,7 +111,7 @@
     {
       "mark": {
         "type": "rule",
-        "stroke": "#9bb9bb",
+        "stroke": "#a4bec0",
         "strokeWidth": 2.5
       },
       "encoding": {
@@ -153,9 +126,9 @@
     {
       "mark": {
         "type": "circle",
-        "size": 190,
-        "stroke": "white",
-        "strokeWidth": 1.5
+        "size": 210,
+        "stroke": "#ffffff",
+        "strokeWidth": 1.6
       },
       "encoding": {
         "color": {
@@ -163,14 +136,8 @@
           "type": "nominal",
           "scale": {
             "domain": [
-              "NSW",
-              "QLD",
-              "VIC",
-              "WA",
-              "SA",
-              "TAS",
-              "ACT",
-              "NT"
+              "NSW", "QLD", "VIC", "WA",
+              "SA", "TAS", "ACT", "NT"
             ],
             "range": [
               "#0072B2",
@@ -187,14 +154,13 @@
             "title": "State / territory",
             "orient": "bottom",
             "columns": 4,
-            "symbolSize": 190,
+            "symbolSize": 200,
+            "labelFontSize": 13,
             "titleFontSize": 14,
             "titleFontWeight": "bold",
-            "labelFontSize": 13,
-            "columnPadding": 18,
+            "columnPadding": 22,
             "rowPadding": 12,
-            "labelLimit": 150,
-            "offset": 14
+            "offset": 16
           }
         }
       }
@@ -216,5 +182,16 @@
         }
       }
     }
-  ]
+  ],
+  "config": {
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelColor": "#31535f",
+      "titleColor": "#31535f",
+      "gridColor": "#e4eeec"
+    },
+    "font": "Arial"
+  }
 }
