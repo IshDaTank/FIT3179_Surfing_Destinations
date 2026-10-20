@@ -1,93 +1,72 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Three equally scaled maps showing how National Surfing Reserve recognition spread across Australia over time.",
+  "description": "Three geographic small multiples showing new and previously dedicated National Surfing Reserves over time.",
   "usermeta": {
     "title": "How Did Surfing Reserve Recognition Spread Across Australia?",
-    "analysis": "Recognition began with a strong New South Wales focus: all eight reserves dedicated between 2006 and 2009 were in that state. The next eight dedications, between 2010 and 2013, expanded the register to five states. Western Australia entered in 2010, Queensland in 2012, and South Australia and Victoria in 2013; New South Wales also added Manly–Freshwater in 2010. By the end of 2013, 16 of the eventual 19 listed reserves had been recognised. The final three entries were Noosa (2015), Bondi (2017) and Norah Head (2022). This progression shows the geographic expansion of formal recognition, rather than the emergence of surfing itself: these communities had surfing histories before their dedication dates. Recognition timing may also reflect nominations, local support and administrative processes, so the maps should not be interpreted as a timeline of surfing popularity. The consistent national map extent across all three panels supports direct comparison.",
-    "source": {
-      "label": "National Surfing Reserves — Official Dedication Register",
-      "url": "https://surfingreserves.org.au/national-surfing-reserves/"
-    }
+    "analysis": "The first phase of National Surfing Reserve recognition was exclusively NSW-based: all eight sites dedicated between 2006 and 2009 were in that state. The 2010–2013 phase marked a decisive geographic expansion, adding eight more reserves and bringing Western Australia, Queensland, South Australia and Victoria into the register. Margaret River's 2010 dedication was the first in WA, extending the initiative from Australia's east coast to its west. By 2013, 16 sites had been recognised across five states. The final phase added Noosa (2015), Bondi (2017) and Norah Head (2022), consolidating the eastern coastal network rather than extending into new states. The three equal-scale maps reveal a transition from a NSW-centred initiative to a national coastal heritage program, driven by communities recognising and protecting their established surfing places.",
+    "sources": [
+      {
+        "label": "National Surfing Reserves — Official Register",
+        "url": "https://surfingreserves.org.au/national-surfing-reserves/"
+      },
+      {
+        "label": "Margaret River — First WA Dedication",
+        "url": "https://surfingreserves.org.au/margaret-river/"
+      }
+    ]
   },
   "background": "#ffffff",
-  "spacing": 18,
+  "spacing": 14,
   "hconcat": [
     {
       "title": {
         "text": "2006–2009",
-        "subtitle": "8 New • NSW Only",
+        "subtitle": "8 new · NSW only",
         "anchor": "middle",
         "fontSize": 15,
         "fontWeight": "bold",
         "color": "#153D4A",
         "subtitleFontSize": 11,
-        "subtitleFontWeight": "bold",
-        "subtitleColor": "#0C6B7A"
+        "subtitleColor": "#0C6B7A",
+        "offset": 12
       },
-      "width": 280,
-      "height": 220,
-      "projection": {
-        "type": "mercator"
-      },
+      "width": 285,
+      "height": 230,
+      "projection": {"type": "mercator"},
       "layer": [
         {
           "data": {
             "url": "https://vega.github.io/vega-datasets/data/world-110m.json",
-            "format": {
-              "type": "topojson",
-              "feature": "countries"
-            }
+            "format": {"type": "topojson", "feature": "countries"}
           },
           "transform": [
-            {
-              "filter": "datum.id == 36 || datum.id == '036'"
-            }
+            {"filter": "datum.id == 36 || datum.id == '036'"}
           ],
           "mark": {
             "type": "geoshape",
-            "fill": "#EAF3F0",
-            "stroke": "#A7C2BF",
-            "strokeWidth": 1.1
+            "fill": "#E8F1EE",
+            "stroke": "#9EBBB9",
+            "strokeWidth": 1
           }
         },
         {
-          "data": {
-            "url": "data/reserves.csv"
-          },
-          "transform": [
-            {
-              "filter": "datum.year >= 2006 && datum.year <= 2009"
-            }
-          ],
+          "data": {"url": "data/reserves.csv"},
+          "transform": [{"filter": "datum.year <= 2009"}],
           "mark": {
             "type": "circle",
             "filled": true,
-            "size": 115,
-            "opacity": 0.98,
+            "size": 105,
+            "opacity": 0.95,
             "stroke": "#FFFFFF",
-            "strokeWidth": 1.4,
+            "strokeWidth": 1.2,
             "color": "#0C6B7A"
           },
           "encoding": {
-            "longitude": {
-              "field": "lon",
-              "type": "quantitative"
-            },
-            "latitude": {
-              "field": "lat",
-              "type": "quantitative"
-            },
+            "longitude": {"field": "lon", "type": "quantitative"},
+            "latitude": {"field": "lat", "type": "quantitative"},
             "tooltip": [
-              {
-                "field": "name",
-                "type": "nominal",
-                "title": "Reserve"
-              },
-              {
-                "field": "state",
-                "type": "nominal",
-                "title": "State"
-              },
+              {"field": "name", "type": "nominal", "title": "Reserve"},
+              {"field": "state", "type": "nominal", "title": "State"},
               {
                 "field": "year",
                 "type": "quantitative",
@@ -102,74 +81,52 @@
     {
       "title": {
         "text": "2010–2013",
-        "subtitle": "8 New • Five States Total",
+        "subtitle": "8 new · five states total",
         "anchor": "middle",
         "fontSize": 15,
         "fontWeight": "bold",
         "color": "#153D4A",
         "subtitleFontSize": 11,
-        "subtitleFontWeight": "bold",
-        "subtitleColor": "#238C85"
+        "subtitleColor": "#238C85",
+        "offset": 12
       },
-      "width": 280,
-      "height": 220,
-      "projection": {
-        "type": "mercator"
-      },
+      "width": 285,
+      "height": 230,
+      "projection": {"type": "mercator"},
       "layer": [
         {
           "data": {
             "url": "https://vega.github.io/vega-datasets/data/world-110m.json",
-            "format": {
-              "type": "topojson",
-              "feature": "countries"
-            }
+            "format": {"type": "topojson", "feature": "countries"}
           },
           "transform": [
-            {
-              "filter": "datum.id == 36 || datum.id == '036'"
-            }
+            {"filter": "datum.id == 36 || datum.id == '036'"}
           ],
           "mark": {
             "type": "geoshape",
-            "fill": "#EAF3F0",
-            "stroke": "#A7C2BF",
-            "strokeWidth": 1.1
+            "fill": "#E8F1EE",
+            "stroke": "#9EBBB9",
+            "strokeWidth": 1
           }
         },
         {
-          "data": {
-            "url": "data/reserves.csv"
-          },
-          "transform": [
-            {
-              "filter": "datum.year <= 2009"
-            }
-          ],
+          "data": {"url": "data/reserves.csv"},
+          "transform": [{"filter": "datum.year <= 2009"}],
           "mark": {
             "type": "circle",
             "filled": true,
             "size": 54,
             "opacity": 0.75,
             "stroke": "#FFFFFF",
-            "strokeWidth": 0.9,
+            "strokeWidth": 0.7,
             "color": "#BCCBC9"
           },
           "encoding": {
-            "longitude": {
-              "field": "lon",
-              "type": "quantitative"
-            },
-            "latitude": {
-              "field": "lat",
-              "type": "quantitative"
-            },
+            "longitude": {"field": "lon", "type": "quantitative"},
+            "latitude": {"field": "lat", "type": "quantitative"},
             "tooltip": [
-              {
-                "field": "name",
-                "type": "nominal",
-                "title": "Previously recognised"
-              },
+              {"field": "name", "type": "nominal", "title": "Reserve"},
+              {"field": "state", "type": "nominal", "title": "State"},
               {
                 "field": "year",
                 "type": "quantitative",
@@ -180,43 +137,25 @@
           }
         },
         {
-          "data": {
-            "url": "data/reserves.csv"
-          },
+          "data": {"url": "data/reserves.csv"},
           "transform": [
-            {
-              "filter": "datum.year >= 2010 && datum.year <= 2013"
-            }
+            {"filter": "datum.year >= 2010 && datum.year <= 2013"}
           ],
           "mark": {
             "type": "circle",
             "filled": true,
-            "size": 115,
-            "opacity": 0.98,
+            "size": 105,
+            "opacity": 0.95,
             "stroke": "#FFFFFF",
-            "strokeWidth": 1.4,
+            "strokeWidth": 1.2,
             "color": "#238C85"
           },
           "encoding": {
-            "longitude": {
-              "field": "lon",
-              "type": "quantitative"
-            },
-            "latitude": {
-              "field": "lat",
-              "type": "quantitative"
-            },
+            "longitude": {"field": "lon", "type": "quantitative"},
+            "latitude": {"field": "lat", "type": "quantitative"},
             "tooltip": [
-              {
-                "field": "name",
-                "type": "nominal",
-                "title": "Newly recognised"
-              },
-              {
-                "field": "state",
-                "type": "nominal",
-                "title": "State"
-              },
+              {"field": "name", "type": "nominal", "title": "Reserve"},
+              {"field": "state", "type": "nominal", "title": "State"},
               {
                 "field": "year",
                 "type": "quantitative",
@@ -231,74 +170,52 @@
     {
       "title": {
         "text": "2014–2022",
-        "subtitle": "3 New • 19 Listed Overall",
+        "subtitle": "3 new · 19 listed overall",
         "anchor": "middle",
         "fontSize": 15,
         "fontWeight": "bold",
         "color": "#153D4A",
         "subtitleFontSize": 11,
-        "subtitleFontWeight": "bold",
-        "subtitleColor": "#C6843F"
+        "subtitleColor": "#C6843F",
+        "offset": 12
       },
-      "width": 280,
-      "height": 220,
-      "projection": {
-        "type": "mercator"
-      },
+      "width": 285,
+      "height": 230,
+      "projection": {"type": "mercator"},
       "layer": [
         {
           "data": {
             "url": "https://vega.github.io/vega-datasets/data/world-110m.json",
-            "format": {
-              "type": "topojson",
-              "feature": "countries"
-            }
+            "format": {"type": "topojson", "feature": "countries"}
           },
           "transform": [
-            {
-              "filter": "datum.id == 36 || datum.id == '036'"
-            }
+            {"filter": "datum.id == 36 || datum.id == '036'"}
           ],
           "mark": {
             "type": "geoshape",
-            "fill": "#EAF3F0",
-            "stroke": "#A7C2BF",
-            "strokeWidth": 1.1
+            "fill": "#E8F1EE",
+            "stroke": "#9EBBB9",
+            "strokeWidth": 1
           }
         },
         {
-          "data": {
-            "url": "data/reserves.csv"
-          },
-          "transform": [
-            {
-              "filter": "datum.year <= 2013"
-            }
-          ],
+          "data": {"url": "data/reserves.csv"},
+          "transform": [{"filter": "datum.year <= 2013"}],
           "mark": {
             "type": "circle",
             "filled": true,
             "size": 54,
             "opacity": 0.75,
             "stroke": "#FFFFFF",
-            "strokeWidth": 0.9,
+            "strokeWidth": 0.7,
             "color": "#BCCBC9"
           },
           "encoding": {
-            "longitude": {
-              "field": "lon",
-              "type": "quantitative"
-            },
-            "latitude": {
-              "field": "lat",
-              "type": "quantitative"
-            },
+            "longitude": {"field": "lon", "type": "quantitative"},
+            "latitude": {"field": "lat", "type": "quantitative"},
             "tooltip": [
-              {
-                "field": "name",
-                "type": "nominal",
-                "title": "Previously recognised"
-              },
+              {"field": "name", "type": "nominal", "title": "Reserve"},
+              {"field": "state", "type": "nominal", "title": "State"},
               {
                 "field": "year",
                 "type": "quantitative",
@@ -309,43 +226,23 @@
           }
         },
         {
-          "data": {
-            "url": "data/reserves.csv"
-          },
-          "transform": [
-            {
-              "filter": "datum.year >= 2014 && datum.year <= 2022"
-            }
-          ],
+          "data": {"url": "data/reserves.csv"},
+          "transform": [{"filter": "datum.year >= 2014"}],
           "mark": {
             "type": "circle",
             "filled": true,
-            "size": 120,
-            "opacity": 0.98,
+            "size": 105,
+            "opacity": 0.95,
             "stroke": "#FFFFFF",
-            "strokeWidth": 1.4,
+            "strokeWidth": 1.2,
             "color": "#C6843F"
           },
           "encoding": {
-            "longitude": {
-              "field": "lon",
-              "type": "quantitative"
-            },
-            "latitude": {
-              "field": "lat",
-              "type": "quantitative"
-            },
+            "longitude": {"field": "lon", "type": "quantitative"},
+            "latitude": {"field": "lat", "type": "quantitative"},
             "tooltip": [
-              {
-                "field": "name",
-                "type": "nominal",
-                "title": "Newly recognised"
-              },
-              {
-                "field": "state",
-                "type": "nominal",
-                "title": "State"
-              },
+              {"field": "name", "type": "nominal", "title": "Reserve"},
+              {"field": "state", "type": "nominal", "title": "State"},
               {
                 "field": "year",
                 "type": "quantitative",
@@ -359,11 +256,7 @@
     }
   ],
   "config": {
-    "view": {
-      "stroke": null
-    },
-    "concat": {
-      "spacing": 18
-    }
+    "view": {"stroke": null},
+    "concat": {"spacing": 14}
   }
 }
