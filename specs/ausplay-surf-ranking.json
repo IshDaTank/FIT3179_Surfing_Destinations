@@ -1,25 +1,14 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Rank Australian states and territories by estimated adult surfing participation count or participation rate.",
+  "description": "Non-overlapping Dorling cartogram of Australian states and territories: circle area proportional to estimated adult surfing participants, switchable to participation rate.",
   "background": "#ffffff",
   "width": "container",
-  "height": 340,
-  "config": {
-    "view": {
-      "stroke": null
-    },
-    "axis": {
-      "labelColor": "#31535f",
-      "titleColor": "#31535f",
-      "gridColor": "#e4eeec"
-    },
-    "text": {
-      "font": "Arial"
-    },
-    "font": "Arial"
+  "height": 425,
+  "data": {
+    "values": []
   },
   "usermeta": {
-    "title": "Which States Lead in Surfing Participation?",
+    "title": "How Do States and Territories Compare in Surfing Participation?",
     "defaultMetric": "count",
     "metricOptions": [
       {
@@ -33,73 +22,57 @@
         "unit": "%"
       }
     ],
-    "interpretations": {
-      "count": "New South Wales leads in estimated adult surfers (117,953), followed by Queensland (63,787), Victoria (58,683) and Western Australia (43,496). The ranking shows a clear concentration in the two largest east-coast surfing states, while South Australia, Tasmania, the ACT and the Northern Territory form a much smaller second tier. This structure suggests that surfing participation is nationally distributed but strongly anchored in a few major population centres.",
-      "rate": "Western Australia ranks first in adult surfing participation rate (1.76%), narrowly ahead of New South Wales (1.67%). Queensland (1.38%) and Tasmania (1.36%) follow. Once population size is taken into account, the ranking changes noticeably: WA rises from fourth by total volume to first by rate, indicating that surfing forms a particularly strong part of everyday sporting participation there."
-    },
     "highlights": {
-      "count": "NSW leads by volume: 117,953 estimated adult surfers.",
-      "rate": "WA leads by participation rate: 1.76% of adults."
+      "count": "NSW leads in absolute participation: an estimated 117,953 adult surfers.",
+      "rate": "WA leads in participation rate: an estimated 1.76% of adults surfed in 2025."
+    },
+    "interpretations": {
+      "count": "NSW has the largest estimated adult surfing population (117,953), followed by Queensland (63,787), Victoria (58,683) and Western Australia (43,496). Together these four states account for approximately 91% of the summed state and territory estimates. Circle area represents estimated participants, not physical land area. The distribution reflects population size as well as surfing participation, so the largest circle does not necessarily indicate the greatest prevalence of surfing.",
+      "rate": "WA has the highest estimated adult surfing participation rate (1.76%), narrowly ahead of NSW (1.67%). Queensland (1.38%) and Tasmania (1.36%) follow. Comparing this cartogram with the participant-count view shows how population adjustment changes the apparent distribution: WA becomes the largest circle despite ranking fourth by absolute participants. Small differences between rates should be interpreted cautiously because AusPlay figures are survey estimates."
     },
     "sources": [
       {
-        "label": "Australian Sports Commission · AusPlay 2025, state and territory tables (30 Apr 2026)",
+        "label": "Australian Sports Commission · AusPlay 2025 state and territory tables (released 30 Apr 2026)",
         "url": "https://www.ausport.gov.au/clearinghouse/research/ausplay/results"
       }
     ]
   },
-  "data": {
-    "url": "data/ausplay_surf_ranking_2025.csv"
-  },
-  "transform": [
-    {
-      "filter": {
-        "field": "metric",
-        "equal": "count"
-      }
-    }
-  ],
   "encoding": {
-    "y": {
-      "field": "state",
-      "type": "nominal",
-      "sort": ["NSW", "QLD", "VIC", "WA", "SA", "TAS", "ACT", "NT"],
-      "axis": {
-        "title": null,
-        "labelFontSize": 14,
-        "labelFontWeight": "bold",
-        "labelPadding": 10
-      }
-    },
     "x": {
-      "field": "value",
+      "field": "x",
       "type": "quantitative",
       "scale": {
-        "domain": [0, 125000],
+        "domain": [0, 760],
         "nice": false,
-        "zero": true
+        "zero": false
       },
-      "axis": {
-        "title": "Estimated adult surfing participants (people)",
-        "grid": true,
-        "labelFontSize": 12,
-        "titleFontSize": 13,
-        "values": [0, 25000, 50000, 75000, 100000, 125000],
-        "format": ",.0f"
-      }
+      "axis": null
+    },
+    "y": {
+      "field": "y",
+      "type": "quantitative",
+      "scale": {
+        "domain": [485, 0],
+        "nice": false,
+        "zero": false
+      },
+      "axis": null
     },
     "tooltip": [
       {
-        "field": "state",
+        "field": "state_name",
+        "type": "nominal",
         "title": "State / territory"
       },
       {
         "field": "participants",
+        "type": "quantitative",
         "title": "Estimated participants",
         "format": ",.0f"
       },
       {
-        "field": "participation_rate_pct",
+        "field": "rate",
+        "type": "quantitative",
         "title": "Participation rate (%)",
         "format": ".2f"
       }
@@ -108,59 +81,93 @@
   "layer": [
     {
       "mark": {
-        "type": "rule",
-        "stroke": "#9bb9bb",
-        "strokeWidth": 2.5
-      },
-      "encoding": {
-        "x": {
-          "datum": 0
-        },
-        "x2": {
-          "field": "value"
-        }
-      }
-    },
-    {
-      "mark": {
         "type": "circle",
-        "size": 190,
-        "stroke": "white",
-        "strokeWidth": 1.5
+        "opacity": 0.87,
+        "stroke": "#ffffff",
+        "strokeWidth": 2.1
       },
       "encoding": {
+        "size": {
+          "field": "value",
+          "type": "quantitative",
+          "scale": {
+            "domain": [0, 125000],
+            "range": [0, 11500],
+            "nice": false
+          },
+          "legend": null
+        },
         "color": {
           "field": "state",
           "type": "nominal",
           "scale": {
-            "domain": ["NSW", "QLD", "VIC", "WA", "SA", "TAS", "ACT", "NT"],
-            "range": ["#0072B2", "#E69F00", "#CC79A7", "#D55E00", "#009E73", "#7B61A8", "#8C6D31", "#666666"]
+            "domain": [
+              "NSW",
+              "QLD",
+              "VIC",
+              "WA",
+              "SA",
+              "TAS",
+              "ACT",
+              "NT"
+            ],
+            "range": [
+              "#0072B2",
+              "#E69F00",
+              "#CC79A7",
+              "#D55E00",
+              "#009E73",
+              "#7B61A8",
+              "#8C6D31",
+              "#666666"
+            ]
           },
-          "legend": {
-            "title": "State / territory",
-            "orient": "top-right",
-            "direction": "vertical",
-            "symbolSize": 180,
-            "titleFontSize": 14,
-            "titleFontWeight": "bold",
-            "labelFontSize": 13,
-            "offset": 8,
-            "padding": 6
-          }
+          "legend": null
         }
       }
     },
     {
       "mark": {
         "type": "text",
-        "align": "left",
-        "baseline": "middle",
-        "dx": 10,
-        "fontSize": 13,
+        "font": "Arial",
+        "fontSize": 15,
         "fontWeight": "bold",
-        "color": "#244654"
+        "color": "#173a48",
+        "baseline": "middle"
       },
       "encoding": {
+        "x": {
+          "field": "x",
+          "type": "quantitative"
+        },
+        "y": {
+          "field": "label_y",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "state",
+          "type": "nominal"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "font": "Arial",
+        "fontSize": 12,
+        "fontWeight": "bold",
+        "color": "#173a48",
+        "baseline": "middle"
+      },
+      "encoding": {
+        "x": {
+          "field": "x",
+          "type": "quantitative"
+        },
+        "y": {
+          "field": "value_y",
+          "type": "quantitative"
+        },
         "text": {
           "field": "value_label",
           "type": "nominal"
@@ -168,10 +175,16 @@
       }
     }
   ],
+  "config": {
+    "view": {
+      "stroke": null
+    },
+    "font": "Arial"
+  },
   "padding": {
-    "left": 8,
-    "right": 20,
-    "top": 10,
-    "bottom": 10
+    "left": 14,
+    "right": 14,
+    "top": 8,
+    "bottom": 8
   }
 }
