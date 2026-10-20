@@ -1,17 +1,11 @@
+
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Interactive map of Australia's National Surfing Reserves with state and territory boundaries. Equal-sized markers represent recognised locations, not wave quality or visitor numbers.",
+  "description": "Interactive map of Australia's 19 National Surfing Reserves, using equal-sized location markers.",
   "usermeta": {
     "title": "Where are Australia's recognised surfing destinations?",
     "defaultState": "All",
-    "stateOrder": [
-      "All",
-      "NSW",
-      "QLD",
-      "VIC",
-      "SA",
-      "WA"
-    ],
+    "stateOrder": ["All", "NSW", "QLD", "VIC", "SA", "WA"],
     "source": {
       "label": "National Surfing Reserves — official register",
       "url": "https://surfingreserves.org.au/national-surfing-reserves/"
@@ -50,34 +44,22 @@
     },
     "annotationTargets": {
       "All": {
-        "name": "Sydney coastal cluster",
-        "lon": 151.26,
-        "lat": -33.95
+        "name": "Sydney coastal cluster"
       },
       "NSW": {
-        "name": "Sydney coastal cluster",
-        "lon": 151.26,
-        "lat": -33.95
+        "name": "Sydney coastal cluster"
       },
       "QLD": {
-        "name": "Gold Coast and Noosa",
-        "lon": 153.48,
-        "lat": -28.12
+        "name": "Gold Coast and Noosa"
       },
       "VIC": {
-        "name": "Phillip Island",
-        "lon": 145.24,
-        "lat": -38.5
+        "name": "Phillip Island"
       },
       "SA": {
-        "name": "South Australian peninsulas",
-        "lon": 133,
-        "lat": -32.14
+        "name": "South Australian peninsulas"
       },
       "WA": {
-        "name": "Western Australia's southwest",
-        "lon": 114.99,
-        "lat": -33.98
+        "name": "Western Australia's southwest"
       }
     }
   },
@@ -91,17 +73,22 @@
   "layer": [
     {
       "data": {
-        "url": "https://raw.githubusercontent.com/rowanhogan/australian-states/master/states.min.geojson",
+        "url": "https://vega.github.io/vega-datasets/data/world-110m.json",
         "format": {
-          "type": "json",
-          "property": "features"
+          "type": "topojson",
+          "feature": "countries"
         }
       },
+      "transform": [
+        {
+          "filter": "datum.id == 36 || datum.id == '036'"
+        }
+      ],
       "mark": {
         "type": "geoshape",
         "fill": "#e8f1ee",
-        "stroke": "#a6bfc0",
-        "strokeWidth": 1.1
+        "stroke": "#97b6b6",
+        "strokeWidth": 1
       }
     },
     {
@@ -130,13 +117,7 @@
           "type": "nominal",
           "title": null,
           "scale": {
-            "domain": [
-              "NSW",
-              "QLD",
-              "VIC",
-              "SA",
-              "WA"
-            ],
+            "domain": ["NSW", "QLD", "VIC", "SA", "WA"],
             "range": [
               "#117989",
               "#E3A049",
