@@ -1,11 +1,15 @@
-// FIT3179: Load independent Vega-Lite 6 specifications and their interpretations.
+// FIT3179 — Australia: A Nation Built on Surf
+// Vega-Lite 6 chart loader and interactive controls.
+
 const root = new URL('../', import.meta.url);
 
-// Keep participation highlights consistent with the dashboard, without arrows.
+// Styling for participation highlights and the fixed map legend.
 const participationStyle = document.createElement('style');
+
 participationStyle.textContent = `
   [data-chart="ausplay-surf-map"] .chart-callout,
-  [data-chart="ausplay-surf-ranking"] .chart-callout {
+  [data-chart="ausplay-surf-ranking"] .chart-callout,
+  [data-chart="ausplay-surf-gender"] .chart-callout {
     margin: 16px 0 14px;
     max-width: 890px;
     background: #e1f4ef;
@@ -16,19 +20,84 @@ participationStyle.textContent = `
     font-weight: 750;
     line-height: 1.5;
   }
+
   [data-chart="ausplay-surf-map"] .chart-callout::before,
-  [data-chart="ausplay-surf-ranking"] .chart-callout::before {
+  [data-chart="ausplay-surf-ranking"] .chart-callout::before,
+  [data-chart="ausplay-surf-gender"] .chart-callout::before {
     content: none !important;
     display: none !important;
   }
+
+  .participation-size-key {
+    margin: 10px 0 18px;
+    padding: 12px 15px 14px;
+    max-width: 780px;
+    border: 1px solid #dfebe8;
+    border-radius: 9px;
+    background: #f8fbfa;
+  }
+
+  .participation-size-key strong {
+    display: block;
+    margin-bottom: 12px;
+    font: 700 0.92rem Arial, sans-serif;
+    color: #244654;
+  }
+
+  .participation-size-key .key-steps {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 7px;
+    align-items: end;
+    text-align: center;
+  }
+
+  .participation-size-key .key-step {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: end;
+    gap: 8px;
+    font: 600 0.86rem Arial, sans-serif;
+    color: #31535f;
+  }
+
+  .participation-size-key .key-circle {
+    display: block;
+    flex: none;
+    background: #648c91;
+    border: 1px solid #365963;
+    border-radius: 50%;
+  }
+
+  .participation-size-key .key-label {
+    white-space: nowrap;
+  }
+
+  @media (max-width: 520px) {
+    .participation-size-key {
+      padding: 10px 5px;
+    }
+
+    .participation-size-key .key-step {
+      font-size: .7rem;
+    }
+  }
 `;
+
 document.head.append(participationStyle);
 
+// Chart 1 state colours.
 const STATE_COLORS = {
-  NSW: '#0072B2', QLD: '#E69F00', VIC: '#CC79A7',
-  SA: '#009E73', WA: '#D55E00'
+  NSW: '#0072B2',
+  QLD: '#E69F00',
+  VIC: '#CC79A7',
+  SA: '#009E73',
+  WA: '#D55E00'
 };
 
+// Chart 1 zoom boundaries.
 const zoomBounds = {
   NSW: [148.5, -37, 155, -27.5],
   QLD: [150, -30, 155, -24],
@@ -44,10 +113,17 @@ function mercatorY(latitude) {
 
 function getStateProjection(state, width, height) {
   const [west, south, east, north] = zoomBounds[state];
+
   const longitudeSpan = (east - west) * Math.PI / 180;
   const latitudeSpan = mercatorY(north) - mercatorY(south);
-  const scale = Math.min(width * .88 / longitudeSpan, height * .84 / latitudeSpan);
-  const centerY = (mercatorY(south) + mercatorY(north)) / 2;
+
+  const scale = Math.min(
+    width * 0.88 / longitudeSpan,
+    height * 0.84 / latitudeSpan
+  );
+
+  const centerY =
+    (mercatorY(south) + mercatorY(north)) / 2;
 
   return {
     type: 'mercator',
@@ -60,14 +136,20 @@ function getStateProjection(state, width, height) {
   };
 }
 
+// Load every chart from its independent specification.
 for (const card of document.querySelectorAll('[data-chart]')) {
   const id = card.dataset.chart;
 
   try {
-    const response = await fetch(new URL(`specs/${id}.json`, root));
+    const response = await fetch(
+      new URL(`specs/${id}.json`, root)
+    );
 
     if (response.status === 404) continue;
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
 
     const spec = await response.json();
 
@@ -76,15 +158,20 @@ for (const card of document.querySelectorAll('[data-chart]')) {
     }
 
     const info = spec.usermeta || {};
+
     const heading = card.querySelector('h3');
     const viz = card.querySelector('.viz');
     const callout = card.querySelector('.chart-callout');
     const story = card.querySelector('.chart-story');
     const source = card.querySelector('.chart-source');
 
-    heading.textContent = info.title || id.replaceAll('-', ' ');
+    heading.textContent =
+      info.title || id.replaceAll('-', ' ');
 
-    const sources = info.sources || (info.source ? [info.source] : []);
+    // Display sources beneath each chart.
+    const sources =
+      info.sources || (info.source ? [info.source] : []);
+
     source.replaceChildren();
 
     sources.forEach((item, index) => {
@@ -97,6 +184,7 @@ for (const card of document.querySelectorAll('[data-chart]')) {
       link.textContent = item.label;
       link.target = '_blank';
       link.rel = 'noopener noreferrer';
+
       source.append(link);
     });
 
@@ -105,19 +193,24 @@ for (const card of document.querySelectorAll('[data-chart]')) {
     const options = {
       actions: false,
       renderer: 'svg',
-      loader: vega.loader({baseURL: root.href})
+      loader: vega.loader({
+        baseURL: root.href
+      })
     };
 
+    // CHART 6 — Ranking by estimated surfers or participation rate.
     if (id === 'ausplay-surf-ranking') {
-      // Chart 6: compare total participation and population-adjusted rates.
       const label = document.createElement('label');
       label.htmlFor = 'ausplay-metric';
       label.textContent = 'Rank states by: ';
+
       label.style.cssText =
-        'display:block;margin:4px 0 12px;font-weight:700;color:#244654';
+        'display:block;margin:4px 0 12px;' +
+        'font-weight:700;color:#244654';
 
       const selector = document.createElement('select');
       selector.id = 'ausplay-metric';
+
       selector.style.cssText =
         'font:inherit;margin-left:8px;padding:9px 12px;' +
         'border:1px solid #bcd6d1;border-radius:8px;' +
@@ -126,7 +219,10 @@ for (const card of document.querySelectorAll('[data-chart]')) {
       for (const metric of info.metricOptions || []) {
         const option = document.createElement('option');
         option.value = metric.value;
-        option.textContent = `${metric.label} (${metric.unit})`;
+
+        option.textContent =
+          `${metric.label} (${metric.unit})`;
+
         selector.append(option);
       }
 
@@ -139,19 +235,66 @@ for (const card of document.querySelectorAll('[data-chart]')) {
         const request = ++revision;
         const copy = structuredClone(spec);
 
+        // Filter the pre-ranked records for the selected metric.
         copy.transform = [
-          {filter: {field: 'metric', equal: metric}}
+          {
+            filter: {
+              field: 'metric',
+              equal: metric
+            }
+          }
         ];
 
+        // The CSV contains the exact numeric rank of each state.
+        // Position 1 is the top row.
+        const names = metric === 'rate'
+          ? [
+              'WA', 'NSW', 'QLD', 'TAS',
+              'SA', 'VIC', 'ACT', 'NT'
+            ]
+          : [
+              'NSW', 'QLD', 'VIC', 'WA',
+              'SA', 'TAS', 'ACT', 'NT'
+            ];
+
+        // Ensure the axis labels match the displayed ranking.
+        copy.encoding.y.axis.labelExpr =
+          JSON.stringify(names) + '[datum.value - 1]';
+
+        // Update the horizontal axis for the chosen measure.
         copy.encoding.x.axis.title = metric === 'rate'
           ? 'Estimated adult surfing participation rate (%)'
           : 'Estimated adult surfing participants (people)';
 
-        story.textContent = info.interpretations?.[metric] || '';
+        copy.encoding.x.scale = metric === 'rate'
+          ? {
+              domain: [0, 2],
+              nice: false
+            }
+          : {
+              domain: [0, 125000],
+              nice: false
+            };
+
+        copy.encoding.x.axis.values = metric === 'rate'
+          ? [0, 0.5, 1, 1.5, 2]
+          : [
+              0, 25000, 50000,
+              75000, 100000, 125000
+            ];
+
+        copy.encoding.x.axis.format =
+          metric === 'rate' ? '.1f' : ',.0f';
+
+        // Update analysis and the highlighted finding.
+        story.textContent =
+          info.interpretations?.[metric] || '';
+
         story.hidden = !story.textContent;
 
-        // Highlight changes with the selected measure.
-        callout.textContent = info.highlights?.[metric] || '';
+        callout.textContent =
+          info.highlights?.[metric] || '';
+
         callout.hidden = !callout.textContent;
 
         if (request === revision) {
@@ -166,33 +309,106 @@ for (const card of document.querySelectorAll('[data-chart]')) {
       });
 
       card.hidden = false;
+
       await showMetric(selector.value);
 
+    // CHART 5 — Australian proportional symbol map.
+    } else if (id === 'ausplay-surf-map') {
+      callout.textContent = info.annotation || '';
+      callout.hidden = !callout.textContent;
+
+      story.textContent = info.analysis || '';
+      story.hidden = !story.textContent;
+
+      // Create an evenly spaced, fixed five-value legend.
+      const values = info.sizeLegendValues || [
+        0, 25000, 50000, 75000, 100000
+      ];
+
+      const key = document.createElement('div');
+      key.className = 'participation-size-key';
+
+      key.setAttribute(
+        'aria-label',
+        'Map symbol size reference'
+      );
+
+      const title = document.createElement('strong');
+
+      title.textContent =
+        info.sizeLegendTitle || 'Estimated surfers (15+)';
+
+      const steps = document.createElement('div');
+      steps.className = 'key-steps';
+
+      for (const value of values) {
+        const step = document.createElement('div');
+        step.className = 'key-step';
+
+        const circle = document.createElement('span');
+        circle.className = 'key-circle';
+
+        // Circle area represents participant volume.
+        const diameter = Math.max(
+          5,
+          Math.sqrt(value / 100000) * 43
+        );
+
+        circle.style.width = `${diameter}px`;
+        circle.style.height = `${diameter}px`;
+
+        const name = document.createElement('span');
+        name.className = 'key-label';
+
+        name.textContent =
+          value.toLocaleString('en-AU');
+
+        step.append(circle, name);
+        steps.append(step);
+      }
+
+      key.append(title, steps);
+      viz.insertAdjacentElement('afterend', key);
+
+      card.hidden = false;
+
+      await vegaEmbed(viz, spec, options);
+
+    // Existing Queensland comparison.
     } else if (id === 'qld-wave-dumbbell') {
-      // Earlier Queensland comparison: retain existing interactive behaviour.
       const label = document.createElement('label');
       label.textContent = 'Compare measure: ';
       label.htmlFor = 'qld-wave-metric';
+
       label.style.cssText =
-        'display:block;font-weight:700;margin:2px 0 12px;color:#244654';
+        'display:block;font-weight:700;margin:2px 0 12px;' +
+        'color:#244654';
 
       const picker = document.createElement('select');
       picker.id = 'qld-wave-metric';
+
       picker.style.cssText =
-        'font:inherit;padding:9px 12px;border:1px solid #bcd6d1;' +
-        'border-radius:8px;background:#fff;color:#123442;' +
+        'font:inherit;padding:9px 12px;' +
+        'border:1px solid #bcd6d1;border-radius:8px;' +
+        'background:#fff;color:#123442;' +
         'max-width:100%;margin-left:8px';
 
       for (const item of info.metricOptions || []) {
         const option = document.createElement('option');
         option.value = item.value;
-        option.textContent = `${item.label} (${item.unit})`;
+
+        option.textContent =
+          `${item.label} (${item.unit})`;
+
         picker.append(option);
       }
 
       const key = document.createElement('p');
+
       key.textContent =
-        '● 2024 (blue)     ● 2025 (orange)  ·  January–November in both years';
+        '● 2024 (blue)     ● 2025 (orange)  ·  ' +
+        'January–November in both years';
+
       key.style.cssText =
         'color:#4f6972;font-size:.84rem;margin:0 0 10px';
 
@@ -204,18 +420,27 @@ for (const card of document.querySelectorAll('[data-chart]')) {
 
       async function renderMeasure(metric) {
         const version = ++revision;
+
         const option = (info.metricOptions || []).find(
           item => item.value === metric
         );
 
         if (!option) return;
 
-        story.textContent = info.interpretations?.[metric] || '';
+        story.textContent =
+          info.interpretations?.[metric] || '';
+
         story.hidden = !story.textContent;
 
         const selected = structuredClone(spec);
+
         selected.transform = [
-          {filter: {field: 'metric', equal: metric}}
+          {
+            filter: {
+              field: 'metric',
+              equal: metric
+            }
+          }
         ];
 
         selected.layer[0].encoding.x.axis.title =
@@ -237,7 +462,8 @@ for (const card of document.querySelectorAll('[data-chart]')) {
         }
       }
 
-      picker.value = info.defaultMetric || 'Median Hs';
+      picker.value =
+        info.defaultMetric || 'Median Hs';
 
       picker.addEventListener('change', () => {
         void renderMeasure(picker.value);
@@ -245,14 +471,15 @@ for (const card of document.querySelectorAll('[data-chart]')) {
 
       callout.hidden = true;
       card.hidden = false;
+
       await renderMeasure(picker.value);
 
+    // CHART 1 — Interactive National Surfing Reserves map.
     } else if (
       id === 'map-reserves' &&
       info.interpretations &&
       info.stateOrder
     ) {
-      // Chart 1: preserve state filters and the right-side analysis panel.
       card.classList.add('map-card');
 
       const layout = document.createElement('div');
@@ -263,11 +490,17 @@ for (const card of document.querySelectorAll('[data-chart]')) {
 
       const analysisSide = document.createElement('aside');
       analysisSide.className = 'map-analysis';
-      analysisSide.setAttribute('aria-live', 'polite');
+
+      analysisSide.setAttribute(
+        'aria-live',
+        'polite'
+      );
 
       const filters = document.createElement('div');
       filters.className = 'state-filters';
+
       filters.setAttribute('role', 'group');
+
       filters.setAttribute(
         'aria-label',
         'Filter surfing reserves by state'
@@ -279,6 +512,7 @@ for (const card of document.querySelectorAll('[data-chart]')) {
       mapSide.append(filters, viz);
       analysisSide.append(callout, detail, story);
       layout.append(mapSide, analysisSide);
+
       card.insertBefore(layout, source);
 
       const buttons = [];
@@ -286,19 +520,32 @@ for (const card of document.querySelectorAll('[data-chart]')) {
 
       async function selectState(state) {
         const request = ++requestNumber;
-        const result = info.interpretations[state];
+
+        const result =
+          info.interpretations[state];
 
         if (!result) return;
 
         for (const button of buttons) {
-          const active = button.dataset.state === state;
-          button.classList.toggle('is-active', active);
-          button.setAttribute('aria-pressed', String(active));
+          const active =
+            button.dataset.state === state;
+
+          button.classList.toggle(
+            'is-active',
+            active
+          );
+
+          button.setAttribute(
+            'aria-pressed',
+            String(active)
+          );
         }
 
         const heading = document.createElement('strong');
+
         heading.textContent =
-          info.annotationTargets?.[state]?.name || 'Map finding';
+          info.annotationTargets?.[state]?.name ||
+          'Map finding';
 
         const finding = document.createElement('span');
         finding.textContent = result.callout || '';
@@ -317,32 +564,40 @@ for (const card of document.querySelectorAll('[data-chart]')) {
         if (state !== 'All') {
           selected.layer[1].transform = [
             ...(selected.layer[1].transform || []),
-            {filter: {field: 'state', equal: state}}
+            {
+              filter: {
+                field: 'state',
+                equal: state
+              }
+            }
           ];
 
           const width = Math.max(
             280,
-            Math.floor(viz.getBoundingClientRect().width)
+            Math.floor(
+              viz.getBoundingClientRect().width
+            )
           );
 
           selected.width = width;
           selected.height = 350;
-          selected.projection = getStateProjection(
-            state,
-            width,
-            350
-          );
+
+          selected.projection =
+            getStateProjection(state, width, 350);
         }
 
         if (request !== requestNumber) return;
+
         await vegaEmbed(viz, selected, options);
       }
 
       for (const state of info.stateOrder) {
         const button = document.createElement('button');
+
         button.type = 'button';
         button.dataset.state = state;
         button.className = 'state-filter';
+
         button.textContent =
           state === 'All' ? 'All states' : state;
 
@@ -362,10 +617,13 @@ for (const card of document.querySelectorAll('[data-chart]')) {
       }
 
       card.hidden = false;
-      await selectState(info.defaultState || 'All');
 
+      await selectState(
+        info.defaultState || 'All'
+      );
+
+    // Standard handling for all other charts.
     } else {
-      // All remaining charts, including Chart 5.
       callout.textContent = info.annotation || '';
       callout.hidden = !info.annotation;
 
@@ -373,13 +631,16 @@ for (const card of document.querySelectorAll('[data-chart]')) {
       story.hidden = !info.analysis;
 
       card.hidden = false;
+
       await vegaEmbed(viz, spec, options);
     }
 
   } catch (error) {
     console.error(`Could not render ${id}:`, error);
+
     card.querySelector('.viz').textContent =
       `Chart could not load: ${error.message}`;
+
     card.hidden = false;
   }
 }
