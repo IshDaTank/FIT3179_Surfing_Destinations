@@ -1,11 +1,14 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Mirrored bar comparison of estimated adult female and male surfing participants by jurisdiction in 2025. NT omitted from subgroup display.",
+  "description": "Mirrored bar comparison of estimated adult male and female surfing participants across seven Australian states and territories in 2025.",
   "background": "#ffffff",
   "width": "container",
   "height": 400,
   "data": {
-    "url": "data/ausplay-surf-gender-2025.csv"
+    "url": "data/ausplay-surf-gender-2025.csv",
+    "format": {
+      "type": "csv"
+    }
   },
   "usermeta": {
     "title": "Who Surfs in Australia?",
@@ -41,7 +44,10 @@
         "ACT"
       ],
       "axis": {
-        "title": null,
+        "title": "States/Territories",
+        "titleFontSize": 14,
+        "titleFontWeight": "bold",
+        "titlePadding": 18,
         "labelFontSize": 14,
         "labelFontWeight": "bold",
         "labelPadding": 12,
@@ -60,31 +66,46 @@
         "nice": false
       },
       "axis": {
-        "title": "Estimated adult surfers (15+) · 2025",
-        "labelExpr": "format(abs(datum.value), \",.0f\")",
-        "tickCount": 9,
+        "title": "Estimated adult surfing participants (15+), 2025",
+        "labelExpr": "format(abs(datum.value), ',.0f')",
+        "values": [
+          -80000,
+          -60000,
+          -40000,
+          -20000,
+          0,
+          20000,
+          40000,
+          60000,
+          80000
+        ],
         "grid": true,
         "labelFontSize": 12,
         "titleFontSize": 13,
-        "labelPadding": 8
+        "labelPadding": 8,
+        "titlePadding": 14
       }
     },
     "tooltip": [
       {
         "field": "state",
+        "type": "ordinal",
         "title": "State / territory"
       },
       {
         "field": "sex",
-        "title": "Gender category"
+        "type": "nominal",
+        "title": "Gender"
       },
       {
         "field": "estimated_participants",
+        "type": "quantitative",
         "title": "Estimated participants",
         "format": ",.0f"
       },
       {
         "field": "year",
+        "type": "ordinal",
         "title": "Year"
       }
     ]
@@ -189,8 +210,8 @@
     "font": "Arial"
   },
   "padding": {
-    "left": 10,
-    "right": 40,
+    "left": 15,
+    "right": 45,
     "top": 10,
     "bottom": 14
   }
