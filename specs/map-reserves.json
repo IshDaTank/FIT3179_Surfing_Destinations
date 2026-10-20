@@ -1,7 +1,6 @@
-
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Interactive map of Australia's 19 National Surfing Reserves, using equal-sized location markers.",
+  "description": "Interactive map of Australia's National Surfing Reserves. Equal-sized location markers use distinct, colour-blind-friendly state colours.",
   "usermeta": {
     "title": "Where are Australia's recognised surfing destinations?",
     "defaultState": "All",
@@ -14,7 +13,7 @@
       "All": {
         "callout": "The Sydney-area cluster helps explain NSW's 11 of 19 listings (58%).",
         "detail": "19 listed reserves · five states · dedication years 2006–2022",
-        "analysis": "Australia's National Surfing Reserves register covers 19 localities across New South Wales (11), Western Australia (3), Queensland (2), South Australia (2) and Victoria (1). The strongest concentration is in NSW, particularly around Sydney, but recognised surfing heritage also spans distant coastal communities such as Kalbarri, Noosa and Phillip Island. This geographic spread supports a story of multiple surfing identities rather than one universally 'best' beach. Importantly, the register records places that received formal heritage recognition—not all surf breaks, wave quality, participation or visitor numbers. The next chart examines whether these recognised locations are tightly clustered or widely separated."
+        "analysis": "Australia's National Surfing Reserves register covers 19 localities across New South Wales (11), Western Australia (3), Queensland (2), South Australia (2) and Victoria (1). The strongest concentration is in NSW, particularly around Sydney, but recognised surfing heritage also spans distant coastal communities such as Kalbarri, Noosa and Phillip Island. This geographic spread supports a story of multiple surfing identities rather than one universally 'best' beach. Importantly, the register records places that received formal heritage recognition—not all surf breaks, wave quality, participation or visitor numbers. The next chart compares how unevenly these recognised locations are distributed between states."
       },
       "NSW": {
         "callout": "Sydney contains five of NSW's 11 listed reserves.",
@@ -97,11 +96,11 @@
       },
       "mark": {
         "type": "circle",
-        "size": 115,
+        "size": 125,
         "filled": true,
-        "opacity": 0.95,
+        "opacity": 1,
         "stroke": "#ffffff",
-        "strokeWidth": 1.5
+        "strokeWidth": 1.8
       },
       "encoding": {
         "longitude": {
@@ -115,15 +114,15 @@
         "color": {
           "field": "state",
           "type": "nominal",
-          "title": null,
+          "title": "State",
           "scale": {
             "domain": ["NSW", "QLD", "VIC", "SA", "WA"],
             "range": [
-              "#117989",
-              "#E3A049",
-              "#7D6BA3",
-              "#B96A75",
-              "#568C69"
+              "#0072B2",
+              "#E69F00",
+              "#CC79A7",
+              "#009E73",
+              "#D55E00"
             ]
           },
           "legend": null
