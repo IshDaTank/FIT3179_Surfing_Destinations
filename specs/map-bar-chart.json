@@ -1,7 +1,6 @@
-
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "A sorted horizontal bar chart comparing the number of National Surfing Reserves across five Australian states. Arrow-connected annotations highlight the maximum and minimum.",
+  "description": "Sorted horizontal bar chart of National Surfing Reserves by state, using colour-blind-friendly categorical colours and arrow-connected annotations.",
   "usermeta": {
     "title": "Which States Have the Most Recognised Surfing Reserves?",
     "analysis": "New South Wales accounts for 11 of Australia's 19 listed National Surfing Reserves (58%), exceeding the eight listings across the other four represented states combined. Western Australia has three (16%), Queensland and South Australia have two each (11%), and Victoria has one (5%). One possible explanation for the uneven pattern is the history of the recognition program: National Surfing Reserves was formed in Sydney in 2005, and its first eight listed dedications, between 2006 and 2009, were all in NSW. This indicates an early concentration of formal recognition, but does not prove why it occurred. Designation also requires a successful nomination, local steering committee, community support and engagement with relevant authorities. These organisational requirements may contribute to differences in state representation, independently of the availability of surf breaks. Victoria's only listed reserve is Phillip Island, even though Bells Beach is an internationally recognised competition venue. The distinction illustrates that official heritage listings do not measure all surfing destinations, wave quality or visitor popularity. Tasmania and the Northern Territory have no entries in this register; the ACT is landlocked. The comparison therefore measures recognised sites rather than total surfing opportunities.",
@@ -38,10 +37,10 @@
   "height": 290,
   "background": "#ffffff",
   "padding": {
-    "left": 8,
-    "right": 6,
+    "left": 10,
+    "right": 8,
     "top": 14,
-    "bottom": 4
+    "bottom": 8
   },
   "encoding": {
     "x": {
@@ -98,17 +97,19 @@
       },
       "encoding": {
         "color": {
-          "condition": [
-            {
-              "test": "datum.state === 'NSW'",
-              "value": "#086579"
-            },
-            {
-              "test": "datum.state === 'VIC'",
-              "value": "#D58B52"
-            }
-          ],
-          "value": "#81bcb6"
+          "field": "state",
+          "type": "nominal",
+          "scale": {
+            "domain": ["NSW", "QLD", "VIC", "SA", "WA"],
+            "range": [
+              "#0072B2",
+              "#E69F00",
+              "#CC79A7",
+              "#009E73",
+              "#D55E00"
+            ]
+          },
+          "legend": null
         },
         "tooltip": [
           {
@@ -152,16 +153,16 @@
         "values": [
           {
             "state": "NSW",
-            "start": 12.15,
-            "end": 16.85,
-            "labelX": 12.35,
+            "boxStart": 12.55,
+            "boxEnd": 16.95,
+            "labelX": 12.8,
             "label": "58% > other states (8)"
           },
           {
             "state": "VIC",
-            "start": 3.05,
-            "end": 10.55,
-            "labelX": 3.25,
+            "boxStart": 3.15,
+            "boxEnd": 9.9,
+            "labelX": 3.4,
             "label": "Only Phillip Island listed"
           }
         ]
@@ -174,25 +175,25 @@
       },
       "encoding": {
         "x": {
-          "field": "start",
+          "field": "boxStart",
           "type": "quantitative"
         },
         "x2": {
-          "field": "end"
+          "field": "boxEnd"
         },
         "color": {
           "condition": {
             "test": "datum.state === 'VIC'",
-            "value": "#FFF1E6"
+            "value": "#F8EBF3"
           },
-          "value": "#E4F2EF"
+          "value": "#E5F2FA"
         },
         "stroke": {
           "condition": {
             "test": "datum.state === 'VIC'",
-            "value": "#EBC7A7"
+            "value": "#CC79A7"
           },
-          "value": "#B7D9D2"
+          "value": "#0072B2"
         }
       }
     },
@@ -201,13 +202,13 @@
         "values": [
           {
             "state": "NSW",
-            "start": 11.45,
-            "end": 12.03
+            "ruleStart": 11.85,
+            "ruleEnd": 12.45
           },
           {
             "state": "VIC",
-            "start": 1.48,
-            "end": 2.95
+            "ruleStart": 1.75,
+            "ruleEnd": 3
           }
         ]
       },
@@ -217,18 +218,18 @@
       },
       "encoding": {
         "x": {
-          "field": "start",
+          "field": "ruleStart",
           "type": "quantitative"
         },
         "x2": {
-          "field": "end"
+          "field": "ruleEnd"
         },
         "color": {
           "condition": {
             "test": "datum.state === 'VIC'",
-            "value": "#C17A40"
+            "value": "#CC79A7"
           },
-          "value": "#267D81"
+          "value": "#0072B2"
         }
       }
     },
@@ -237,11 +238,11 @@
         "values": [
           {
             "state": "NSW",
-            "pointX": 11.45
+            "pointX": 11.85
           },
           {
             "state": "VIC",
-            "pointX": 1.48
+            "pointX": 1.75
           }
         ]
       },
@@ -259,9 +260,9 @@
         "color": {
           "condition": {
             "test": "datum.state === 'VIC'",
-            "value": "#C17A40"
+            "value": "#CC79A7"
           },
-          "value": "#267D81"
+          "value": "#0072B2"
         }
       }
     },
@@ -270,12 +271,12 @@
         "values": [
           {
             "state": "NSW",
-            "labelX": 12.35,
+            "labelX": 12.8,
             "label": "58% > other states (8)"
           },
           {
             "state": "VIC",
-            "labelX": 3.25,
+            "labelX": 3.4,
             "label": "Only Phillip Island listed"
           }
         ]
