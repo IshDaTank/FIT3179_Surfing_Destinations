@@ -1,81 +1,102 @@
 
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Sorted horizontal bar chart comparing registered National Surfing Reserves across Australian states, with arrow-connected maximum and minimum annotations.",
+  "description": "A sorted horizontal bar chart comparing the number of National Surfing Reserves across five Australian states. Arrow-connected annotations highlight the maximum and minimum.",
   "usermeta": {
     "title": "Which States Have the Most Recognised Surfing Reserves?",
-    "analysis": "New South Wales dominates the National Surfing Reserves register, accounting for 11 of Australia's 19 listings (58%). This concentration includes historically significant surfing communities around Sydney, Newcastle and the NSW coast. Western Australia ranks second with three reserves (16%), including Margaret River and Yallingup, while Queensland and South Australia each have two (11%). Victoria has one (5%), at Phillip Island. Why might these differences exist? National Surfing Reserve recognition considers wave quality, surfing history and long-term community use, but official designation also depends on local nominations, community support, coordination with councils and completion of the dedication process. NSW has an established history of surfing recognition and cooperation with Crown Lands, which may help explain its stronger representation. However, the available data cannot establish how much each factor contributes to the differences. Victoria's single listing does not mean it has only one important surfing location: Bells Beach demonstrates that international competition significance and National Surfing Reserve recognition are different measures. Tasmania, the Northern Territory and the ACT have no entries in this particular register and are excluded from the displayed ranking. Consequently, the chart measures formally recognised heritage sites, not the quality, quantity or popularity of surfing destinations in each state.",
-    "source": {
-      "label": "National Surfing Reserves — Official Register",
-      "url": "https://surfingreserves.org.au/national-surfing-reserves/"
-    }
+    "analysis": "New South Wales accounts for 11 of Australia's 19 listed National Surfing Reserves (58%), exceeding the eight listings across the other four represented states combined. Western Australia has three (16%), Queensland and South Australia have two each (11%), and Victoria has one (5%). One possible explanation for the uneven pattern is the history of the recognition program: National Surfing Reserves was formed in Sydney in 2005, and its first eight listed dedications, between 2006 and 2009, were all in NSW. This indicates an early concentration of formal recognition, but does not prove why it occurred. Designation also requires a successful nomination, local steering committee, community support and engagement with relevant authorities. These organisational requirements may contribute to differences in state representation, independently of the availability of surf breaks. Victoria's only listed reserve is Phillip Island, even though Bells Beach is an internationally recognised competition venue. The distinction illustrates that official heritage listings do not measure all surfing destinations, wave quality or visitor popularity. Tasmania and the Northern Territory have no entries in this register; the ACT is landlocked. The comparison therefore measures recognised sites rather than total surfing opportunities.",
+    "sources": [
+      {
+        "label": "National Surfing Reserves — Official Register",
+        "url": "https://surfingreserves.org.au/national-surfing-reserves/"
+      },
+      {
+        "label": "National Surfing Reserves — Nomination Process",
+        "url": "https://surfingreserves.org.au/nomination-process/"
+      }
+    ]
   },
+  "data": {
+    "url": "data/reserves.csv"
+  },
+  "transform": [
+    {
+      "aggregate": [
+        {
+          "op": "count",
+          "as": "count"
+        }
+      ],
+      "groupby": ["state"]
+    },
+    {
+      "calculate": "datum.count / 19",
+      "as": "share"
+    }
+  ],
   "width": "container",
-  "height": 310,
+  "height": 290,
   "background": "#ffffff",
   "padding": {
-    "left": 5,
-    "right": 5,
-    "top": 18,
-    "bottom": 5
+    "left": 8,
+    "right": 6,
+    "top": 14,
+    "bottom": 4
+  },
+  "encoding": {
+    "x": {
+      "field": "count",
+      "type": "quantitative",
+      "title": "Number of National Surfing Reserves",
+      "scale": {
+        "domain": [0, 17],
+        "nice": false
+      },
+      "axis": {
+        "values": [0, 3, 6, 9, 12, 15],
+        "grid": true,
+        "gridColor": "#e7efed",
+        "domain": false,
+        "tickColor": "#b7ceca",
+        "labelColor": "#526b74",
+        "titleColor": "#244654",
+        "titlePadding": 13,
+        "labelFontSize": 11,
+        "titleFontSize": 12,
+        "titleFontWeight": "bold"
+      }
+    },
+    "y": {
+      "field": "state",
+      "type": "nominal",
+      "title": "States",
+      "sort": ["NSW", "WA", "QLD", "SA", "VIC"],
+      "scale": {
+        "paddingInner": 0.35,
+        "paddingOuter": 0.3
+      },
+      "axis": {
+        "labelFontSize": 13,
+        "labelFontWeight": "bold",
+        "labelColor": "#244654",
+        "labelPadding": 10,
+        "titleColor": "#244654",
+        "titleFontSize": 12,
+        "titleFontWeight": "bold",
+        "titlePadding": 16,
+        "domain": false,
+        "ticks": false
+      }
+    }
   },
   "layer": [
     {
-      "data": {
-        "url": "data/reserves.csv"
-      },
-      "transform": [
-        {
-          "aggregate": [
-            {
-              "op": "count",
-              "as": "count"
-            }
-          ],
-          "groupby": ["state"]
-        }
-      ],
       "mark": {
         "type": "bar",
-        "size": 31,
+        "size": 29,
         "cornerRadiusEnd": 4
       },
       "encoding": {
-        "x": {
-          "field": "count",
-          "type": "quantitative",
-          "title": "Number of National Surfing Reserves",
-          "scale": {
-            "domain": [0, 18],
-            "nice": false
-          },
-          "axis": {
-            "values": [0, 3, 6, 9, 12, 15, 18],
-            "grid": true,
-            "gridColor": "#e7efed",
-            "labelColor": "#526b74",
-            "titleColor": "#244654",
-            "titlePadding": 15
-          }
-        },
-        "y": {
-          "field": "state",
-          "type": "nominal",
-          "title": null,
-          "sort": ["NSW", "WA", "QLD", "SA", "VIC"],
-          "scale": {
-            "paddingInner": 0.35,
-            "paddingOuter": 0.35
-          },
-          "axis": {
-            "labelFontSize": 14,
-            "labelFontWeight": "bold",
-            "labelColor": "#244654",
-            "labelPadding": 12,
-            "domain": false,
-            "ticks": false
-          }
-        },
         "color": {
           "condition": [
             {
@@ -98,44 +119,27 @@
           {
             "field": "count",
             "type": "quantitative",
-            "title": "Registered reserves"
+            "title": "Listed reserves"
+          },
+          {
+            "field": "share",
+            "type": "quantitative",
+            "format": ".1%",
+            "title": "Share of national total"
           }
         ]
       }
     },
     {
-      "data": {
-        "url": "data/reserves.csv"
-      },
-      "transform": [
-        {
-          "aggregate": [
-            {
-              "op": "count",
-              "as": "count"
-            }
-          ],
-          "groupby": ["state"]
-        }
-      ],
       "mark": {
         "type": "text",
         "align": "left",
-        "dx": 9,
-        "fontSize": 13,
+        "dx": 8,
+        "fontSize": 12,
         "fontWeight": "bold",
         "color": "#244654"
       },
       "encoding": {
-        "x": {
-          "field": "count",
-          "type": "quantitative"
-        },
-        "y": {
-          "field": "state",
-          "type": "nominal",
-          "sort": ["NSW", "WA", "QLD", "SA", "VIC"]
-        },
         "text": {
           "field": "count",
           "type": "quantitative",
@@ -148,44 +152,47 @@
         "values": [
           {
             "state": "NSW",
-            "boxStart": 12.35,
-            "boxEnd": 17.8,
-            "textX": 12.65,
-            "arrowStart": 11.4,
-            "arrowEnd": 12.25,
-            "label": "MAX: 11 reserves (58%)"
+            "start": 12.15,
+            "end": 16.85,
+            "labelX": 12.35,
+            "label": "58% > other states (8)"
           },
           {
             "state": "VIC",
-            "boxStart": 3.1,
-            "boxEnd": 9.0,
-            "textX": 3.4,
-            "arrowStart": 1.45,
-            "arrowEnd": 3.0,
-            "label": "MIN: 1 reserve (5%)"
+            "start": 3.05,
+            "end": 10.55,
+            "labelX": 3.25,
+            "label": "Only Phillip Island listed"
           }
         ]
       },
       "mark": {
         "type": "rect",
-        "color": "#e7f4f0",
-        "stroke": "#b7d9d2",
-        "strokeWidth": 1,
+        "height": 32,
         "cornerRadius": 5,
-        "height": 32
+        "strokeWidth": 1
       },
       "encoding": {
         "x": {
-          "field": "boxStart",
+          "field": "start",
           "type": "quantitative"
         },
         "x2": {
-          "field": "boxEnd"
+          "field": "end"
         },
-        "y": {
-          "field": "state",
-          "type": "nominal",
-          "sort": ["NSW", "WA", "QLD", "SA", "VIC"]
+        "color": {
+          "condition": {
+            "test": "datum.state === 'VIC'",
+            "value": "#FFF1E6"
+          },
+          "value": "#E4F2EF"
+        },
+        "stroke": {
+          "condition": {
+            "test": "datum.state === 'VIC'",
+            "value": "#EBC7A7"
+          },
+          "value": "#B7D9D2"
         }
       }
     },
@@ -194,33 +201,34 @@
         "values": [
           {
             "state": "NSW",
-            "arrowStart": 11.4,
-            "arrowEnd": 12.25
+            "start": 11.45,
+            "end": 12.03
           },
           {
             "state": "VIC",
-            "arrowStart": 1.45,
-            "arrowEnd": 3.0
+            "start": 1.48,
+            "end": 2.95
           }
         ]
       },
       "mark": {
         "type": "rule",
-        "color": "#267d81",
         "strokeWidth": 1.7
       },
       "encoding": {
         "x": {
-          "field": "arrowStart",
+          "field": "start",
           "type": "quantitative"
         },
         "x2": {
-          "field": "arrowEnd"
+          "field": "end"
         },
-        "y": {
-          "field": "state",
-          "type": "nominal",
-          "sort": ["NSW", "WA", "QLD", "SA", "VIC"]
+        "color": {
+          "condition": {
+            "test": "datum.state === 'VIC'",
+            "value": "#C17A40"
+          },
+          "value": "#267D81"
         }
       }
     },
@@ -229,11 +237,11 @@
         "values": [
           {
             "state": "NSW",
-            "arrowStart": 11.4
+            "pointX": 11.45
           },
           {
             "state": "VIC",
-            "arrowStart": 1.45
+            "pointX": 1.48
           }
         ]
       },
@@ -241,18 +249,19 @@
         "type": "point",
         "shape": "triangle-left",
         "filled": true,
-        "size": 80,
-        "color": "#267d81"
+        "size": 72
       },
       "encoding": {
         "x": {
-          "field": "arrowStart",
+          "field": "pointX",
           "type": "quantitative"
         },
-        "y": {
-          "field": "state",
-          "type": "nominal",
-          "sort": ["NSW", "WA", "QLD", "SA", "VIC"]
+        "color": {
+          "condition": {
+            "test": "datum.state === 'VIC'",
+            "value": "#C17A40"
+          },
+          "value": "#267D81"
         }
       }
     },
@@ -261,13 +270,13 @@
         "values": [
           {
             "state": "NSW",
-            "textX": 12.65,
-            "label": "MAX: 11 reserves (58%)"
+            "labelX": 12.35,
+            "label": "58% > other states (8)"
           },
           {
             "state": "VIC",
-            "textX": 3.4,
-            "label": "MIN: 1 reserve (5%)"
+            "labelX": 3.25,
+            "label": "Only Phillip Island listed"
           }
         ]
       },
@@ -275,19 +284,14 @@
         "type": "text",
         "align": "left",
         "baseline": "middle",
-        "fontSize": 11,
+        "fontSize": 10,
         "fontWeight": "bold",
-        "color": "#145764"
+        "color": "#244654"
       },
       "encoding": {
         "x": {
-          "field": "textX",
+          "field": "labelX",
           "type": "quantitative"
-        },
-        "y": {
-          "field": "state",
-          "type": "nominal",
-          "sort": ["NSW", "WA", "QLD", "SA", "VIC"]
         },
         "text": {
           "field": "label",
