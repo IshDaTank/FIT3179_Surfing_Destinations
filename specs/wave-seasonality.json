@@ -1,0 +1,255 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Month-by-year heatmap of median significant wave height at Bilinga, comparing 2022–2025.",
+  "usermeta": {
+    "title": "Do the Same Wave Patterns Return Each Year?",
+    "analysis": "A recurring June–July lull emerges across the four years. June records the lowest monthly median in 2022 (0.62 m), 2023 (0.55 m) and 2024 (0.54 m), while July is lowest in 2025 (0.58 m). In contrast, the strongest months shift between years: May leads in 2022 (1.32 m) and 2025 (1.20 m), April in 2023 (0.98 m), and March in 2024 (1.22 m). February also experiences relatively elevated medians across several years, suggesting that stronger typical conditions are not confined to one fixed season. Compared with the single-year view in Chart 5, the heatmap reveals a more consistent pattern of lower typical wave heights in early winter, alongside considerable variation in the timing of stronger conditions. This provides a basis for examining how occasional large swell events contribute to differences between months and years.",
+    "method": "Monthly medians of half-hourly significant wave height (Hs, metres) recorded by the Bilinga wave buoy. Only complete calendar years 2022–2025 are included. Invalid and missing readings, including -99.9, were excluded. Colour and cell labels represent monthly medians. Data completeness varies by month; coverage is available in the hover tooltip.",
+    "sources": [
+      {
+        "label": "Queensland Government — Bilinga Verified Wave Data",
+        "url": "https://www.data.qld.gov.au/dataset/coastal-data-system-waves-bilinga"
+      }
+    ]
+  },
+  "width": "container",
+  "height": 292,
+  "background": "#ffffff",
+  "data": {
+    "url": "data/bilinga-monthly-2022-2025.csv",
+    "format": {
+      "type": "csv",
+      "parse": {
+        "year": "number",
+        "month_number": "number",
+        "median_hs": "number",
+        "valid_readings": "number",
+        "missing_readings": "number",
+        "coverage_pct": "number"
+      }
+    }
+  },
+  "title": {
+    "text": "Monthly Median Significant Wave Height",
+    "subtitle": [
+      "Bilinga, Gold Coast · 2022–2025 · metres",
+      "Orange outlines highlight June–July"
+    ],
+    "anchor": "start",
+    "fontSize": 15,
+    "fontWeight": "bold",
+    "color": "#183F4C",
+    "subtitleFontSize": 11,
+    "subtitleColor": "#506C75",
+    "offset": 12
+  },
+  "layer": [
+    {
+      "mark": {
+        "type": "rect",
+        "cornerRadius": 5,
+        "stroke": "#ffffff",
+        "strokeWidth": 3
+      },
+      "encoding": {
+        "x": {
+          "field": "month",
+          "type": "ordinal",
+          "sort": [
+            "Jan", "Feb", "Mar", "Apr",
+            "May", "Jun", "Jul", "Aug",
+            "Sep", "Oct", "Nov", "Dec"
+          ],
+          "title": "Month",
+          "axis": {
+            "labelAngle": 0,
+            "labelFontSize": 12,
+            "labelColor": "#355764",
+            "titleFontSize": 12,
+            "titleFontWeight": "bold",
+            "titleColor": "#244654",
+            "ticks": false,
+            "domain": false,
+            "labelPadding": 9,
+            "titlePadding": 12
+          }
+        },
+        "y": {
+          "field": "year",
+          "type": "ordinal",
+          "sort": [2022, 2023, 2024, 2025],
+          "title": "Year",
+          "axis": {
+            "labelFontSize": 13,
+            "labelFontWeight": "bold",
+            "labelColor": "#244654",
+            "titleFontSize": 12,
+            "titleFontWeight": "bold",
+            "titleColor": "#244654",
+            "ticks": false,
+            "domain": false,
+            "labelPadding": 9,
+            "titlePadding": 12
+          }
+        },
+        "color": {
+          "field": "median_hs",
+          "type": "quantitative",
+          "title": "Median wave height (m)",
+          "scale": {
+            "domain": [0.5, 1.35],
+            "range": [
+              "#DCEFEB",
+              "#A9D9CC",
+              "#50A9AD",
+              "#09697D"
+            ]
+          },
+          "legend": {
+            "orient": "bottom",
+            "direction": "horizontal",
+            "gradientLength": 230,
+            "gradientThickness": 12,
+            "labelFontSize": 11,
+            "titleFontSize": 11,
+            "titleColor": "#355764",
+            "labelColor": "#355764",
+            "format": ".1f"
+          }
+        },
+        "tooltip": [
+          {
+            "field": "year",
+            "type": "ordinal",
+            "title": "Year"
+          },
+          {
+            "field": "month",
+            "type": "nominal",
+            "title": "Month"
+          },
+          {
+            "field": "median_hs",
+            "type": "quantitative",
+            "format": ".2f",
+            "title": "Median Hs (m)"
+          },
+          {
+            "field": "valid_readings",
+            "type": "quantitative",
+            "title": "Valid half-hour readings"
+          },
+          {
+            "field": "coverage_pct",
+            "type": "quantitative",
+            "format": ".1f",
+            "title": "Data coverage (%)"
+          }
+        ]
+      }
+    },
+    {
+      "transform": [
+        {
+          "filter": "datum.month === 'Jun' || datum.month === 'Jul'"
+        }
+      ],
+      "mark": {
+        "type": "rect",
+        "cornerRadius": 5,
+        "fillOpacity": 0,
+        "stroke": "#D47439",
+        "strokeWidth": 2.7
+      },
+      "encoding": {
+        "x": {
+          "field": "month",
+          "type": "ordinal",
+          "sort": [
+            "Jan", "Feb", "Mar", "Apr",
+            "May", "Jun", "Jul", "Aug",
+            "Sep", "Oct", "Nov", "Dec"
+          ]
+        },
+        "y": {
+          "field": "year",
+          "type": "ordinal",
+          "sort": [2022, 2023, 2024, 2025]
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "fontSize": 13,
+        "fontWeight": "bold"
+      },
+      "encoding": {
+        "x": {
+          "field": "month",
+          "type": "ordinal",
+          "sort": [
+            "Jan", "Feb", "Mar", "Apr",
+            "May", "Jun", "Jul", "Aug",
+            "Sep", "Oct", "Nov", "Dec"
+          ]
+        },
+        "y": {
+          "field": "year",
+          "type": "ordinal",
+          "sort": [2022, 2023, 2024, 2025]
+        },
+        "text": {
+          "field": "median_hs",
+          "type": "quantitative",
+          "format": ".2f"
+        },
+        "color": {
+          "condition": {
+            "test": "datum.median_hs >= 1.06",
+            "value": "#FFFFFF"
+          },
+          "value": "#153B49"
+        },
+        "tooltip": [
+          {
+            "field": "year",
+            "type": "ordinal",
+            "title": "Year"
+          },
+          {
+            "field": "month",
+            "type": "nominal",
+            "title": "Month"
+          },
+          {
+            "field": "median_hs",
+            "type": "quantitative",
+            "format": ".2f",
+            "title": "Median Hs (m)"
+          },
+          {
+            "field": "valid_readings",
+            "type": "quantitative",
+            "title": "Valid readings"
+          },
+          {
+            "field": "coverage_pct",
+            "type": "quantitative",
+            "format": ".1f",
+            "title": "Coverage (%)"
+          }
+        ]
+      }
+    }
+  ],
+  "config": {
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelFont": "Arial",
+      "titleFont": "Arial"
+    }
+  }
+}
