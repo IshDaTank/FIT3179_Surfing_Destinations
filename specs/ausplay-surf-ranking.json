@@ -1,9 +1,9 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Dorling cartogram showing Australian states and territories as non-overlapping proportional-area circles. Interactive selection changes between estimated surfing participants and adult participation rate.",
+  "description": "Dorling cartogram showing eight Australian states and territories as non-overlapping circles. Circle area increases with the selected surfing participation measure, with a minimum size for readable numeric labels.",
   "background": "#ffffff",
   "width": 760,
-  "height": 440,
+  "height": 470,
   "usermeta": {
     "title": "How Do States and Territories Compare in Surfing Participation?",
     "defaultMetric": "count",
@@ -24,8 +24,8 @@
       "rate": "WA leads in participation rate: 1.76% of adults."
     },
     "interpretations": {
-      "count": "In this Dorling cartogram, each state or territory is represented by a circle whose area reflects its estimated adult surfing population. NSW is largest (117,953), followed by Queensland (63,787), Victoria (58,683) and Western Australia (43,496). The circle arrangement preserves approximate Australian geography, but physical state areas, boundaries and precise distances are deliberately removed. These totals partly reflect underlying population size, rather than surfing prevalence alone.",
-      "rate": "When circle area instead represents the proportion of adults participating in surfing, Western Australia becomes the largest (1.76%), narrowly ahead of NSW (1.67%). Queensland (1.38%) and Tasmania (1.36%) follow. Comparing the two layouts illustrates how the relative importance of states and territories changes when participation is adjusted for population. Small differences in survey-based rates should be interpreted cautiously."
+      "count": "Each circle represents an Australian state or territory, arranged to retain approximate geographic relationships without displaying the original state boundaries. NSW has the largest estimated surfing population (117,953), followed by Queensland (63,787), Victoria (58,683) and Western Australia (43,496). These results partly reflect population size rather than surfing prevalence. A minimum circle size is used so all numeric labels remain readable; the smallest circles are therefore not strictly proportional in area.",
+      "rate": "Western Australia has the highest estimated adult surfing participation rate (1.76%), narrowly ahead of NSW (1.67%). Queensland (1.38%) and Tasmania (1.36%) follow. Compared with the participant-count view, the relative size of WA increases significantly, illustrating why population-adjusted measures matter. A minimum circle size keeps the smallest rates readable, and narrow differences between survey estimates should be interpreted cautiously."
     },
     "sources": [
       {
@@ -42,10 +42,7 @@
       "field": "x",
       "type": "quantitative",
       "scale": {
-        "domain": [
-          0,
-          760
-        ],
+        "domain": [0, 760],
         "nice": false,
         "zero": false
       },
@@ -55,10 +52,7 @@
       "field": "y",
       "type": "quantitative",
       "scale": {
-        "domain": [
-          440,
-          0
-        ],
+        "domain": [470, 0],
         "nice": false,
         "zero": false
       },
@@ -158,10 +152,6 @@
         "align": "center"
       },
       "encoding": {
-        "y": {
-          "field": "value_y",
-          "type": "quantitative"
-        },
         "text": {
           "field": "value_label",
           "type": "nominal"
