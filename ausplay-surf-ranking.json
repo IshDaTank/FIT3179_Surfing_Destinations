@@ -1,0 +1,177 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "background": "#ffffff",
+  "width": "container",
+  "config": {
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelColor": "#31535f",
+      "titleColor": "#31535f",
+      "gridColor": "#e4eeec"
+    },
+    "text": {
+      "font": "Arial"
+    }
+  },
+  "description": "State or territory adult surfing participation, switch between estimated number of participants and estimated percent of adult residents.",
+  "usermeta": {
+    "title": "Which States Lead in Surfing Participation?",
+    "defaultMetric": "count",
+    "metricOptions": [
+      {
+        "value": "count",
+        "label": "Estimated participants",
+        "unit": "people"
+      },
+      {
+        "value": "rate",
+        "label": "Adult participation rate",
+        "unit": "%"
+      }
+    ],
+    "interpretations": {
+      "count": "New South Wales has the largest estimated adult surfing population at 117,953, nearly twice Queensland’s 63,787. Victoria follows at 58,683, then Western Australia at 43,496. This ordering is influenced by state population size: absolute participant numbers do not necessarily indicate a stronger surfing culture per resident.",
+      "rate": "Western Australia ranks first in estimated adult surfing participation rate (1.76%), narrowly ahead of NSW (1.67%). Queensland (1.38%) and Tasmania (1.36%) follow. This population-adjusted ranking reverses the impression from raw counts; however, close estimates and smaller territories should not be treated as statistically significant differences without confidence intervals."
+    },
+    "sources": [
+      {
+        "label": "Australian Sports Commission · AusPlay 2025, state and territory tables (30 Apr 2026)",
+        "url": "https://www.ausport.gov.au/clearinghouse/research/ausplay/results"
+      }
+    ]
+  },
+  "height": 360,
+  "data": {
+    "url": "data/ausplay_surf_ranking_2025.csv"
+  },
+  "transform": [
+    {
+      "filter": {
+        "field": "metric",
+        "equal": "count"
+      }
+    }
+  ],
+  "encoding": {
+    "y": {
+      "field": "state",
+      "type": "nominal",
+      "sort": {
+        "field": "value",
+        "order": "descending"
+      },
+      "axis": {
+        "title": null,
+        "labelFontSize": 12,
+        "labelFontWeight": "bold"
+      }
+    },
+    "x": {
+      "field": "value",
+      "type": "quantitative",
+      "scale": {
+        "zero": true,
+        "nice": true
+      },
+      "axis": {
+        "title": "Estimated surfing participants aged 15+",
+        "tickCount": 5,
+        "grid": true
+      }
+    },
+    "tooltip": [
+      {
+        "field": "state",
+        "title": "State / territory"
+      },
+      {
+        "field": "participants",
+        "title": "Estimated participants",
+        "format": ","
+      },
+      {
+        "field": "participation_rate_pct",
+        "title": "Participation rate (%)",
+        "format": ".2f"
+      }
+    ]
+  },
+  "layer": [
+    {
+      "mark": {
+        "type": "rule",
+        "stroke": "#9bb9bb",
+        "strokeWidth": 2.5
+      },
+      "encoding": {
+        "x": {
+          "datum": 0
+        },
+        "x2": {
+          "field": "value"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "circle",
+        "size": 190,
+        "stroke": "white",
+        "strokeWidth": 1.5
+      },
+      "encoding": {
+        "color": {
+          "field": "state",
+          "type": "nominal",
+          "scale": {
+            "domain": [
+              "NSW",
+              "QLD",
+              "VIC",
+              "WA",
+              "SA",
+              "TAS",
+              "ACT",
+              "NT"
+            ],
+            "range": [
+              "#0072B2",
+              "#E69F00",
+              "#CC79A7",
+              "#D55E00",
+              "#009E73",
+              "#7B61A8",
+              "#8C6D31",
+              "#666666"
+            ]
+          },
+          "legend": {
+            "title": "State / territory",
+            "orient": "bottom",
+            "columns": 4,
+            "symbolSize": 110
+          }
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "baseline": "middle",
+        "dx": 11,
+        "fontSize": 12,
+        "fontWeight": "bold",
+        "color": "#244654"
+      },
+      "encoding": {
+        "text": {
+          "field": "value_label",
+          "type": "nominal"
+        }
+      }
+    }
+  ]
+}
