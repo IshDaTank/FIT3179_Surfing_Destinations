@@ -1,24 +1,29 @@
-
+/* Load each chart and its analysis from its Vega-Lite JSON file */
 const root = new URL("../", import.meta.url);
 
-// Load every chart from its individual Vega-Lite JSON file.
 for (const card of document.querySelectorAll("[data-chart]")) {
   const id = card.dataset.chart;
 
   try {
+    // Load the chart JSON
     const response = await fetch(new URL(`specs/${id}.json`, root));
 
-    // Charts not yet built remain hidden.
+    // Hide charts that have not been created yet
     if (response.status === 404) continue;
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
 
     const spec = await response.json();
     const info = spec.usermeta || {};
 
+    // Ensure the chart uses Vega-Lite 6
     if (!spec.$schema?.includes("vega-lite/v6")) {
       throw new Error("Expected Vega-Lite 6");
     }
 
+    // Chart heading
     card.querySelector("h3").textContent =
       info.title || id.replaceAll("-", " ");
 
@@ -27,7 +32,7 @@ for (const card of document.querySelectorAll("[data-chart]")) {
     const story = card.querySelector(".chart-story");
     const source = card.querySelector(".chart-source");
 
-    // Display the official source.
+    // Source attribution
     if (info.source?.url && info.source?.label) {
       const link = document.createElement("a");
 
@@ -41,6 +46,7 @@ for (const card of document.querySelectorAll("[data-chart]")) {
 
     source.hidden = !source.childNodes.length;
 
+    // Vega-Lite rendering settings
     const options = {
       actions: false,
       renderer: "svg",
@@ -49,7 +55,8 @@ for (const card of document.querySelectorAll("[data-chart]")) {
       })
     };
 
-    // Chart 1: Interactive map of surfing reserves.
+    /* CHART 1: INTERACTIVE SURFING RESERVES MAP */
+
     if (
       id === "map-reserves" &&
       info.interpretations &&
@@ -57,7 +64,7 @@ for (const card of document.querySelectorAll("[data-chart]")) {
     ) {
       card.classList.add("map-card");
 
-      // Create the two-column layout.
+      // Create the two-column layout
       const layout = document.createElement("div");
       layout.className = "map-layout";
 
@@ -68,29 +75,34 @@ for (const card of document.querySelectorAll("[data-chart]")) {
       analysisSide.className = "map-analysis";
       analysisSide.setAttribute("aria-live", "polite");
 
-      // State selection buttons.
+      // State filter buttons
       const filters = document.createElement("div");
       filters.className = "state-filters";
+
       filters.setAttribute("role", "group");
       filters.setAttribute(
         "aria-label",
         "Filter surfing reserves by state"
       );
 
-      // Supporting map context.
+      // Supporting map information
       const context = document.createElement("p");
       context.className = "state-context";
 
-      // State-specific figures and dates.
+      // State-specific figures
       const detail = document.createElement("p");
       detail.className = "state-detail";
 
+      // Left side: filters and map
       mapSide.append(filters, viz, context);
+
+      // Right side: annotation and analysis
       analysisSide.append(callout, detail, story);
 
       layout.append(mapSide, analysisSide);
       card.insertBefore(layout, source);
 
+      // Consistent state colours
       const palette = {
         NSW: "#117989",
         QLD: "#E3A049",
@@ -102,11 +114,11 @@ for (const card of document.querySelectorAll("[data-chart]")) {
       const buttons = [];
       let latestRequest = 0;
 
-      // Update the chart and analysis when a state is selected.
+      // Update the map and analysis when a state is selected
       async function selectState(state) {
         const request = ++latestRequest;
 
-        // Highlight the selected button.
+        // Update active filter button
         for (const button of buttons) {
           const active = button.dataset.state === state;
 
@@ -114,12 +126,14 @@ for (const card of document.querySelectorAll("[data-chart]")) {
           button.setAttribute("aria-pressed", String(active));
         }
 
+        // Get the selected state's interpretation
         const result = info.interpretations[state];
+
         if (!result) return;
 
         const target = info.annotationTargets?.[state];
 
-        // Short, location-specific annotation.
+        // Display the short annotation on the right
         callout.replaceChildren();
 
         const annotationTitle = document.createElement("strong");
@@ -131,7 +145,7 @@ for (const card of document.querySelectorAll("[data-chart]")) {
 
         callout.append(annotationTitle, annotationText);
 
-        // Separate analytical interpretation.
+        // Display the separate analytical paragraph
         story.textContent = result.analysis;
         detail.textContent = result.detail || "";
 
@@ -139,15 +153,16 @@ for (const card of document.querySelectorAll("[data-chart]")) {
         story.hidden = false;
         detail.hidden = false;
 
+        // Update the map context
         context.textContent =
           state === "All"
             ? "All 19 nationally listed reserves · equal-sized location markers"
             : `${state} only · national map extent unchanged`;
 
-        // Copy the original Vega-Lite specification.
+        // Copy the original chart specification
         const selected = structuredClone(spec);
 
-        // Filter the location markers to the chosen state.
+        // Filter the reserve markers by state
         if (state !== "All") {
           selected.layer[1].transform = [
             ...(selected.layer[1].transform || []),
@@ -160,74 +175,22 @@ for (const card of document.querySelectorAll("[data-chart]")) {
           ];
         }
 
-        // Add a dashed leader line to the selected location.
-        if (target) {
-          selected.layer.push({
-            data: {
-              values: [target]
-            },
-            mark: {
-              type: "rule",
-              stroke: "#075d6c",
-              strokeWidth: 2.1,
-              strokeDash: [5, 3]
-            },
-            encoding: {
-              longitude: {
-                field: "startLon",
-                type: "quantitative"
-              },
-              latitude: {
-                field: "startLat",
-                type: "quantitative"
-              },
-              longitude2: {
-                field: "lon"
-              },
-              latitude2: {
-                field: "lat"
-              }
-            }
-          });
-
-          // Outline the annotated map location.
-          selected.layer.push({
-            data: {
-              values: [target]
-            },
-            mark: {
-              type: "circle",
-              filled: false,
-              size: 410,
-              stroke: "#075d6c",
-              strokeWidth: 2.5
-            },
-            encoding: {
-              longitude: {
-                field: "lon",
-                type: "quantitative"
-              },
-              latitude: {
-                field: "lat",
-                type: "quantitative"
-              }
-            }
-          });
-        }
+        // No dashed lines or outlined circles are added.
+        // Only the Australia map and reserve markers remain.
 
         try {
-          // Prevent older requests from starting after newer ones.
           if (request !== latestRequest) return;
 
           await vegaEmbed(viz, selected, options);
         } catch (error) {
           console.error("Could not render state map:", error);
+
           viz.textContent =
             `Map could not load: ${error.message}`;
         }
       }
 
-      // Create the interactive state buttons.
+      // Create state filter buttons
       for (const state of info.stateOrder) {
         const button = document.createElement("button");
 
@@ -253,21 +216,30 @@ for (const card of document.querySelectorAll("[data-chart]")) {
         buttons.push(button);
       }
 
+      // Display Chart 1
       card.hidden = false;
 
-      // Display the combined national view initially.
+      // Show all states by default
       await selectState(info.defaultState || "All");
+
     } else {
-      // Standard loading for the remaining charts.
+
+      /* ALL OTHER CHARTS */
+
+      // Chart-specific annotation from JSON
       callout.textContent = info.annotation || "";
       callout.hidden = !info.annotation;
 
+      // Chart-specific analysis from JSON
       story.textContent = info.analysis || "";
       story.hidden = !info.analysis;
 
+      // Render the chart
       await vegaEmbed(viz, spec, options);
+
       card.hidden = false;
     }
+
   } catch (error) {
     console.error(`Could not render ${id}:`, error);
 
