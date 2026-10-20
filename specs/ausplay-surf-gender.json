@@ -1,16 +1,16 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Mirrored bar comparison of estimated adult female and male surfing participants by jurisdiction in 2025.",
+  "description": "Mirrored bar comparison of estimated adult female and male surfing participants by jurisdiction in 2025. NT omitted from subgroup display.",
   "background": "#ffffff",
   "width": "container",
-  "height": 410,
+  "height": 400,
   "data": {
     "url": "data/ausplay-surf-gender-2025.csv"
   },
   "usermeta": {
     "title": "Who Surfs in Australia?",
-    "annotation": "NSW has the largest estimated surfing population among both men (74,892) and women (43,061).",
-    "analysis": "Men outnumber women in estimated adult surfing participation across all eight states and territories. New South Wales leads both groups, while Queensland and Victoria form a clear second tier. The chart also shows that the gender balance differs by state: women make up a comparatively larger share of surfers in Victoria than in Western Australia, suggesting that Australia’s surfing population is not only uneven in size but also different in composition from one jurisdiction to another. NSW’s dominance in both groups reinforces the scale of its surfing community within the national picture.",
+    "annotation": "NSW has the largest estimated number of both male (74,892) and female (43,061) adult surfers.",
+    "analysis": "Men have higher estimated adult surfing participant counts than women in all seven jurisdictions shown. NSW leads both groups, with 74,892 male and 43,061 female participants. However, the composition varies: women account for approximately 43% of Victoria’s combined male and female estimates, compared with approximately 35% in Western Australia. These figures reflect residence-based survey estimates, not surfing frequency or destination visits. The Northern Territory is excluded because the published female subgroup estimate is zero, which does not establish that no women surf there.",
     "sources": [
       {
         "label": "Australian Sports Commission · AusPlay 2025, state and territory tables (30 Apr 2026)",
@@ -20,10 +20,10 @@
   },
   "transform": [
     {
-      "filter": "isValid(datum.state) && datum.state != null && datum.state != ''"
+      "filter": "isValid(datum.state) && datum.state != null && datum.state != '' && datum.state != 'NT'"
     },
     {
-      "calculate": "datum.sex === 'Women' ? -datum.estimated_participants : datum.estimated_participants",
+      "calculate": "datum.sex === 'Women' ? -toNumber(datum.estimated_participants) : toNumber(datum.estimated_participants)",
       "as": "signed_value"
     }
   ],
@@ -31,7 +31,15 @@
     "y": {
       "field": "state",
       "type": "ordinal",
-      "sort": ["NSW", "QLD", "VIC", "WA", "SA", "TAS", "ACT", "NT"],
+      "sort": [
+        "NSW",
+        "QLD",
+        "VIC",
+        "WA",
+        "SA",
+        "TAS",
+        "ACT"
+      ],
       "axis": {
         "title": null,
         "labelFontSize": 14,
@@ -45,12 +53,16 @@
       "field": "signed_value",
       "type": "quantitative",
       "scale": {
-        "domain": [-82000, 82000]
+        "domain": [
+          -85000,
+          85000
+        ],
+        "nice": false
       },
       "axis": {
-        "title": "Estimated adult surfing participants (15+), 2025",
-        "labelExpr": "format(abs(datum.value), ',.0f')",
-        "values": [-80000, -60000, -40000, -20000, 0, 20000, 40000, 60000, 80000],
+        "title": "Estimated adult surfers (15+) · 2025",
+        "labelExpr": "format(abs(datum.value), \",.0f\")",
+        "tickCount": 9,
         "grid": true,
         "labelFontSize": 12,
         "titleFontSize": 13,
@@ -92,8 +104,14 @@
           "field": "sex",
           "type": "nominal",
           "scale": {
-            "domain": ["Women", "Men"],
-            "range": ["#CC79A7", "#0072B2"]
+            "domain": [
+              "Women",
+              "Men"
+            ],
+            "range": [
+              "#CC79A7",
+              "#0072B2"
+            ]
           },
           "legend": {
             "title": null,
@@ -112,15 +130,15 @@
     {
       "transform": [
         {
-          "filter": "datum.state === 'NSW' && datum.sex === 'Women'"
+          "filter": "datum.sex === 'Women' && datum.estimated_participants > 0"
         }
       ],
       "mark": {
         "type": "text",
         "align": "right",
-        "dx": -9,
         "baseline": "middle",
-        "fontSize": 13,
+        "dx": -9,
+        "fontSize": 12,
         "fontWeight": "bold",
         "color": "#244654"
       },
@@ -135,15 +153,15 @@
     {
       "transform": [
         {
-          "filter": "datum.state === 'NSW' && datum.sex === 'Men'"
+          "filter": "datum.sex === 'Men' && datum.estimated_participants > 0"
         }
       ],
       "mark": {
         "type": "text",
         "align": "left",
-        "dx": 9,
         "baseline": "middle",
-        "fontSize": 13,
+        "dx": 9,
+        "fontSize": 12,
         "fontWeight": "bold",
         "color": "#244654"
       },
@@ -171,9 +189,9 @@
     "font": "Arial"
   },
   "padding": {
-    "left": 6,
-    "right": 22,
-    "top": 4,
-    "bottom": 12
+    "left": 10,
+    "right": 40,
+    "top": 10,
+    "bottom": 14
   }
 }
