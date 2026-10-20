@@ -463,100 +463,94 @@ for (
     // --------------------------------------------------------
 
     if (id === 'ausplay-surf-ranking') {
-      const controls = document.createElement('div');
-      controls.className =
-        'participation-ranking-controls';
+  // Chart 6: map-aligned Dorling / proportional symbol comparison.
+  const label = document.createElement('label');
+  label.htmlFor = 'ausplay-metric';
+  label.textContent = 'Size circles by: ';
+  label.style.cssText = 'display:block;margin:4px 0 12px;font-weight:700;color:#244654';
 
-      const label = document.createElement('label');
-      label.htmlFor = 'ausplay-metric';
-      label.textContent = 'Size circles by:';
+  const selector = document.createElement('select');
+  selector.id = 'ausplay-metric';
+  selector.style.cssText =
+    'font:inherit;margin-left:8px;padding:9px 12px;border:1px solid #bcd6d1;border-radius:8px;background:#fff;color:#123442;max-width:100%';
 
-      const selector = document.createElement('select');
-      selector.id = 'ausplay-metric';
+  for (const metric of info.metricOptions || []) {
+    const option = document.createElement('option');
+    option.value = metric.value;
+    option.textContent = `${metric.label} (${metric.unit})`;
+    selector.append(option);
+  }
 
-      for (const item of info.metricOptions || []) {
-        const option = document.createElement('option');
+  label.append(selector);
+  card.insertBefore(label, viz);
 
-        option.value = item.value;
+  let revision = 0;
 
-        option.textContent =
-          `${item.label} (${item.unit})`;
+  async function showMetric(metric) {
+    const request = ++revision;
+    const copy = structuredClone(spec);
 
-        selector.append(option);
-      }
+    copy.transform = [{ filter: { field: 'metric', equal: metric } }];
 
-      controls.append(label, selector);
+    const isRate = metric === 'rate';
 
-      card.insertBefore(controls, viz);
+    const circleLayer = copy.layer.find(
+      layer => layer.encoding && layer.encoding.size
+    );
 
-      const legendHost = document.createElement('div');
+    if (circleLayer) {
+      circleLayer.encoding.size.scale = isRate
+        ? { domain: [0, 2.0], range: [30, 5200] }
+        : { domain: [0, 125000], range: [30, 5200] };
 
-      card.insertBefore(legendHost, viz);
+      circleLayer.encoding.size.legend = isRate
+        ? {
+            title: 'Adult participation rate (%)',
+            orient: 'top',
+            direction: 'horizontal',
+            values: [0, 0.4, 0.8, 1.2, 1.6, 2.0],
+            format: '.1f',
+            labelFontSize: 13,
+            titleFontSize: 14,
+            titleFontWeight: 'bold',
+            labelPadding: 10,
+            offset: 8,
+            symbolStrokeColor: '#35626d',
+            symbolFillColor: '#5c959e'
+          }
+        : {
+            title: 'Estimated participants (people)',
+            orient: 'top',
+            direction: 'horizontal',
+            values: [0, 25000, 50000, 75000, 100000, 125000],
+            format: '~s',
+            labelFontSize: 13,
+            titleFontSize: 14,
+            titleFontWeight: 'bold',
+            labelPadding: 10,
+            offset: 8,
+            symbolStrokeColor: '#35626d',
+            symbolFillColor: '#5c959e'
+          };
+    }
 
-      let revision = 0;
+    story.textContent = info.interpretations?.[metric] || '';
+    story.hidden = !story.textContent;
 
-      async function showMetric(metric) {
-        const request = ++revision;
+    callout.textContent = info.highlights?.[metric] || '';
+    callout.hidden = !callout.textContent;
 
-        const selected =
-          metric === 'rate' ? 'rate' : 'count';
+    if (request === revision) {
+      await vegaEmbed(viz, copy, options);
+    }
+  }
 
-        const isRate = selected === 'rate';
+  selector.value = info.defaultMetric || 'count';
+  selector.addEventListener('change', () => void showMetric(selector.value));
 
-        const values = isRate
-          ? [0, 0.4, 0.8, 1.2, 1.6, 2.0]
-          : [
-              0,
-              25000,
-              50000,
-              75000,
-              100000,
-              125000
-            ];
-
-        const key = createSizeKey(
-          values,
-          isRate
-            ? 'Adult participation rate (%)'
-            : 'Estimated adult participants (people)',
-          isRate ? 2 : 125000,
-          34
-        );
-
-        legendHost.replaceChildren(key);
-
-        // The highlight and interpretation follow the filter.
-        setText(
-          story,
-          info.interpretations?.[selected]
-        );
-
-        setText(
-          callout,
-          info.highlights?.[selected]
-        );
-
-        const selectedSpec =
-          makeDorlingSpec(spec, selected);
-
-        if (request !== revision) return;
-
-        await vegaEmbed(
-          viz,
-          selectedSpec,
-          options
-        );
-      }
-
-      selector.value = info.defaultMetric || 'count';
-
-      selector.addEventListener('change', () => {
-        void showMetric(selector.value);
-      });
-
-      card.hidden = false;
-
-      await showMetric(selector.value);
+  card.hidden = false;
+  await showMetric(selector.value);
+}
 
     // --------------------------------------------------------
     // CHART 5 — GEOGRAPHIC PROPORTIONAL SYMBOL MAP
