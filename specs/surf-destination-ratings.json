@@ -1,6 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Interactive ranking of 21 selected Australian surf breaks using Surf-Forecast visitor ratings. Filter by rating measure, state and minimum votes.",
+  "description": "Interactive ranked dot plot of selected Australian surf breaks, comparing visitor-rated wave quality, consistency and overall rating, with state and vote-count filters.",
   "background": "#ffffff",
   "width": "container",
   "height": 480,
@@ -12,11 +12,11 @@
   },
   "usermeta": {
     "title": "Which Australian Surf Breaks Receive the Strongest Ratings?",
-    "annotation": "Snapper Rocks scores 4.9/5 for wave quality with 16 site votes, while Kirra scores 5.0/5 with just four. The number of votes matters when interpreting rankings.",
-    "analysis": "Surf-Forecast visitor ratings distinguish exceptional wave quality from consistency. Snapper Rocks scores 4.9/5 for wave quality on a good day but 3.9/5 for consistency, while Burleigh Heads scores 4.5/5 for quality and a higher 4.2/5 for consistency. This reveals an important trade-off: a destination with outstanding waves under ideal conditions is not necessarily the most consistently surfable location. Kirra and Shipstern Bluff both score 5.0/5 for quality, although their pages report only four and three votes respectively. The vote-count filter allows readers to examine how including sparsely rated locations changes the comparison. The chart covers 21 selected breaks, not every Australian surfing destination; ratings reflect subjective user feedback rather than independently measured wave conditions. Overall ratings are separate survey measures, not averages of wave quality and consistency.",
+    "annotation": "Snapper Rocks leads Burleigh Heads in wave quality (4.9 vs 4.5), but Burleigh scores higher for consistency (4.2 vs 3.9). The best-rated waves are not necessarily the most reliable.",
+    "analysis": "The ratings reveal an important distinction between wave quality under favourable conditions and how consistently those conditions occur. Snapper Rocks scores 4.9/5 for wave quality, ahead of Burleigh Heads at 4.5/5. However, this relationship reverses for consistency, where Burleigh scores 4.2/5 compared with Snapper Rocks at 3.9/5. A break therefore cannot be evaluated using wave quality alone: exceptionally rated waves may occur less consistently than those at another destination. The interactive controls allow readers to examine how the ranking changes by rating dimension and state. The minimum-vote filter adds a further consideration, as locations such as Kirra and Shipstern Bluff receive extremely high quality ratings but have comparatively few recorded votes. Removing the vote threshold reveals these highly rated breaks, while increasing it restricts the comparison to destinations with more reported feedback. Consequently, the visualisation should be interpreted as a comparison of visitor perceptions for 21 selected surf breaks, rather than a definitive ranking of all Australian surfing destinations. Ratings are subjective, and the reported site vote counts are not separate sample sizes for each rating dimension.",
     "sources": [
       {
-        "label": "Surf-Forecast · Australian surf break visitor ratings (accessed October 2026)",
+        "label": "Surf-Forecast · Australian surf-break visitor ratings (accessed October 2026)",
         "url": "https://www.surf-forecast.com/countries/Australia/breaks"
       }
     ]
@@ -92,7 +92,7 @@
       "filter": "stateChoice === 'All states' || datum.state === stateChoice"
     },
     {
-      "filter": "datum.votes >= minVotes"
+      "filter": "toNumber(datum.votes) >= minVotes"
     },
     {
       "calculate": "metricChoice === 'quality' ? toNumber(datum.quality) : metricChoice === 'consistency' ? toNumber(datum.consistency) : toNumber(datum.overall)",
@@ -144,10 +144,10 @@
           5
         ],
         "grid": true,
+        "gridColor": "#e4eeec",
         "titleFontSize": 13,
         "labelFontSize": 12,
-        "labelPadding": 7,
-        "gridColor": "#e4eeec"
+        "labelPadding": 7
       }
     },
     "tooltip": [
@@ -188,7 +188,7 @@
       {
         "field": "votes",
         "type": "quantitative",
-        "title": "Votes reported",
+        "title": "Site votes reported",
         "format": ",.0f"
       },
       {
@@ -217,7 +217,7 @@
     {
       "mark": {
         "type": "circle",
-        "size": 170,
+        "size": 175,
         "stroke": "#ffffff",
         "strokeWidth": 1.5
       },
@@ -247,10 +247,12 @@
             "title": "State",
             "orient": "top",
             "direction": "horizontal",
-            "symbolSize": 160,
+            "symbolSize": 170,
             "labelFontSize": 13,
             "titleFontSize": 13,
-            "columnPadding": 16
+            "titleFontWeight": "bold",
+            "columnPadding": 16,
+            "offset": 12
           }
         }
       }
