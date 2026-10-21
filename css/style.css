@@ -1,8 +1,3 @@
-/* ==========================================
-   FIT3179 — SURFING DESTINATIONS DASHBOARD
-   Main Stylesheet
-   ========================================== */
-
 :root {
   --ink: #123442;
   --muted: #4f6972;
@@ -11,10 +6,6 @@
   --sea: #167d88;
   --line: #d9e7e3;
 }
-
-/* ==========================================
-   GLOBAL STYLING
-   ========================================== */
 
 * {
   box-sizing: border-box;
@@ -42,9 +33,9 @@ a {
   padding: 0 24px;
 }
 
-/* ==========================================
-   WEBSITE HEADER
-   ========================================== */
+/* =========================================================
+   HEADER AND NAVIGATION
+   ========================================================= */
 
 header {
   background: var(--deep);
@@ -55,8 +46,8 @@ header {
 header .eyebrow,
 .section-label {
   text-transform: uppercase;
-  letter-spacing: 0.15em;
-  font-size: 0.75rem;
+  letter-spacing: .15em;
+  font-size: .75rem;
   font-weight: 700;
 }
 
@@ -64,7 +55,7 @@ h1,
 h2,
 h3 {
   font-family: Arial, Helvetica, sans-serif;
-  letter-spacing: -0.035em;
+  letter-spacing: -.035em;
   line-height: 1.15;
 }
 
@@ -88,7 +79,7 @@ nav {
 }
 
 nav a {
-  font-size: 0.83rem;
+  font-size: .83rem;
   text-decoration: none;
   color: #c3e4e2;
 }
@@ -97,9 +88,9 @@ nav a:hover {
   text-decoration: underline;
 }
 
-/* ==========================================
-   SECTION LAYOUT
-   ========================================== */
+/* =========================================================
+   SECTIONS AND HEADINGS
+   ========================================================= */
 
 section {
   padding: 52px 0 42px;
@@ -135,46 +126,22 @@ h2 {
   margin: 0;
 }
 
-/* ==========================================
-   CONSISTENT SECTION HEADINGS
-
-   Sections 1, 2 and 3 use the same
-   full-width, single-line heading layout.
-   ========================================== */
-
-#geography .section-head,
-#history .section-head,
-#hotspots .section-head {
+.section-head--full {
   display: block;
-  grid-template-columns: none;
-  width: 100%;
-  margin-bottom: 20px;
 }
 
-#geography .section-head > div,
-#history .section-head > div,
-#hotspots .section-head > div {
-  display: block;
+.section-head--full > div {
+  max-width: none;
+}
+
+.section-head--full h2 {
   width: 100%;
   max-width: none;
 }
 
-#geography .section-head h2,
-#history .section-head h2,
-#hotspots .section-head h2 {
-  display: block;
-  width: 100%;
-  max-width: none;
-  font-size: clamp(1.85rem, 3.2vw, 3rem);
-  font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -0.035em;
-  white-space: nowrap;
-}
-
-/* ==========================================
+/* =========================================================
    CHART CARDS
-   ========================================== */
+   ========================================================= */
 
 .chart-card {
   background: #ffffff;
@@ -197,23 +164,15 @@ h3 {
   margin: 0 0 14px;
 }
 
-/* ==========================================
-   VEGA-LITE VISUALISATIONS
-   ========================================== */
-
 .viz {
   width: 100%;
-  overflow-x: auto;
   min-width: 0;
+  overflow-x: auto;
 }
 
 .viz .vega-embed {
   max-width: 100%;
 }
-
-/* ==========================================
-   STANDARD CHART ANNOTATIONS
-   ========================================== */
 
 .chart-callout {
   position: relative;
@@ -227,7 +186,7 @@ h3 {
 }
 
 .chart-callout::before {
-  content: "↗";
+  content: '↗';
   position: absolute;
   left: -22px;
   top: -21px;
@@ -235,10 +194,6 @@ h3 {
   font-size: 27px;
   line-height: 1;
 }
-
-/* ==========================================
-   ANALYTICAL PARAGRAPHS
-   ========================================== */
 
 .chart-story {
   margin: 0 0 10px;
@@ -249,19 +204,26 @@ h3 {
   line-height: 1.68;
 }
 
-/* ==========================================
-   DATA SOURCES
-   ========================================== */
-
 .chart-source {
   margin: 10px 0 0;
   color: var(--muted);
-  font-size: 0.8rem;
+  font-size: .8rem;
 }
 
-/* ==========================================
-   CHART 1 — INTERACTIVE MAP
-   ========================================== */
+footer {
+  background: var(--deep);
+  color: #d3e6e9;
+  padding: 25px 0;
+  font-size: .83rem;
+}
+
+footer p {
+  margin: 5px 0;
+}
+
+/* =========================================================
+   CHART 1 — INTERACTIVE SURFING RESERVES MAP
+   ========================================================= */
 
 .map-card {
   padding: 22px 24px 20px;
@@ -286,10 +248,6 @@ h3 {
   flex-direction: column;
 }
 
-/* ==========================================
-   STATE FILTER BUTTONS
-   ========================================== */
-
 .state-filters {
   display: flex;
   flex-wrap: wrap;
@@ -299,7 +257,7 @@ h3 {
 
 .state-filter {
   font: inherit;
-  font-size: 0.82rem;
+  font-size: .82rem;
   font-weight: 700;
   line-height: 1.2;
   cursor: pointer;
@@ -309,8 +267,8 @@ h3 {
   border-radius: 999px;
   padding: 8px 12px;
   transition:
-    background 0.15s,
-    border-color 0.15s;
+    background .15s,
+    border-color .15s;
 }
 
 .state-filter:hover {
@@ -330,7 +288,7 @@ h3 {
 }
 
 .state-filter:not(:first-child)::before {
-  content: "";
+  content: '';
   display: inline-block;
   width: 8px;
   height: 8px;
@@ -343,10 +301,6 @@ h3 {
 .state-filter.is-active:not(:first-child)::before {
   border: 1px solid #ffffff;
 }
-
-/* ==========================================
-   MAP RENDERING
-   ========================================== */
 
 .map-card .viz {
   width: 100%;
@@ -361,14 +315,10 @@ h3 {
 }
 
 .state-context {
-  font-size: 0.77rem;
+  font-size: .77rem;
   color: var(--muted);
   margin: 4px 0 0;
 }
-
-/* ==========================================
-   CHART 1 — RIGHT ANALYSIS PANEL
-   ========================================== */
 
 .map-analysis {
   display: flex;
@@ -388,20 +338,19 @@ h3 {
   gap: 5px;
   position: relative;
   margin: 0 0 2px 9px;
-  padding: 12px 14px;
   background: #dff2ee;
   border: 1px solid #b6d9d0;
   border-left: 4px solid #117989;
-  border-radius: 8px;
-  line-height: 1.4;
-  font-size: 0.92rem;
-  font-weight: 400;
+  padding: 12px 14px;
   max-width: none;
+  line-height: 1.4;
+  font-size: .92rem;
+  font-weight: 400;
   color: #124552;
 }
 
 .map-card .chart-callout::before {
-  content: "";
+  content: '';
   position: absolute;
   display: block;
   top: 20px;
@@ -420,25 +369,24 @@ h3 {
 }
 
 .map-card .chart-callout span {
-  font-size: 0.91rem;
+  font-size: .91rem;
   color: #264e57;
 }
 
 .map-card .state-detail {
-  font-size: 0.78rem;
+  font-size: .78rem;
   color: #426773;
   margin: 0 0 2px;
   line-height: 1.4;
-  font-weight: 700;
 }
 
 .map-card .chart-story {
-  margin: 0;
-  padding: 11px 0 0;
   border: 0;
   border-top: 1px solid #d5e5e0;
+  padding: 11px 0 0;
+  margin: 0;
   max-width: none;
-  font-size: 0.9rem;
+  font-size: .9rem;
   line-height: 1.58;
   color: #294b56;
 }
@@ -447,27 +395,153 @@ h3 {
   margin: 11px 0 0;
 }
 
-/* ==========================================
-   WEBSITE FOOTER
-   ========================================== */
+/* =========================================================
+   COMPACT FULL-WIDTH SECTION HEADINGS
+   ========================================================= */
 
-footer {
-  background: var(--deep);
-  color: #d3e6e9;
-  padding: 25px 0;
-  font-size: 0.83rem;
+#geography .section-head,
+#history .section-head,
+#hotspots .section-head,
+#destinations .section-head {
+  display: block;
+  margin-bottom: 20px;
 }
 
-footer p {
-  margin: 5px 0;
+#geography h2,
+#history h2,
+#hotspots h2,
+#destinations h2 {
+  font-size: clamp(1.85rem, 3.2vw, 3rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -.035em;
 }
 
-/* ==========================================
-   RESPONSIVE DESIGN
-   ========================================== */
+#geography h2,
+#history h2,
+#hotspots h2 {
+  white-space: nowrap;
+}
+
+#destinations .section-head {
+  margin-bottom: 24px;
+}
+
+#destinations h2 {
+  max-width: none;
+  width: 100%;
+}
+
+/* =========================================================
+   CHART 8 — SURF DESTINATION RATINGS
+   ========================================================= */
+
+[data-chart="surf-destination-ratings"] .viz {
+  position: relative;
+  overflow-x: auto;
+}
+
+/* Vega-Embed and its interactive controls */
+
+[data-chart="surf-destination-ratings"] .vega-embed {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  max-width: 100%;
+  border: none;
+  box-shadow: none;
+  background: transparent;
+}
+
+[data-chart="surf-destination-ratings"] .vega-bindings {
+  order: -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 18px;
+  align-items: center;
+  width: 100%;
+  margin: 0 0 20px;
+  padding: 15px 17px;
+  background: #f5faf9;
+  border: 1px solid #d7e9e5;
+  border-radius: 12px;
+}
+
+[data-chart="surf-destination-ratings"] .vega-bindings label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 0;
+  color: #183847;
+  font-size: .92rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+[data-chart="surf-destination-ratings"] .vega-bindings select {
+  min-width: 150px;
+  max-width: 240px;
+  padding: 10px 30px 10px 12px;
+  border: 1px solid #bdd7d3;
+  border-radius: 8px;
+  color: #123442;
+  background: #ffffff;
+  font-family: inherit;
+  font-size: .88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color .15s ease,
+    box-shadow .15s ease;
+}
+
+[data-chart="surf-destination-ratings"] .vega-bindings select:hover {
+  border-color: #58989b;
+}
+
+[data-chart="surf-destination-ratings"] .vega-bindings select:focus-visible {
+  outline: none;
+  border-color: #167d88;
+  box-shadow: 0 0 0 3px rgb(22 125 136 / 16%);
+}
+
+/* Remove the decorative arrow from Chart 8 only. */
+
+[data-chart="surf-destination-ratings"] .chart-callout::before,
+[data-chart="surf-destination-ratings"] .chart-callout::after {
+  content: none !important;
+  display: none !important;
+}
+
+[data-chart="surf-destination-ratings"] .chart-callout {
+  margin: 17px 0 12px;
+  padding: 16px 20px;
+  max-width: none;
+  background: #e0f2ed;
+  border: 1px solid #bcded4;
+  border-radius: 10px;
+  color: #123f48;
+  font-size: 1rem;
+  font-weight: 750;
+  line-height: 1.55;
+}
+
+[data-chart="surf-destination-ratings"] .chart-story {
+  margin-top: 15px;
+  max-width: none;
+  line-height: 1.75;
+}
+
+[data-chart="surf-destination-ratings"] .chart-source {
+  margin-top: 15px;
+}
+
+/* =========================================================
+   RESPONSIVE LAYOUT
+   ========================================================= */
 
 @media (max-width: 860px) {
-
   .map-layout {
     grid-template-columns: 1fr;
     gap: 12px;
@@ -477,35 +551,47 @@ footer p {
     padding: 17px;
   }
 
-  .map-card .chart-callout::before {
-    display: none;
-  }
-
   .map-card .chart-callout {
     margin-left: 0;
   }
 
-  .map-card .chart-story {
-    font-size: 0.95rem;
+  .map-card .chart-callout::before {
+    display: none;
   }
 
+  .map-card .chart-story {
+    font-size: .95rem;
+  }
 }
 
-/* Section titles may wrap on smaller screens */
-
 @media (max-width: 760px) {
-
-  #geography .section-head h2,
-  #history .section-head h2,
-  #hotspots .section-head h2 {
+  #geography h2,
+  #history h2,
+  #hotspots h2,
+  #destinations h2 {
     font-size: clamp(1.45rem, 5vw, 2rem);
     white-space: normal;
   }
 
+  [data-chart="surf-destination-ratings"] .vega-bindings {
+    gap: 12px;
+    padding: 13px;
+  }
+
+  [data-chart="surf-destination-ratings"] .vega-bindings label {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  [data-chart="surf-destination-ratings"] .vega-bindings select {
+    flex: 1 1 180px;
+    max-width: none;
+    min-width: 0;
+  }
 }
 
 @media (max-width: 700px) {
-
   header {
     padding: 48px 0;
   }
@@ -526,18 +612,26 @@ footer p {
   .wrap {
     padding: 0 16px;
   }
-
 }
 
 @media (max-width: 480px) {
-
   .map-card {
     padding: 16px;
   }
 
   .state-filter {
     padding: 7px 10px;
-    font-size: 0.76rem;
+    font-size: .76rem;
   }
 
+  [data-chart="surf-destination-ratings"] .chart-callout {
+    padding: 14px 15px;
+    font-size: .94rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
