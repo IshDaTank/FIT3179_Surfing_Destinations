@@ -1,0 +1,293 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Interactive ranking of 21 selected Australian surf breaks using Surf-Forecast visitor ratings. Filter by rating measure, state and minimum votes.",
+  "background": "#ffffff",
+  "width": "container",
+  "height": 480,
+  "data": {
+    "url": "data/surf_break_ratings_2026.csv",
+    "format": {
+      "type": "csv"
+    }
+  },
+  "usermeta": {
+    "title": "Which Australian Surf Breaks Receive the Strongest Ratings?",
+    "annotation": "Snapper Rocks scores 4.9/5 for wave quality with 16 site votes, while Kirra scores 5.0/5 with just four. The number of votes matters when interpreting rankings.",
+    "analysis": "Surf-Forecast visitor ratings distinguish exceptional wave quality from consistency. Snapper Rocks scores 4.9/5 for wave quality on a good day but 3.9/5 for consistency, while Burleigh Heads scores 4.5/5 for quality and a higher 4.2/5 for consistency. This reveals an important trade-off: a destination with outstanding waves under ideal conditions is not necessarily the most consistently surfable location. Kirra and Shipstern Bluff both score 5.0/5 for quality, although their pages report only four and three votes respectively. The vote-count filter allows readers to examine how including sparsely rated locations changes the comparison. The chart covers 21 selected breaks, not every Australian surfing destination; ratings reflect subjective user feedback rather than independently measured wave conditions. Overall ratings are separate survey measures, not averages of wave quality and consistency.",
+    "sources": [
+      {
+        "label": "Surf-Forecast · Australian surf break visitor ratings (accessed October 2026)",
+        "url": "https://www.surf-forecast.com/countries/Australia/breaks"
+      }
+    ]
+  },
+  "params": [
+    {
+      "name": "metricChoice",
+      "value": "quality",
+      "bind": {
+        "input": "select",
+        "options": [
+          "quality",
+          "consistency",
+          "overall"
+        ],
+        "labels": [
+          "Wave quality (good day)",
+          "Surf consistency",
+          "Overall rating"
+        ],
+        "name": "Rating measure: "
+      }
+    },
+    {
+      "name": "stateChoice",
+      "value": "All states",
+      "bind": {
+        "input": "select",
+        "options": [
+          "All states",
+          "NSW",
+          "QLD",
+          "VIC",
+          "WA",
+          "SA",
+          "TAS"
+        ],
+        "labels": [
+          "All states",
+          "New South Wales",
+          "Queensland",
+          "Victoria",
+          "Western Australia",
+          "South Australia",
+          "Tasmania"
+        ],
+        "name": "State: "
+      }
+    },
+    {
+      "name": "minVotes",
+      "value": 5,
+      "bind": {
+        "input": "select",
+        "options": [
+          0,
+          5,
+          10,
+          15
+        ],
+        "labels": [
+          "All vote counts",
+          "At least 5",
+          "At least 10",
+          "At least 15"
+        ],
+        "name": "Vote threshold: "
+      }
+    }
+  ],
+  "transform": [
+    {
+      "filter": "stateChoice === 'All states' || datum.state === stateChoice"
+    },
+    {
+      "filter": "datum.votes >= minVotes"
+    },
+    {
+      "calculate": "metricChoice === 'quality' ? toNumber(datum.quality) : metricChoice === 'consistency' ? toNumber(datum.consistency) : toNumber(datum.overall)",
+      "as": "score"
+    },
+    {
+      "calculate": "datum.break + ' (' + datum.state + ')'",
+      "as": "break_state"
+    }
+  ],
+  "encoding": {
+    "y": {
+      "field": "break_state",
+      "type": "nominal",
+      "sort": {
+        "field": "score",
+        "op": "max",
+        "order": "descending"
+      },
+      "axis": {
+        "title": "Australian surf breaks",
+        "titleFontSize": 13,
+        "titlePadding": 12,
+        "labelFontSize": 12,
+        "labelLimit": 235,
+        "labelPadding": 8,
+        "ticks": false,
+        "domain": false
+      }
+    },
+    "x": {
+      "field": "score",
+      "type": "quantitative",
+      "scale": {
+        "domain": [
+          0,
+          5.35
+        ],
+        "nice": false
+      },
+      "axis": {
+        "title": "Visitor rating (out of 5)",
+        "values": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "grid": true,
+        "titleFontSize": 13,
+        "labelFontSize": 12,
+        "labelPadding": 7,
+        "gridColor": "#e4eeec"
+      }
+    },
+    "tooltip": [
+      {
+        "field": "break",
+        "type": "nominal",
+        "title": "Surf break"
+      },
+      {
+        "field": "state",
+        "type": "nominal",
+        "title": "State"
+      },
+      {
+        "field": "score",
+        "type": "quantitative",
+        "title": "Selected rating / 5",
+        "format": ".1f"
+      },
+      {
+        "field": "quality",
+        "type": "quantitative",
+        "title": "Wave quality / 5",
+        "format": ".1f"
+      },
+      {
+        "field": "consistency",
+        "type": "quantitative",
+        "title": "Consistency / 5",
+        "format": ".1f"
+      },
+      {
+        "field": "overall",
+        "type": "quantitative",
+        "title": "Overall rating / 5",
+        "format": ".1f"
+      },
+      {
+        "field": "votes",
+        "type": "quantitative",
+        "title": "Votes reported",
+        "format": ",.0f"
+      },
+      {
+        "field": "url",
+        "type": "nominal",
+        "title": "Rating source"
+      }
+    ]
+  },
+  "layer": [
+    {
+      "mark": {
+        "type": "rule",
+        "stroke": "#a3c4c4",
+        "strokeWidth": 2
+      },
+      "encoding": {
+        "x": {
+          "datum": 0
+        },
+        "x2": {
+          "field": "score"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "circle",
+        "size": 170,
+        "stroke": "#ffffff",
+        "strokeWidth": 1.5
+      },
+      "encoding": {
+        "color": {
+          "field": "state",
+          "type": "nominal",
+          "scale": {
+            "domain": [
+              "NSW",
+              "QLD",
+              "VIC",
+              "WA",
+              "SA",
+              "TAS"
+            ],
+            "range": [
+              "#0072B2",
+              "#E69F00",
+              "#CC79A7",
+              "#D55E00",
+              "#009E73",
+              "#7B61A8"
+            ]
+          },
+          "legend": {
+            "title": "State",
+            "orient": "top",
+            "direction": "horizontal",
+            "symbolSize": 160,
+            "labelFontSize": 13,
+            "titleFontSize": 13,
+            "columnPadding": 16
+          }
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "baseline": "middle",
+        "dx": 12,
+        "fontSize": 12,
+        "fontWeight": "bold",
+        "color": "#244654"
+      },
+      "encoding": {
+        "text": {
+          "field": "score",
+          "type": "quantitative",
+          "format": ".1f"
+        }
+      }
+    }
+  ],
+  "config": {
+    "view": {
+      "stroke": null
+    },
+    "axis": {
+      "labelColor": "#31535f",
+      "titleColor": "#31535f"
+    },
+    "font": "Arial"
+  },
+  "padding": {
+    "left": 8,
+    "right": 28,
+    "top": 12,
+    "bottom": 12
+  }
+}
