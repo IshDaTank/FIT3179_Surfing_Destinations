@@ -1,16 +1,10 @@
-// ========================================
-// FIT3179 - CHASING THE PERFECT WAVE
-// MAIN CHART LOADER
-// VEGA-LITE VERSION 6
-// ========================================
+/* ========================================
+   FIT3179 - AUSTRALIAN SURFING DASHBOARD
+   MAIN CHART LOADER
+   VEGA-LITE VERSION 6
+======================================== */
 
 const root = new URL('../', import.meta.url);
-
-const chartCards = [
-  ...document.querySelectorAll(
-    '.chart-card[data-chart]'
-  )
-];
 
 const options = {
   actions: false,
@@ -21,54 +15,9 @@ const options = {
 };
 
 
-// ========================================
-// HELPER: REMOVE BOUND CONTROLS
-// ========================================
-
-function removeBoundControls(spec) {
-
-  // Remove input bindings while preserving
-  // the parameter values and other properties.
-
-  function visit(node) {
-
-    if (!node || typeof node !== 'object') {
-      return;
-    }
-
-    if (Array.isArray(node)) {
-
-      node.forEach(visit);
-      return;
-    }
-
-    if (Array.isArray(node.params)) {
-
-      node.params = node.params.map(param => {
-
-        const updated = { ...param };
-
-        delete updated.bind;
-
-        return updated;
-
-      });
-    }
-
-    for (const value of Object.values(node)) {
-      visit(value);
-    }
-  }
-
-  visit(spec);
-
-  return spec;
-}
-
-
-// ========================================
-// HELPER: CHART INFORMATION
-// ========================================
+/* ========================================
+   1. POPULATE CHART INFORMATION
+======================================== */
 
 function populateInformation(card, info) {
 
@@ -77,56 +26,74 @@ function populateInformation(card, info) {
   const story = card.querySelector('.chart-story');
   const source = card.querySelector('.chart-source');
 
-  if (heading && info.title) {
-    heading.textContent = info.title;
+  // Chart title
+
+  if (heading) {
+    heading.textContent =
+      info.title ||
+      heading.textContent ||
+      card.dataset.chart;
   }
 
-  if (callout) {
+  // Chart annotation
 
+  if (callout) {
     callout.textContent = info.annotation || '';
     callout.hidden = !info.annotation;
   }
 
+  // Chart interpretation
+
   if (story) {
-
-    story.textContent =
-      info.analysis ||
-      story.textContent ||
-      '';
-
+    story.textContent = info.analysis || '';
     story.hidden = !story.textContent.trim();
   }
+
+  // Data sources
 
   if (source) {
 
     source.replaceChildren();
 
-    if (info.source?.url && info.source?.label) {
+    const sources = info.sources ||
+      (info.source ? [info.source] : []);
+
+    const valid = sources.filter(
+      s => s?.url && s?.label
+    );
+
+    valid.forEach((s, i) => {
+
+      if (i === 0) {
+        source.append(
+          valid.length === 1
+            ? 'Source: '
+            : 'Sources: '
+        );
+      } else {
+        source.append(' · ');
+      }
 
       const link = document.createElement('a');
 
-      link.href = info.source.url;
-      link.textContent = info.source.label;
+      link.href = s.url;
+      link.textContent = s.label;
       link.target = '_blank';
       link.rel = 'noopener noreferrer';
 
-      source.append('Source: ', link);
-    }
+      source.append(link);
+    });
 
-    source.hidden = !source.childNodes.length;
+    source.hidden = valid.length === 0;
   }
 }
 
 
-// ========================================
-// CHART 1: INTERACTIVE STATE MAP
-// ========================================
+/* ========================================
+   2. CHART 1 — INTERACTIVE STATE MAP
+======================================== */
 
-async function renderStateMap(
-  card,
-  spec,
-  info
-) {
+async function renderStateMap(card, spec, info) {
 
   card.classList.add('map-card');
 
@@ -135,19 +102,23 @@ async function renderStateMap(
   const story = card.querySelector('.chart-story');
   const source = card.querySelector('.chart-source');
 
+  // Layout containers
+
   const layout = document.createElement('div');
   layout.className = 'map-layout';
 
   const mapSide = document.createElement('div');
   mapSide.className = 'map-side';
 
-  const analysisSide = document.createElement('aside');
-  analysisSide.className = 'map-analysis';
+  const analysis = document.createElement('aside');
+  analysis.className = 'map-analysis';
 
-  analysisSide.setAttribute(
+  analysis.setAttribute(
     'aria-live',
     'polite'
   );
+
+  // State filter buttons
 
   const filters = document.createElement('div');
   filters.className = 'state-filters';
@@ -159,23 +130,37 @@ async function renderStateMap(
     'Filter surfing reserves by state'
   );
 
+  // Additional information
+
   const context = document.createElement('p');
   context.className = 'state-context';
 
   const detail = document.createElement('p');
   detail.className = 'state-detail';
 
+  // Assemble layout
+
   mapSide.append(filters, viz, context);
 
-  if (callout) analysisSide.append(callout);
+  if (callout) {
+    analysis.append(callout);
+  }
 
-  analysisSide.append(detail);
+  analysis.append(detail);
 
-  if (story) analysisSide.append(story);
+  if (story) {
+    analysis.append(story);
+  }
 
-  layout.append(mapSide, analysisSide);
+  layout.append(mapSide, analysis);
 
-  card.insertBefore(layout, source);
+  if (source) {
+    card.insertBefore(layout, source);
+  } else {
+    card.append(layout);
+  }
+
+  // State colour palette
 
   const palette = {
     NSW: '#117989',
@@ -186,13 +171,15 @@ async function renderStateMap(
   };
 
   const buttons = [];
-  let latestRequest = 0;
+  let currentRequest = 0;
+
+  // Update selected state
 
   async function selectState(state) {
 
-    const request = ++latestRequest;
+    const request = ++currentRequest;
 
-    for (const button of buttons) {
+    buttons.forEach(button => {
 
       const active =
         button.dataset.state === state;
@@ -206,63 +193,57 @@ async function renderStateMap(
         'aria-pressed',
         String(active)
       );
-    }
+    });
 
-    const result =
-      info.interpretations[state];
+    const result = info.interpretations[state];
 
     if (!result) return;
 
-    const target =
-      info.annotationTargets?.[state];
+    // Annotation
 
     if (callout) {
 
-      callout.replaceChildren();
+      const strong = document.createElement('strong');
 
-      const title = document.createElement('strong');
+      strong.textContent =
+        info.annotationTargets?.[state]?.name ||
+        'Map finding';
 
-      title.textContent =
-        target?.name || 'Map finding';
+      const span = document.createElement('span');
 
-      const description =
-        document.createElement('span');
+      span.textContent = result.callout || '';
 
-      description.textContent =
-        result.callout || '';
-
-      callout.append(title, description);
+      callout.replaceChildren(strong, span);
       callout.hidden = false;
     }
 
+    // Interpretation
+
     if (story) {
-
-      story.textContent =
-        result.analysis || '';
-
+      story.textContent = result.analysis || '';
       story.hidden = !result.analysis;
     }
 
-    detail.textContent =
-      result.detail || '';
+    // State detail
 
+    detail.textContent = result.detail || '';
     detail.hidden = !result.detail;
+
+    // Map context
 
     context.textContent =
       state === 'All'
         ? 'All 19 nationally listed reserves · equal-sized location markers'
         : `${state} only · national map extent unchanged`;
 
-    const selectedSpec =
-      structuredClone(spec);
+    // Clone original specification
 
-    if (
-      state !== 'All' &&
-      selectedSpec.layer?.[1]
-    ) {
+    const selected = structuredClone(spec);
 
-      selectedSpec.layer[1].transform = [
-        ...(selectedSpec.layer[1].transform || []),
+    if (state !== 'All' && selected.layer?.[1]) {
+
+      selected.layer[1].transform = [
+        ...(selected.layer[1].transform || []),
         {
           filter: {
             field: 'state',
@@ -272,40 +253,38 @@ async function renderStateMap(
       ];
     }
 
-    if (request !== latestRequest) return;
+    // Render map
 
-    await vegaEmbed(
-      viz,
-      selectedSpec,
-      options
-    );
+    if (request === currentRequest) {
+      await vegaEmbed(viz, selected, options);
+    }
   }
+
+  // Generate state-selection buttons
 
   for (const state of info.stateOrder) {
 
-    const button =
-      document.createElement('button');
+    const button = document.createElement('button');
 
     button.type = 'button';
-    button.className = 'state-filter';
     button.dataset.state = state;
-
-    if (palette[state]) {
-
-      button.style.setProperty(
-        '--state-color',
-        palette[state]
-      );
-    }
+    button.className = 'state-filter';
 
     button.textContent =
       state === 'All'
         ? 'All states'
         : state;
 
+    if (palette[state]) {
+      button.style.setProperty(
+        '--state-color',
+        palette[state]
+      );
+    }
+
     button.addEventListener(
       'click',
-      () => selectState(state)
+      () => selectState(state).catch(console.error)
     );
 
     filters.append(button);
@@ -320,9 +299,319 @@ async function renderStateMap(
 }
 
 
-// ========================================
-// MAIN CHART LOADING LOOP
-// ========================================
+/* ========================================
+   3. CHART 6 — PARTICIPATION CARTOGRAM
+======================================== */
+
+/*
+  The cartogram JSON defines the chart's
+  Vega-Lite structure and metadata.
+
+  Data comes from:
+  data/ausplay_surf_map_2025.csv
+
+  The dropdown allows users to switch
+  between:
+  - Estimated participants
+  - Adult participation rate
+
+  The approximate geographic arrangement
+  of states remains fixed.
+*/
+
+async function renderParticipationCartogram(
+  card,
+  baseSpec,
+  info
+) {
+
+  const viz = card.querySelector('.viz');
+
+  // Load participation dataset
+
+  const sourceURL = new URL(
+    'data/ausplay_surf_map_2025.csv',
+    root
+  );
+
+  const response = await fetch(sourceURL);
+
+  if (!response.ok) {
+    throw new Error(
+      `Could not load AusPlay data: HTTP ${response.status}`
+    );
+  }
+
+  const csv = await response.text();
+
+  const data = vega.read(csv, {
+    type: 'csv',
+    parse: 'auto'
+  });
+
+  // Approximate geographic positions
+
+  const positions = {
+    WA: {
+      x: 130,
+      y: 265,
+      name: 'Western Australia'
+    },
+
+    NT: {
+      x: 350,
+      y: 125,
+      name: 'Northern Territory'
+    },
+
+    SA: {
+      x: 350,
+      y: 295,
+      name: 'South Australia'
+    },
+
+    QLD: {
+      x: 640,
+      y: 150,
+      name: 'Queensland'
+    },
+
+    NSW: {
+      x: 650,
+      y: 300,
+      name: 'New South Wales'
+    },
+
+    VIC: {
+      x: 510,
+      y: 400,
+      name: 'Victoria'
+    },
+
+    TAS: {
+      x: 610,
+      y: 448,
+      name: 'Tasmania'
+    },
+
+    ACT: {
+      x: 805,
+      y: 390,
+      name: 'Australian Capital Territory'
+    }
+  };
+
+  // Convert dataset into cartogram records
+
+  const observations = data
+    .filter(d => positions[d.state])
+    .map(d => ({
+
+      state: d.state,
+
+      name: positions[d.state].name,
+
+      participants: Number(d.participants),
+
+      rate: Number(d.participation_rate_pct),
+
+      x: positions[d.state].x,
+
+      y: positions[d.state].y
+
+    }));
+
+  if (observations.length !== 8) {
+    throw new Error(
+      'Expected eight state/territory records'
+    );
+  }
+
+  // Create dropdown controls
+
+  const controls = document.createElement('div');
+  controls.className = 'cartogram-controls';
+
+  const label = document.createElement('label');
+  label.textContent = 'Size circles by:';
+
+  const select = document.createElement('select');
+
+  select.setAttribute(
+    'aria-label',
+    'Choose surfing participation measure'
+  );
+
+  const modes = info.metricOptions || [
+    {
+      value: 'count',
+      label: 'Estimated participants',
+      unit: 'people'
+    },
+    {
+      value: 'rate',
+      label: 'Adult participation rate',
+      unit: '%'
+    }
+  ];
+
+  for (const mode of modes) {
+
+    const option = document.createElement('option');
+
+    option.value = mode.value;
+
+    option.textContent =
+      `${mode.label} (${mode.unit})`;
+
+    select.append(option);
+  }
+
+  label.append(select);
+  controls.append(label);
+
+  // Insert controls immediately before chart
+
+  viz.before(controls);
+
+  let request = 0;
+
+  // Update cartogram based on metric
+
+  async function update(metric) {
+
+    const current = ++request;
+
+    const countMode = metric === 'count';
+
+    const max = countMode
+      ? 117953
+      : 1.762;
+
+    const rows = observations.map(d => {
+
+      const value = countMode
+        ? d.participants
+        : d.rate;
+
+      // Scale symbol area to measure
+
+      const area =
+        1300 +
+        (value / max) * 7100;
+
+      const radius =
+        Math.sqrt(area / Math.PI);
+
+      return {
+
+        ...d,
+
+        area,
+
+        label_y:
+          d.y - radius - 20,
+
+        value_label: countMode
+          ? d.participants.toLocaleString('en-AU')
+          : `${d.rate.toFixed(2)}%`
+
+      };
+    });
+
+    // Clone existing Vega-Lite chart
+
+    const spec = structuredClone(baseSpec);
+
+    spec.data = {
+      values: rows
+    };
+
+    spec.width = 'container';
+    spec.height = 490;
+
+    // Keep geographic layout fixed
+
+    spec.encoding.x.scale.domain = [0, 900];
+
+    spec.encoding.y.scale.domain = [490, 0];
+
+    spec.autosize = {
+      type: 'fit-x',
+      contains: 'padding'
+    };
+
+    // Skip stale updates
+
+    if (current !== request) {
+      return;
+    }
+
+    // Re-render updated cartogram
+
+    await vegaEmbed(
+      viz,
+      spec,
+      options
+    );
+
+    // Update contextual text
+
+    const callout =
+      card.querySelector('.chart-callout');
+
+    const story =
+      card.querySelector('.chart-story');
+
+    if (callout) {
+
+      callout.textContent =
+        info.highlights?.[metric] || '';
+
+      callout.hidden =
+        !callout.textContent;
+    }
+
+    if (story) {
+
+      story.textContent =
+        info.interpretations?.[metric] || '';
+
+      story.hidden =
+        !story.textContent;
+    }
+  }
+
+  // Dropdown interaction
+
+  select.addEventListener(
+    'change',
+    () => update(select.value).catch(error => {
+
+      console.error(
+        'Cartogram could not update:',
+        error
+      );
+
+    })
+  );
+
+  // Show chart
+
+  card.hidden = false;
+
+  // Render selected default metric
+
+  select.value =
+    info.defaultMetric || 'count';
+
+  await update(select.value);
+}
+
+
+/* ========================================
+   4. MAIN CHART LOADER
+======================================== */
 
 async function loadChart(card) {
 
@@ -330,19 +619,19 @@ async function loadChart(card) {
 
   const viz = card.querySelector('.viz');
 
-  if (!viz) return;
+  if (!viz) {
+    return;
+  }
 
   try {
 
-    // Each chart uses its own JSON file.
-    // Chart 11 no longer uses chart-11-info.
+    // Load JSON specification
 
     const response = await fetch(
       new URL(`specs/${id}.json`, root)
     );
 
     if (response.status === 404) {
-
       console.warn(
         `Chart specification not found: ${id}`
       );
@@ -351,16 +640,16 @@ async function loadChart(card) {
     }
 
     if (!response.ok) {
-
       throw new Error(
         `HTTP ${response.status}`
       );
     }
 
-    let spec = await response.json();
+    const spec = await response.json();
+
+    // Require Vega-Lite version 6
 
     if (!spec.$schema?.includes('vega-lite/v6')) {
-
       throw new Error(
         'Expected Vega-Lite version 6'
       );
@@ -368,36 +657,12 @@ async function loadChart(card) {
 
     const info = spec.usermeta || {};
 
+    // Populate title, annotation, story and source
+
     populateInformation(card, info);
 
 
-    // ====================================
-    // REMOVE CHART 11 FILTERS
-    // ====================================
-
-    if (
-      card.dataset.removeFilter === 'true'
-    ) {
-
-      spec = removeBoundControls(
-        structuredClone(spec)
-      );
-
-      // Remove any old HTML filter containers.
-
-      card.querySelectorAll(
-        '.chart-filters, ' +
-        '.filter-controls, ' +
-        '.filter-buttons, ' +
-        '.chart11-filters, ' +
-        '[data-chart11-filter]'
-      ).forEach(element => element.remove());
-    }
-
-
-    // ====================================
-    // CHART 1 SPECIAL RENDERING
-    // ====================================
+    // Chart 1: Interactive surfing reserves map
 
     if (
       id === 'map-reserves' &&
@@ -411,21 +676,32 @@ async function loadChart(card) {
         info
       );
 
-      return;
     }
 
+    // Chart 6: Interactive participation cartogram
 
-    // ====================================
-    // STANDARD VEGA-LITE RENDERING
-    // ====================================
+    else if (id === 'ausplay-surf-ranking') {
 
-    await vegaEmbed(
-      viz,
-      spec,
-      options
-    );
+      await renderParticipationCartogram(
+        card,
+        spec,
+        info
+      );
 
-    card.hidden = false;
+    }
+
+    // All other charts, including Charts 11 and 12
+
+    else {
+
+      await vegaEmbed(
+        viz,
+        spec,
+        options
+      );
+
+      card.hidden = false;
+    }
 
   } catch (error) {
 
@@ -442,16 +718,32 @@ async function loadChart(card) {
 }
 
 
-// ========================================
-// INITIALISE ALL CHARTS
-// ========================================
+/* ========================================
+   5. INITIALISE DASHBOARD
+======================================== */
+
+/*
+  Charts are loaded independently.
+
+  A failure in one chart will not stop
+  the remaining charts from being rendered.
+*/
 
 async function initialiseCharts() {
 
-  for (const card of chartCards) {
+  const cards = document.querySelectorAll(
+    '.chart-card[data-chart]'
+  );
+
+  for (const card of cards) {
 
     await loadChart(card);
   }
 }
+
+
+/* ========================================
+   6. START DASHBOARD
+======================================== */
 
 initialiseCharts();
