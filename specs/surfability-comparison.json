@@ -1,6 +1,7 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Chart 12: Monthly modelled surfability across Snapper Rocks, Mystics and the Bilinga area.",
+
+  "description": "Chart 12: Accessible radial heatmap comparing monthly modelled surfable-hour percentages at Snapper Rocks, Mystics and the Bilinga area. Uses a colour-vision-accessible sequential scale and numerical labels.",
 
   "width": 520,
   "height": 520,
@@ -8,44 +9,224 @@
 
   "data": {
     "values": [
-      {"location":"Snapper Rocks","month":"Jan","monthIndex":1,"surfablePct":28},
-      {"location":"Snapper Rocks","month":"Feb","monthIndex":2,"surfablePct":38},
-      {"location":"Snapper Rocks","month":"Mar","monthIndex":3,"surfablePct":38},
-      {"location":"Snapper Rocks","month":"Apr","monthIndex":4,"surfablePct":39},
-      {"location":"Snapper Rocks","month":"May","monthIndex":5,"surfablePct":30},
-      {"location":"Snapper Rocks","month":"Jun","monthIndex":6,"surfablePct":29},
-      {"location":"Snapper Rocks","month":"Jul","monthIndex":7,"surfablePct":22},
-      {"location":"Snapper Rocks","month":"Aug","monthIndex":8,"surfablePct":19},
-      {"location":"Snapper Rocks","month":"Sep","monthIndex":9,"surfablePct":18},
-      {"location":"Snapper Rocks","month":"Oct","monthIndex":10,"surfablePct":18},
-      {"location":"Snapper Rocks","month":"Nov","monthIndex":11,"surfablePct":20},
-      {"location":"Snapper Rocks","month":"Dec","monthIndex":12,"surfablePct":24},
+      {
+        "location": "Snapper Rocks",
+        "month": "Jan",
+        "monthIndex": 1,
+        "surfablePct": 28
+      },
+      {
+        "location": "Snapper Rocks",
+        "month": "Feb",
+        "monthIndex": 2,
+        "surfablePct": 38
+      },
+      {
+        "location": "Snapper Rocks",
+        "month": "Mar",
+        "monthIndex": 3,
+        "surfablePct": 38
+      },
+      {
+        "location": "Snapper Rocks",
+        "month": "Apr",
+        "monthIndex": 4,
+        "surfablePct": 39
+      },
+      {
+        "location": "Snapper Rocks",
+        "month": "May",
+        "monthIndex": 5,
+        "surfablePct": 30
+      },
+      {
+        "location": "Snapper Rocks",
+        "month": "Jun",
+        "monthIndex": 6,
+        "surfablePct": 29
+      },
+      {
+        "location": "Snapper Rocks",
+        "month": "Jul",
+        "monthIndex": 7,
+        "surfablePct": 22
+      },
+      {
+        "location": "Snapper Rocks",
+        "month": "Aug",
+        "monthIndex": 8,
+        "surfablePct": 19
+      },
+      {
+        "location": "Snapper Rocks",
+        "month": "Sep",
+        "monthIndex": 9,
+        "surfablePct": 18
+      },
+      {
+        "location": "Snapper Rocks",
+        "month": "Oct",
+        "monthIndex": 10,
+        "surfablePct": 18
+      },
+      {
+        "location": "Snapper Rocks",
+        "month": "Nov",
+        "monthIndex": 11,
+        "surfablePct": 20
+      },
+      {
+        "location": "Snapper Rocks",
+        "month": "Dec",
+        "monthIndex": 12,
+        "surfablePct": 24
+      },
 
-      {"location":"Mystics","month":"Jan","monthIndex":1,"surfablePct":23},
-      {"location":"Mystics","month":"Feb","monthIndex":2,"surfablePct":28},
-      {"location":"Mystics","month":"Mar","monthIndex":3,"surfablePct":27},
-      {"location":"Mystics","month":"Apr","monthIndex":4,"surfablePct":28},
-      {"location":"Mystics","month":"May","monthIndex":5,"surfablePct":25},
-      {"location":"Mystics","month":"Jun","monthIndex":6,"surfablePct":26},
-      {"location":"Mystics","month":"Jul","monthIndex":7,"surfablePct":24},
-      {"location":"Mystics","month":"Aug","monthIndex":8,"surfablePct":23},
-      {"location":"Mystics","month":"Sep","monthIndex":9,"surfablePct":23},
-      {"location":"Mystics","month":"Oct","monthIndex":10,"surfablePct":21},
-      {"location":"Mystics","month":"Nov","monthIndex":11,"surfablePct":23},
-      {"location":"Mystics","month":"Dec","monthIndex":12,"surfablePct":24},
+      {
+        "location": "Mystics",
+        "month": "Jan",
+        "monthIndex": 1,
+        "surfablePct": 23
+      },
+      {
+        "location": "Mystics",
+        "month": "Feb",
+        "monthIndex": 2,
+        "surfablePct": 28
+      },
+      {
+        "location": "Mystics",
+        "month": "Mar",
+        "monthIndex": 3,
+        "surfablePct": 27
+      },
+      {
+        "location": "Mystics",
+        "month": "Apr",
+        "monthIndex": 4,
+        "surfablePct": 28
+      },
+      {
+        "location": "Mystics",
+        "month": "May",
+        "monthIndex": 5,
+        "surfablePct": 25
+      },
+      {
+        "location": "Mystics",
+        "month": "Jun",
+        "monthIndex": 6,
+        "surfablePct": 26
+      },
+      {
+        "location": "Mystics",
+        "month": "Jul",
+        "monthIndex": 7,
+        "surfablePct": 24
+      },
+      {
+        "location": "Mystics",
+        "month": "Aug",
+        "monthIndex": 8,
+        "surfablePct": 23
+      },
+      {
+        "location": "Mystics",
+        "month": "Sep",
+        "monthIndex": 9,
+        "surfablePct": 23
+      },
+      {
+        "location": "Mystics",
+        "month": "Oct",
+        "monthIndex": 10,
+        "surfablePct": 21
+      },
+      {
+        "location": "Mystics",
+        "month": "Nov",
+        "monthIndex": 11,
+        "surfablePct": 23
+      },
+      {
+        "location": "Mystics",
+        "month": "Dec",
+        "monthIndex": 12,
+        "surfablePct": 24
+      },
 
-      {"location":"Bilinga area","month":"Jan","monthIndex":1,"surfablePct":28},
-      {"location":"Bilinga area","month":"Feb","monthIndex":2,"surfablePct":34},
-      {"location":"Bilinga area","month":"Mar","monthIndex":3,"surfablePct":35},
-      {"location":"Bilinga area","month":"Apr","monthIndex":4,"surfablePct":32},
-      {"location":"Bilinga area","month":"May","monthIndex":5,"surfablePct":28},
-      {"location":"Bilinga area","month":"Jun","monthIndex":6,"surfablePct":27},
-      {"location":"Bilinga area","month":"Jul","monthIndex":7,"surfablePct":23},
-      {"location":"Bilinga area","month":"Aug","monthIndex":8,"surfablePct":19},
-      {"location":"Bilinga area","month":"Sep","monthIndex":9,"surfablePct":19},
-      {"location":"Bilinga area","month":"Oct","monthIndex":10,"surfablePct":20},
-      {"location":"Bilinga area","month":"Nov","monthIndex":11,"surfablePct":22},
-      {"location":"Bilinga area","month":"Dec","monthIndex":12,"surfablePct":24}
+      {
+        "location": "Bilinga area",
+        "month": "Jan",
+        "monthIndex": 1,
+        "surfablePct": 28
+      },
+      {
+        "location": "Bilinga area",
+        "month": "Feb",
+        "monthIndex": 2,
+        "surfablePct": 34
+      },
+      {
+        "location": "Bilinga area",
+        "month": "Mar",
+        "monthIndex": 3,
+        "surfablePct": 35
+      },
+      {
+        "location": "Bilinga area",
+        "month": "Apr",
+        "monthIndex": 4,
+        "surfablePct": 32
+      },
+      {
+        "location": "Bilinga area",
+        "month": "May",
+        "monthIndex": 5,
+        "surfablePct": 28
+      },
+      {
+        "location": "Bilinga area",
+        "month": "Jun",
+        "monthIndex": 6,
+        "surfablePct": 27
+      },
+      {
+        "location": "Bilinga area",
+        "month": "Jul",
+        "monthIndex": 7,
+        "surfablePct": 23
+      },
+      {
+        "location": "Bilinga area",
+        "month": "Aug",
+        "monthIndex": 8,
+        "surfablePct": 19
+      },
+      {
+        "location": "Bilinga area",
+        "month": "Sep",
+        "monthIndex": 9,
+        "surfablePct": 19
+      },
+      {
+        "location": "Bilinga area",
+        "month": "Oct",
+        "monthIndex": 10,
+        "surfablePct": 20
+      },
+      {
+        "location": "Bilinga area",
+        "month": "Nov",
+        "monthIndex": 11,
+        "surfablePct": 22
+      },
+      {
+        "location": "Bilinga area",
+        "month": "Dec",
+        "monthIndex": 12,
+        "surfablePct": 24
+      }
     ]
   },
 
@@ -69,11 +250,21 @@
     {
       "calculate": "datum.location === 'Snapper Rocks' ? 3.51 : datum.location === 'Mystics' ? 2.58 : 1.65",
       "as": "outer"
+    },
+    {
+      "calculate": "(datum.inner + datum.outer) / 2",
+      "as": "midRadius"
+    },
+    {
+      "calculate": "format(datum.surfablePct, '.0f') + '%'",
+      "as": "percentageLabel"
     }
   ],
 
   "layer": [
     {
+      "description": "Thirty-six coloured radial segments encoding monthly surfability values. Ring position identifies the surf location.",
+
       "mark": {
         "type": "arc",
         "stroke": "#ffffff",
@@ -86,8 +277,8 @@
           "field": "monthStart",
           "type": "quantitative",
           "scale": {
-            "domain": [0,12],
-            "range": [0,6.283185307179586]
+            "domain": [0, 12],
+            "range": [0, 6.283185307179586]
           },
           "axis": null
         },
@@ -100,8 +291,8 @@
           "field": "outer",
           "type": "quantitative",
           "scale": {
-            "domain": [0,4.5],
-            "range": [0,258]
+            "domain": [0, 4.5],
+            "range": [0, 258]
           }
         },
 
@@ -114,23 +305,35 @@
           "type": "quantitative",
 
           "scale": {
-            "domain": [15,40],
+            "domain": [15, 40],
             "range": [
-              "#e5f3f5",
-              "#85c9cc",
-              "#268b9e",
-              "#124b70"
-            ]
+              "#00204C",
+              "#535F6E",
+              "#A69C6C",
+              "#FDE945"
+            ],
+            "interpolate": "rgb"
           },
 
           "legend": {
             "title": "Modelled surfable hours (%)",
             "orient": "bottom",
             "direction": "horizontal",
-            "gradientLength": 320,
-            "gradientThickness": 12,
-            "labelFontSize": 12,
-            "titleFontSize": 13
+            "gradientLength": 350,
+            "gradientThickness": 15,
+            "labelFontSize": 13,
+            "titleFontSize": 14,
+            "titleFontWeight": "bold",
+            "titleColor": "#183E52",
+            "labelColor": "#183E52",
+            "values": [
+              15,
+              20,
+              25,
+              30,
+              35,
+              40
+            ]
           }
         },
 
@@ -148,7 +351,7 @@
           {
             "field": "surfablePct",
             "type": "quantitative",
-            "title": "Surfable hours (%)",
+            "title": "Modelled surfable hours (%)",
             "format": ".0f"
           }
         ]
@@ -156,6 +359,54 @@
     },
 
     {
+      "description": "High-contrast percentage labels displayed inside each radial segment.",
+
+      "mark": {
+        "type": "text",
+        "font": "Arial",
+        "fontSize": 9,
+        "fontWeight": "bold",
+        "align": "center",
+        "baseline": "middle"
+      },
+
+      "encoding": {
+        "theta": {
+          "field": "monthMid",
+          "type": "quantitative",
+          "scale": {
+            "domain": [0, 12],
+            "range": [0, 6.283185307179586]
+          }
+        },
+
+        "radius": {
+          "field": "midRadius",
+          "type": "quantitative",
+          "scale": {
+            "domain": [0, 4.5],
+            "range": [0, 258]
+          }
+        },
+
+        "text": {
+          "field": "percentageLabel",
+          "type": "nominal"
+        },
+
+        "color": {
+          "condition": {
+            "test": "datum.surfablePct >= 29",
+            "value": "#132D40"
+          },
+          "value": "#FFFFFF"
+        }
+      }
+    },
+
+    {
+      "description": "Month labels positioned outside the outermost Snapper Rocks ring.",
+
       "transform": [
         {
           "filter": "datum.location === 'Snapper Rocks'"
@@ -167,7 +418,8 @@
         "font": "Arial",
         "fontSize": 12,
         "fontWeight": "bold",
-        "color": "#183e52",
+        "color": "#183E52",
+        "align": "center",
         "baseline": "middle"
       },
 
@@ -176,8 +428,8 @@
           "field": "monthMid",
           "type": "quantitative",
           "scale": {
-            "domain": [0,12],
-            "range": [0,6.283185307179586]
+            "domain": [0, 12],
+            "range": [0, 6.283185307179586]
           }
         },
 
@@ -185,8 +437,8 @@
           "datum": 4.15,
           "type": "quantitative",
           "scale": {
-            "domain": [0,4.5],
-            "range": [0,258]
+            "domain": [0, 4.5],
+            "range": [0, 258]
           }
         },
 
@@ -207,7 +459,9 @@
 
     "legend": {
       "labelColor": "#274458",
-      "titleColor": "#274458"
+      "titleColor": "#274458",
+      "labelFont": "Arial",
+      "titleFont": "Arial"
     }
   },
 
