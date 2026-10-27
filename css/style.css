@@ -1,7 +1,20 @@
 /* =========================================================
    FIT3179 — AUSTRALIAN SURFING DESTINATIONS
-   COMPLETE STYLESHEET
+   COMPLETE DASHBOARD STYLESHEET
+
+   Includes:
+   - Global layout and typography
+   - Eight-chapter dashboard structure
+   - Chart 1 interactive state map
+   - Charts 5–7 surfing participation
+   - Chart 8 surf-break ratings
+   - Chapter 05 full-width heading
+   - Chart 11 radar comparison
+   - Chart 12 seasonal surfability
+   - Chart 13 professional surfing
+   - Responsive design and accessibility
    ========================================================= */
+
 
 /* =========================================================
    01. GLOBAL VARIABLES
@@ -16,8 +29,9 @@
   --line: #d9e7e3;
 }
 
+
 /* =========================================================
-   02. RESET AND GLOBAL TYPOGRAPHY
+   02. GLOBAL RESET AND TYPOGRAPHY
    ========================================================= */
 
 * {
@@ -49,13 +63,22 @@ select {
   display: none !important;
 }
 
+h1,
+h2,
+h3 {
+  font-family: Arial, Helvetica, sans-serif;
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+}
+
+
 /* =========================================================
    03. PAGE LAYOUT
    ========================================================= */
 
 .wrap {
   max-width: 1120px;
-  margin: auto;
+  margin: 0 auto;
   padding: 0 24px;
 }
 
@@ -67,6 +90,7 @@ section {
 section:nth-of-type(even) {
   background: var(--pale);
 }
+
 
 /* =========================================================
    04. HEADER AND NAVIGATION
@@ -81,17 +105,9 @@ header {
 header .eyebrow,
 .section-label {
   text-transform: uppercase;
-  letter-spacing: .15em;
-  font-size: .75rem;
+  letter-spacing: 0.15em;
+  font-size: 0.75rem;
   font-weight: 700;
-}
-
-h1,
-h2,
-h3 {
-  font-family: Arial, Helvetica, sans-serif;
-  letter-spacing: -.035em;
-  line-height: 1.15;
 }
 
 h1 {
@@ -114,7 +130,7 @@ nav {
 }
 
 nav a {
-  font-size: .83rem;
+  font-size: 0.83rem;
   text-decoration: none;
   color: #c3e4e2;
 }
@@ -127,6 +143,7 @@ nav a:focus-visible {
   outline: 2px solid #ffffff;
   outline-offset: 3px;
 }
+
 
 /* =========================================================
    05. SECTION HEADINGS AND INTRODUCTIONS
@@ -180,9 +197,10 @@ h2 {
 
 .section-transition {
   max-width: 1000px;
-  padding: 0 0 0 17px;
+  padding-left: 17px;
   border-left: 3px solid var(--sea);
 }
+
 
 /* =========================================================
    06. CHART CARDS
@@ -202,6 +220,7 @@ h3 {
   margin: 0 0 14px;
 }
 
+
 /* =========================================================
    07. VEGA VISUALISATION CONTAINERS
    ========================================================= */
@@ -215,6 +234,7 @@ h3 {
 .viz .vega-embed {
   max-width: 100%;
 }
+
 
 /* =========================================================
    08. CHART ANNOTATIONS
@@ -241,6 +261,7 @@ h3 {
   line-height: 1;
 }
 
+
 /* =========================================================
    09. CHART INTERPRETATIONS
    ========================================================= */
@@ -254,6 +275,7 @@ h3 {
   line-height: 1.68;
 }
 
+
 /* =========================================================
    10. SOURCE ATTRIBUTION
    ========================================================= */
@@ -261,7 +283,7 @@ h3 {
 .chart-source {
   margin: 10px 0 0;
   color: var(--muted);
-  font-size: .8rem;
+  font-size: 0.8rem;
 }
 
 .chart-source a {
@@ -273,6 +295,7 @@ h3 {
 .chart-source a:hover {
   color: #0d3443;
 }
+
 
 /* =========================================================
    11. CHART 1 — INTERACTIVE SURFING RESERVES MAP
@@ -310,7 +333,7 @@ h3 {
 
 .state-filter {
   font: inherit;
-  font-size: .82rem;
+  font-size: 0.82rem;
   font-weight: 700;
   line-height: 1.2;
   cursor: pointer;
@@ -320,8 +343,8 @@ h3 {
   border-radius: 999px;
   padding: 8px 12px;
   transition:
-    background .15s,
-    border-color .15s;
+    background 0.15s,
+    border-color 0.15s;
 }
 
 .state-filter:hover {
@@ -367,12 +390,15 @@ h3 {
 }
 
 .state-context {
-  font-size: .77rem;
+  font-size: 0.77rem;
   color: var(--muted);
   margin: 4px 0 0;
 }
 
-/* MAP ANALYSIS PANEL */
+
+/* =========================================================
+   12. CHART 1 — MAP ANALYSIS PANEL
+   ========================================================= */
 
 .map-analysis {
   display: flex;
@@ -397,7 +423,7 @@ h3 {
   padding: 12px 14px;
   max-width: none;
   line-height: 1.4;
-  font-size: .92rem;
+  font-size: 0.92rem;
   font-weight: 400;
   color: #124552;
 }
@@ -422,12 +448,12 @@ h3 {
 }
 
 .map-card .chart-callout span {
-  font-size: .91rem;
+  font-size: 0.91rem;
   color: #264e57;
 }
 
 .map-card .state-detail {
-  font-size: .78rem;
+  font-size: 0.78rem;
   color: #426773;
   margin: 0 0 2px;
   line-height: 1.4;
@@ -439,7 +465,7 @@ h3 {
   padding: 11px 0 0;
   margin: 0;
   max-width: none;
-  font-size: .9rem;
+  font-size: 0.9rem;
   line-height: 1.58;
   color: #294b56;
 }
@@ -448,8 +474,9 @@ h3 {
   margin: 11px 0 0;
 }
 
+
 /* =========================================================
-   12. FULL-WIDTH CHAPTER HEADINGS
+   13. FULL-WIDTH CHAPTER HEADINGS
    ========================================================= */
 
 #geography .section-head,
@@ -471,7 +498,7 @@ h3 {
   font-size: clamp(1.85rem, 3.2vw, 3rem);
   font-weight: 800;
   line-height: 1.15;
-  letter-spacing: -.035em;
+  letter-spacing: -0.035em;
 }
 
 #geography h2,
@@ -486,16 +513,78 @@ h3 {
   width: 100%;
 }
 
+
 /* =========================================================
-   13. PARTICIPATION CHARTS 5, 6 AND 7
+   14. CHAPTER 05 — WAVE CONDITIONS
+   NEW FULL-WIDTH HEADING AND EXPLANATION
    ========================================================= */
 
 /*
-   Preserve the original marks, chart dimensions,
-   legends and data from the Vega-Lite specifications.
+   Previous layout:
+   Left column: chapter heading
+   Right column: introductory paragraph
 
-   These rules style only the surrounding elements.
+   Updated layout:
+   Full-width chapter heading
+   Introductory paragraph directly underneath
+   Followed by the existing wave charts
 */
+
+#competition .section-head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 26px;
+}
+
+/* Allow the heading to occupy the entire container */
+
+#competition .section-head > div {
+  width: 100%;
+  max-width: none;
+}
+
+/* Display the full heading on one line where possible */
+
+#competition .section-head h2 {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+
+  font-size: clamp(1.85rem, 3.2vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.035em;
+
+  white-space: nowrap;
+}
+
+/* Place the explanatory text beneath the heading */
+
+#competition .section-head > p {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+
+  color: #31535f;
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+/*
+   Maintain a readable line length on large screens
+   without restricting the heading width.
+*/
+
+#competition .section-head > p {
+  text-wrap: pretty;
+}
+
+
+/* =========================================================
+   15. CHARTS 5–7 — SURFING PARTICIPATION
+   ========================================================= */
 
 [data-chart="ausplay-surf-map"],
 [data-chart="ausplay-surf-ranking"],
@@ -528,7 +617,8 @@ h3 {
   max-width: 100%;
 }
 
-/* PARTICIPATION CHART CALLOUTS */
+
+/* PARTICIPATION CHART ANNOTATIONS */
 
 [data-chart="ausplay-surf-map"] .chart-callout,
 [data-chart="ausplay-surf-ranking"] .chart-callout,
@@ -540,6 +630,9 @@ h3 {
   line-height: 1.6;
 }
 
+
+/* REMOVE DECORATIVE ARROWS */
+
 [data-chart="ausplay-surf-map"] .chart-callout::before,
 [data-chart="ausplay-surf-ranking"] .chart-callout::before,
 [data-chart="ausplay-surf-gender"] .chart-callout::before,
@@ -550,7 +643,8 @@ h3 {
   display: none !important;
 }
 
-/* PARTICIPATION ANALYTICAL PARAGRAPHS */
+
+/* PARTICIPATION ANALYSIS PARAGRAPHS */
 
 [data-chart="ausplay-surf-map"] .chart-story,
 [data-chart="ausplay-surf-ranking"] .chart-story,
@@ -560,17 +654,10 @@ h3 {
   line-height: 1.75;
 }
 
+
 /* =========================================================
-   14. CHART 6 — INTERACTIVE DORLING CARTOGRAM
+   16. CHART 6 — INTERACTIVE DORLING CARTOGRAM
    ========================================================= */
-
-/*
-   The corrected main.js creates the controls.
-
-   Modes:
-   - Estimated participants (people)
-   - Adult participation rate (%)
-*/
 
 [data-chart="ausplay-surf-ranking"] .cartogram-controls {
   display: flex;
@@ -586,7 +673,7 @@ h3 {
   flex-wrap: wrap;
   gap: 12px;
   color: #183847;
-  font-size: .95rem;
+  font-size: 0.95rem;
   font-weight: 700;
   line-height: 1.4;
 }
@@ -600,12 +687,12 @@ h3 {
   background: #ffffff;
   color: #123442;
   font: inherit;
-  font-size: .9rem;
+  font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition:
-    border-color .15s ease,
-    box-shadow .15s ease;
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 [data-chart="ausplay-surf-ranking"] .cartogram-controls select:hover {
@@ -613,13 +700,13 @@ h3 {
 }
 
 [data-chart="ausplay-surf-ranking"] .cartogram-controls select:focus-visible {
-  outline: 3px solid rgba(22, 125, 136, .2);
+  outline: 3px solid rgba(22, 125, 136, 0.2);
   outline-offset: 2px;
 }
 
+
 /* =========================================================
-   15. SHARED VEGA FILTER STYLING
-   CHART 8 AND WORLD TOUR
+   17. CHART 8 AND WORLD TOUR — FILTER STYLING
    ========================================================= */
 
 [data-chart="surf-destination-ratings"] .vega-embed,
@@ -654,7 +741,7 @@ h3 {
   gap: 9px;
   margin: 0;
   color: #183847;
-  font-size: .92rem;
+  font-size: 0.92rem;
   font-weight: 700;
   line-height: 1.4;
 }
@@ -669,12 +756,12 @@ h3 {
   background: #ffffff;
   color: #123442;
   font-family: inherit;
-  font-size: .88rem;
+  font-size: 0.88rem;
   font-weight: 600;
   cursor: pointer;
   transition:
-    border-color .15s ease,
-    box-shadow .15s ease;
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 [data-chart="surf-destination-ratings"] .vega-bindings select:hover,
@@ -686,11 +773,12 @@ h3 {
 [data-chart="world-tour"] .vega-bindings select:focus-visible {
   outline: none;
   border-color: #167d88;
-  box-shadow: 0 0 0 3px rgba(22, 125, 136, .16);
+  box-shadow: 0 0 0 3px rgba(22, 125, 136, 0.16);
 }
 
+
 /* =========================================================
-   16. CHART 8 — SURF BREAK RATINGS
+   18. CHART 8 — SURF BREAK RATINGS
    ========================================================= */
 
 [data-chart="surf-destination-ratings"] .chart-callout {
@@ -714,13 +802,16 @@ h3 {
   line-height: 1.75;
 }
 
+
 /* =========================================================
-   17. CHART 11 — RADAR COMPARISON
+   19. CHART 11 — RADAR COMPARISON
    ========================================================= */
 
 /*
-   The explanatory button panel has been removed.
-   The radar now occupies the available width.
+   Preserves the radar layout and its existing
+   Vega-Lite legend.
+
+   No explanatory buttons are displayed.
 */
 
 .chart11-layout {
@@ -758,8 +849,9 @@ h3 {
   display: none !important;
 }
 
+
 /* =========================================================
-   18. CHART 11 TO CHART 12 TRANSITION
+   20. CHART 11 → CHART 12 TRANSITION
    ========================================================= */
 
 .comparison-transition {
@@ -772,8 +864,9 @@ h3 {
   line-height: 1.75;
 }
 
+
 /* =========================================================
-   19. CHART 12 — SEASONAL SURFABILITY HEATMAP
+   21. CHART 12 — SEASONAL SURFABILITY HEATMAP
    ========================================================= */
 
 .chart12-card {
@@ -788,9 +881,10 @@ h3 {
   max-width: 850px;
   margin: 0 0 20px;
   color: var(--muted);
-  font-size: .95rem;
+  font-size: 0.95rem;
   line-height: 1.7;
 }
+
 
 /* LOCATION / RING GUIDE */
 
@@ -812,7 +906,7 @@ h3 {
   align-items: center;
   gap: 8px;
   color: #31535f;
-  font-size: .85rem;
+  font-size: 0.85rem;
   font-weight: 700;
 }
 
@@ -825,7 +919,8 @@ h3 {
   background: var(--sea);
 }
 
-/* RADIAL CHART */
+
+/* RADIAL HEATMAP */
 
 [data-chart="surfability-comparison"] .viz {
   display: flex;
@@ -840,7 +935,8 @@ h3 {
   margin: 0 auto;
 }
 
-/* CHART 12 CALLOUT */
+
+/* CHART 12 ANNOTATION */
 
 [data-chart="surfability-comparison"] .chart-callout {
   max-width: none;
@@ -856,14 +952,18 @@ h3 {
   display: none !important;
 }
 
+
+/* CHART 12 ANALYSIS */
+
 [data-chart="surfability-comparison"] .chart-story {
   max-width: none;
   margin-top: 16px;
   line-height: 1.75;
 }
 
+
 /* =========================================================
-   20. PROFESSIONAL SURFING — WORLD TOUR
+   22. CHART 13 — PROFESSIONAL SURFING / WORLD TOUR
    ========================================================= */
 
 [data-chart="world-tour"] .viz {
@@ -899,26 +999,43 @@ h3 {
   line-height: 1.75;
 }
 
+
 /* =========================================================
-   21. FOOTER
+   23. FOOTER
    ========================================================= */
 
 footer {
   background: var(--deep);
   color: #d3e6e9;
   padding: 25px 0;
-  font-size: .83rem;
+  font-size: 0.83rem;
 }
 
 footer p {
   margin: 5px 0;
 }
 
+
 /* =========================================================
-   22. RESPONSIVE — TABLETS
+   24. RESPONSIVE — TABLETS
    ========================================================= */
 
+@media (max-width: 1100px) {
+
+  /*
+     Permit the Wave Conditions heading to wrap
+     before it becomes wider than the viewport.
+  */
+
+  #competition .section-head h2 {
+    font-size: clamp(1.8rem, 3.2vw, 2.5rem);
+    white-space: normal;
+  }
+}
+
 @media (max-width: 900px) {
+
+  /* Chart 1 map layout */
 
   .map-layout {
     grid-template-columns: 1fr;
@@ -937,14 +1054,33 @@ footer p {
     display: none;
   }
 
+  /* Chart 11 */
+
   .chart11-layout {
     display: block;
     width: 100%;
   }
+
+  /* Chapter 05 */
+
+  #competition .section-head {
+    gap: 13px;
+    margin-bottom: 24px;
+  }
+
+  #competition .section-head h2 {
+    font-size: clamp(1.65rem, 4vw, 2.4rem);
+    white-space: normal;
+  }
+
+  #competition .section-head > p {
+    font-size: 1rem;
+  }
 }
 
+
 /* =========================================================
-   23. RESPONSIVE — SMALL TABLETS
+   25. RESPONSIVE — SMALL TABLETS
    ========================================================= */
 
 @media (max-width: 760px) {
@@ -958,6 +1094,8 @@ footer p {
     font-size: clamp(1.45rem, 5vw, 2rem);
     white-space: normal;
   }
+
+  /* Chart 8 and World Tour controls */
 
   [data-chart="surf-destination-ratings"] .vega-bindings,
   [data-chart="world-tour"] .vega-bindings {
@@ -980,7 +1118,7 @@ footer p {
   }
 
   .section-intro {
-    font-size: .98rem;
+    font-size: 0.98rem;
   }
 
   /* Chart 6 dropdown */
@@ -996,10 +1134,22 @@ footer p {
     min-width: 0;
     max-width: none;
   }
+
+  /* Chapter 05 */
+
+  #competition .section-head h2 {
+    font-size: clamp(1.55rem, 4.5vw, 2.1rem);
+  }
+
+  #competition .section-head > p {
+    font-size: 0.98rem;
+    line-height: 1.7;
+  }
 }
 
+
 /* =========================================================
-   24. RESPONSIVE — MOBILE
+   26. RESPONSIVE — MOBILE
    ========================================================= */
 
 @media (max-width: 700px) {
@@ -1033,6 +1183,23 @@ footer p {
     padding: 16px;
   }
 
+  /* Chapter 05 */
+
+  #competition .section-head {
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  #competition .section-head h2 {
+    font-size: clamp(1.5rem, 5vw, 2rem);
+    white-space: normal;
+  }
+
+  #competition .section-head > p {
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
   /* Chart 12 */
 
   .chart12-card {
@@ -1050,13 +1217,14 @@ footer p {
   }
 
   .comparison-transition {
-    font-size: .94rem;
+    font-size: 0.94rem;
     margin: 24px 0;
   }
 }
 
+
 /* =========================================================
-   25. RESPONSIVE — SMALL MOBILE
+   27. RESPONSIVE — SMALL MOBILE
    ========================================================= */
 
 @media (max-width: 480px) {
@@ -1067,12 +1235,12 @@ footer p {
 
   .state-filter {
     padding: 7px 10px;
-    font-size: .76rem;
+    font-size: 0.76rem;
   }
 
   [data-chart="world-tour"] .chart-callout {
     padding: 14px 15px;
-    font-size: .94rem;
+    font-size: 0.94rem;
   }
 
   [data-chart="ausplay-surf-ranking"] .cartogram-controls {
@@ -1080,17 +1248,24 @@ footer p {
   }
 
   [data-chart="ausplay-surf-ranking"] .cartogram-controls select {
-    font-size: .85rem;
+    font-size: 0.85rem;
     padding: 9px 11px;
+  }
+
+  #competition .section-head h2 {
+    font-size: clamp(1.35rem, 5.5vw, 1.8rem);
   }
 }
 
+
 /* =========================================================
-   26. ACCESSIBILITY
+   28. ACCESSIBILITY
    ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
+
   html {
     scroll-behavior: auto;
   }
+
 }
