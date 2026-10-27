@@ -20,7 +20,7 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   line-height: 1.55;
   color: var(--ink);
-  background: white;
+  background: #ffffff;
 }
 
 a {
@@ -33,13 +33,9 @@ a {
   padding: 0 24px;
 }
 
-/* =========================================================
-   HEADER AND NAVIGATION
-   ========================================================= */
-
 header {
   background: var(--deep);
-  color: white;
+  color: #ffffff;
   padding: 70px 0 56px;
 }
 
@@ -88,10 +84,6 @@ nav a:hover {
   text-decoration: underline;
 }
 
-/* =========================================================
-   SECTIONS AND HEADINGS
-   ========================================================= */
-
 section {
   padding: 52px 0 42px;
   scroll-margin-top: 25px;
@@ -137,6 +129,20 @@ h2 {
 .section-head--full h2 {
   width: 100%;
   max-width: none;
+}
+
+.section-intro {
+  margin: 0 0 24px;
+  max-width: 970px;
+  color: #31535f;
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.section-transition {
+  max-width: 1000px;
+  padding: 0 0 0 17px;
+  border-left: 3px solid var(--sea);
 }
 
 /* =========================================================
@@ -208,6 +214,12 @@ h3 {
   margin: 10px 0 0;
   color: var(--muted);
   font-size: .8rem;
+}
+
+.chart-source a {
+  color: #137586;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 footer {
@@ -305,7 +317,6 @@ footer p {
 .map-card .viz {
   width: 100%;
   overflow: visible;
-  min-height: 0;
 }
 
 .map-card .vega-embed,
@@ -336,7 +347,6 @@ footer p {
   display: flex;
   flex-direction: column;
   gap: 5px;
-  position: relative;
   margin: 0 0 2px 9px;
   background: #dff2ee;
   border: 1px solid #b6d9d0;
@@ -396,21 +406,25 @@ footer p {
 }
 
 /* =========================================================
-   COMPACT FULL-WIDTH SECTION HEADINGS
+   FULL-WIDTH SECTION HEADINGS
    ========================================================= */
 
 #geography .section-head,
 #history .section-head,
 #hotspots .section-head,
-#destinations .section-head {
+#destinations .section-head,
+#comparison .section-head,
+#professional .section-head {
   display: block;
-  margin-bottom: 20px;
+  margin-bottom: 22px;
 }
 
 #geography h2,
 #history h2,
 #hotspots h2,
-#destinations h2 {
+#destinations h2,
+#comparison h2,
+#professional h2 {
   font-size: clamp(1.85rem, 3.2vw, 3rem);
   font-weight: 800;
   line-height: 1.15;
@@ -423,43 +437,33 @@ footer p {
   white-space: nowrap;
 }
 
-#destinations .section-head {
-  margin-bottom: 24px;
-}
-
-#destinations h2 {
+#comparison h2,
+#professional h2 {
   max-width: none;
   width: 100%;
 }
 
 /* =========================================================
-   CHART 8 — SURF DESTINATION RATINGS
+   CHART 8 AND CHART 12 — SHARED FILTER STYLING
    ========================================================= */
 
-[data-chart="surf-destination-ratings"] .viz {
-  position: relative;
-  overflow-x: auto;
-}
-
-/* Vega-Embed and its interactive controls */
-
-[data-chart="surf-destination-ratings"] .vega-embed {
+[data-chart="surf-destination-ratings"] .vega-embed,
+[data-chart="world-tour"] .vega-embed {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 0;
   max-width: 100%;
   border: none;
-  box-shadow: none;
   background: transparent;
 }
 
-[data-chart="surf-destination-ratings"] .vega-bindings {
+[data-chart="surf-destination-ratings"] .vega-bindings,
+[data-chart="world-tour"] .vega-bindings {
   order: -1;
   display: flex;
   flex-wrap: wrap;
-  gap: 12px 18px;
   align-items: center;
+  gap: 12px 18px;
   width: 100%;
   margin: 0 0 20px;
   padding: 15px 17px;
@@ -468,7 +472,8 @@ footer p {
   border-radius: 12px;
 }
 
-[data-chart="surf-destination-ratings"] .vega-bindings label {
+[data-chart="surf-destination-ratings"] .vega-bindings label,
+[data-chart="world-tour"] .vega-bindings label {
   display: flex;
   align-items: center;
   gap: 9px;
@@ -479,14 +484,15 @@ footer p {
   line-height: 1.4;
 }
 
-[data-chart="surf-destination-ratings"] .vega-bindings select {
-  min-width: 150px;
-  max-width: 240px;
+[data-chart="surf-destination-ratings"] .vega-bindings select,
+[data-chart="world-tour"] .vega-bindings select {
+  min-width: 155px;
+  max-width: 250px;
   padding: 10px 30px 10px 12px;
   border: 1px solid #bdd7d3;
   border-radius: 8px;
-  color: #123442;
   background: #ffffff;
+  color: #123442;
   font-family: inherit;
   font-size: .88rem;
   font-weight: 600;
@@ -496,17 +502,30 @@ footer p {
     box-shadow .15s ease;
 }
 
-[data-chart="surf-destination-ratings"] .vega-bindings select:hover {
+[data-chart="surf-destination-ratings"] .vega-bindings select:hover,
+[data-chart="world-tour"] .vega-bindings select:hover {
   border-color: #58989b;
 }
 
-[data-chart="surf-destination-ratings"] .vega-bindings select:focus-visible {
+[data-chart="surf-destination-ratings"] .vega-bindings select:focus-visible,
+[data-chart="world-tour"] .vega-bindings select:focus-visible {
   outline: none;
   border-color: #167d88;
   box-shadow: 0 0 0 3px rgb(22 125 136 / 16%);
 }
 
-/* Remove the decorative arrow from Chart 8 only. */
+/* =========================================================
+   CHART 8 — EXISTING RATING CHART
+   ========================================================= */
+
+[data-chart="surf-destination-ratings"] .chart-callout {
+  margin: 17px 0 12px;
+  padding: 16px 20px;
+  max-width: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  line-height: 1.55;
+}
 
 [data-chart="surf-destination-ratings"] .chart-callout::before,
 [data-chart="surf-destination-ratings"] .chart-callout::after {
@@ -514,34 +533,188 @@ footer p {
   display: none !important;
 }
 
-[data-chart="surf-destination-ratings"] .chart-callout {
-  margin: 17px 0 12px;
-  padding: 16px 20px;
-  max-width: none;
-  background: #e0f2ed;
-  border: 1px solid #bcded4;
-  border-radius: 10px;
-  color: #123f48;
-  font-size: 1rem;
-  font-weight: 750;
-  line-height: 1.55;
-}
-
 [data-chart="surf-destination-ratings"] .chart-story {
-  margin-top: 15px;
   max-width: none;
+  margin-top: 15px;
   line-height: 1.75;
 }
 
-[data-chart="surf-destination-ratings"] .chart-source {
-  margin-top: 15px;
+/* =========================================================
+   CHART 11 — RADAR AND MEASURE DEFINITIONS
+   ========================================================= */
+
+.chart11-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 280px;
+  gap: 16px;
+  align-items: start;
+  margin: 12px 0 20px;
+}
+
+.chart11-plot {
+  min-width: 0;
+  overflow: visible;
+}
+
+.chart11-plot .viz {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.chart11-explainer {
+  background: #f6faf9;
+  border: 1px solid #d8e9e4;
+  border-radius: 12px;
+  padding: 18px;
+}
+
+.chart11-explainer h4 {
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  line-height: 1.35;
+  color: #173847;
+}
+
+.chart11-explainer-intro {
+  margin: 0 0 15px;
+  font-size: .88rem;
+  color: #55707a;
+  line-height: 1.5;
+}
+
+.chart11-measure-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chart11-measure-btn {
+  padding: 8px 10px;
+  font: inherit;
+  font-size: .82rem;
+  font-weight: 700;
+  line-height: 1.25;
+  border: 1px solid #c4dbd5;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #254c56;
+  cursor: pointer;
+  transition:
+    background .15s ease,
+    border-color .15s ease;
+}
+
+.chart11-measure-btn:hover {
+  background: #eaf5f1;
+  border-color: #8bb9ad;
+}
+
+.chart11-measure-btn:focus-visible {
+  outline: 3px solid #6fa7a5;
+  outline-offset: 2px;
+}
+
+.chart11-measure-btn.is-active {
+  background: #135c69;
+  border-color: #135c69;
+  color: #ffffff;
+}
+
+.chart11-measure-definition {
+  margin-top: 16px;
+  padding: 15px;
+  background: #ffffff;
+  border: 1px solid #d8e8e2;
+  border-radius: 10px;
+  min-height: 145px;
+}
+
+.chart11-measure-definition h5 {
+  margin: 0 0 8px;
+  color: #123b47;
+  font-size: 1rem;
+  line-height: 1.35;
+}
+
+.chart11-measure-definition p {
+  margin: 0;
+  color: #385863;
+  font-size: .91rem;
+  line-height: 1.6;
+}
+
+.chart11-measure-definition .measure-note {
+  display: block;
+  margin-top: 10px;
+  color: #57737b;
+  font-size: .84rem;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+[data-chart="surf-break-head-to-head"] .chart-callout {
+  margin: 18px 0 12px;
+  max-width: none;
+}
+
+[data-chart="surf-break-head-to-head"] .chart-callout::before,
+[data-chart="surf-break-head-to-head"] .chart-callout::after {
+  content: none !important;
+  display: none !important;
 }
 
 /* =========================================================
-   RESPONSIVE LAYOUT
+   CHART 12 — WORLD TOUR
    ========================================================= */
 
-@media (max-width: 860px) {
+[data-chart="world-tour"] .viz {
+  width: 100%;
+  overflow-x: auto;
+}
+
+[data-chart="world-tour"] .vega-embed {
+  width: 100%;
+}
+
+[data-chart="world-tour"] .chart-callout {
+  margin: 18px 0 12px;
+  max-width: none;
+  padding: 16px 20px;
+  border-radius: 10px;
+  background: #e0f2ed;
+  border: 1px solid #bcded4;
+  color: #123f48;
+  line-height: 1.55;
+}
+
+/* Remove the arrow beside Chart 12's key note. */
+
+[data-chart="world-tour"] .chart-callout::before,
+[data-chart="world-tour"] .chart-callout::after,
+[data-chart="world-tour"] .chart-story::before {
+  content: none !important;
+  display: none !important;
+}
+
+[data-chart="world-tour"] .chart-story {
+  max-width: none;
+  margin-top: 16px;
+  line-height: 1.75;
+}
+
+/* =========================================================
+   RESPONSIVE DESIGN
+   ========================================================= */
+
+@media (max-width: 1100px) {
+  .chart11-layout {
+    grid-template-columns: minmax(0, 1fr) 255px;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 900px) {
   .map-layout {
     grid-template-columns: 1fr;
     gap: 12px;
@@ -559,8 +732,17 @@ footer p {
     display: none;
   }
 
-  .map-card .chart-story {
-    font-size: .95rem;
+  .chart11-layout {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .chart11-explainer {
+    width: 100%;
+  }
+
+  .chart11-measure-definition {
+    min-height: 0;
   }
 }
 
@@ -568,26 +750,35 @@ footer p {
   #geography h2,
   #history h2,
   #hotspots h2,
-  #destinations h2 {
+  #destinations h2,
+  #comparison h2,
+  #professional h2 {
     font-size: clamp(1.45rem, 5vw, 2rem);
     white-space: normal;
   }
 
-  [data-chart="surf-destination-ratings"] .vega-bindings {
+  [data-chart="surf-destination-ratings"] .vega-bindings,
+  [data-chart="world-tour"] .vega-bindings {
     gap: 12px;
     padding: 13px;
   }
 
-  [data-chart="surf-destination-ratings"] .vega-bindings label {
+  [data-chart="surf-destination-ratings"] .vega-bindings label,
+  [data-chart="world-tour"] .vega-bindings label {
     width: 100%;
     justify-content: space-between;
     flex-wrap: wrap;
   }
 
-  [data-chart="surf-destination-ratings"] .vega-bindings select {
+  [data-chart="surf-destination-ratings"] .vega-bindings select,
+  [data-chart="world-tour"] .vega-bindings select {
     flex: 1 1 180px;
-    max-width: none;
     min-width: 0;
+    max-width: none;
+  }
+
+  .section-intro {
+    font-size: .98rem;
   }
 }
 
@@ -624,7 +815,16 @@ footer p {
     font-size: .76rem;
   }
 
-  [data-chart="surf-destination-ratings"] .chart-callout {
+  .chart11-explainer {
+    padding: 14px;
+  }
+
+  .chart11-measure-btn {
+    font-size: .78rem;
+    padding: 8px 9px;
+  }
+
+  [data-chart="world-tour"] .chart-callout {
     padding: 14px 15px;
     font-size: .94rem;
   }
