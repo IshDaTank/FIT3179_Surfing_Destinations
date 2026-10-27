@@ -1,156 +1,178 @@
 /* =========================================================
-   CHART 11 — RADAR MEASURE DEFINITIONS
+   CHART 11 — INTERACTIVE RADAR MEASURE DEFINITIONS
 
-   This module only creates explanatory buttons.
+   This file handles only the explanatory side panel.
 
-   It does not:
-   - load or replace the radar chart
-   - modify rating values
-   - change the Vega-Lite specification
-   - interfere with main.js
+   The radar chart itself is still created using:
+   specs/surf-break-head-to-head.json
+
+   No surfing ratings are changed by this script.
    ========================================================= */
 
-const MEASURE_DEFINITIONS = [
+const CHART11_DEFINITIONS = [
   {
-    label: 'Wave quality',
-    definition:
-      'The quality of the waves when conditions are favourable, including how enjoyable and rewarding the break is to surf.',
+    label: "Wave quality",
+    description:
+      "How highly visitors rate the waves at this surf break when conditions are favourable.",
     note:
-      'A high score describes the quality of a good surfing session, not how often those conditions occur.'
+      "Wave quality does not measure how often good conditions occur."
   },
   {
-    label: 'Consistency',
-    definition:
-      'How regularly the surf break produces favourable or usable surfing conditions.',
+    label: "Consistency",
+    description:
+      "How regularly visitors expect the break to produce suitable surfing conditions.",
     note:
-      'A location can have excellent waves on its best days without being consistently good.'
+      "A high consistency rating suggests more reliable opportunities to surf."
   },
   {
-    label: 'Water quality',
-    definition:
-      'Visitors’ perceptions of the cleanliness and overall condition of the water at the surf break.',
+    label: "Water quality",
+    description:
+      "Visitors' assessment of the cleanliness and general quality of the water.",
     note:
-      'This is a visitor rating, not a laboratory measurement of water quality.'
+      "This is a subjective review rating, not laboratory water-quality testing."
   },
   {
-    label: 'Crowds',
-    definition:
-      'How visitors rate the crowding experience at the surf break.',
+    label: "Crowds",
+    description:
+      "How favourable visitors consider the crowding conditions at the surf break.",
     note:
-      'Higher scores indicate a more favourable crowding experience — generally fewer or more manageable crowds.'
+      "Higher ratings mean a more favourable experience, generally indicating fewer or more manageable crowds."
   },
   {
-    label: 'Access',
-    definition:
-      'How easy visitors consider it to reach and use the surf break.',
+    label: "Access",
+    description:
+      "How conveniently surfers can reach and use the location.",
     note:
-      'Access can involve factors such as reaching the beach, entering the water and nearby facilities.'
+      "Access may reflect entry points, transport and surrounding facilities."
   },
   {
-    label: 'Scenery',
-    definition:
-      'The perceived attractiveness of the surrounding coastline and landscape.',
+    label: "Scenery",
+    description:
+      "How attractive visitors consider the coastal environment and surrounding landscape.",
     note:
-      'This represents the destination experience rather than the physical quality of the waves.'
+      "This describes the destination experience rather than the waves themselves."
   },
   {
-    label: 'Local attitude',
-    definition:
-      'How welcoming and friendly visitors perceive the local surfing environment.',
+    label: "Local attitude",
+    description:
+      "Visitors' perception of how welcoming and friendly the local surfing environment is.",
     note:
-      'This is a subjective assessment based on visitor experiences.'
+      "Individual experiences may vary considerably."
   },
   {
-    label: 'Accommodation',
-    definition:
-      'How favourably visitors rate nearby places to stay when travelling to the surf destination.',
+    label: "Accommodation",
+    description:
+      "Visitors' assessment of accommodation availability and suitability around the surfing destination.",
     note:
-      'A higher rating indicates a more positive assessment of accommodation options.'
+      "This measures supporting facilities rather than surfing performance."
   },
   {
-    label: 'Equipment & repairs',
-    definition:
-      'Visitors’ assessments of access to surfing equipment, shops and repair services around the destination.',
+    label: "Equipment & repairs",
+    description:
+      "Visitors' assessment of the availability of surfing equipment and repair services.",
     note:
-      'This measures supporting facilities rather than wave performance.'
+      "This includes supporting services rather than wave conditions."
   }
 ];
 
 function initialiseChart11Definitions() {
-  const buttonsContainer =
-    document.getElementById('chart11-measure-buttons');
+  const buttonsContainer = document.getElementById(
+    "chart11-measure-buttons"
+  );
 
-  const definitionContainer =
-    document.getElementById('chart11-measure-definition');
+  const definitionContainer = document.getElementById(
+    "chart11-measure-definition"
+  );
 
   if (!buttonsContainer || !definitionContainer) {
+    console.warn(
+      "Chart 11: definition containers were not found. " +
+      "Check the IDs in index.html."
+    );
+
     return;
   }
 
+  // Remove any previously generated controls.
+  buttonsContainer.replaceChildren();
+
   const buttons = [];
 
-  function selectMeasure(index) {
-    const selected = MEASURE_DEFINITIONS[index];
+  function showDefinition(index) {
+    const measure = CHART11_DEFINITIONS[index];
 
-    if (!selected) {
+    if (!measure) {
       return;
     }
 
-    // Use DOM text nodes rather than injecting HTML strings.
+    // Update the explanation box.
     definitionContainer.replaceChildren();
 
-    const heading = document.createElement('h5');
-    heading.textContent = selected.label;
+    const heading = document.createElement("h5");
+    heading.textContent = measure.label;
 
-    const description = document.createElement('p');
-    description.textContent = selected.definition;
+    const description = document.createElement("p");
+    description.textContent = measure.description;
 
-    definitionContainer.append(heading, description);
+    const note = document.createElement("span");
+    note.className = "measure-note";
+    note.textContent = measure.note;
 
-    if (selected.note) {
-      const note = document.createElement('span');
-      note.className = 'measure-note';
-      note.textContent = selected.note;
-      definitionContainer.append(note);
-    }
+    definitionContainer.append(
+      heading,
+      description,
+      note
+    );
 
+    // Update button appearance and accessibility state.
     buttons.forEach((button, buttonIndex) => {
-      const active = buttonIndex === index;
+      const isSelected = buttonIndex === index;
 
-      button.classList.toggle('is-active', active);
-      button.setAttribute('aria-pressed', String(active));
+      button.classList.toggle(
+        "is-active",
+        isSelected
+      );
+
+      button.setAttribute(
+        "aria-pressed",
+        String(isSelected)
+      );
     });
   }
 
-  MEASURE_DEFINITIONS.forEach((measure, index) => {
-    const button = document.createElement('button');
+  // Generate one button per rating measure.
+  CHART11_DEFINITIONS.forEach((measure, index) => {
+    const button = document.createElement("button");
 
-    button.type = 'button';
-    button.className = 'chart11-measure-btn';
+    button.type = "button";
+    button.className = "chart11-measure-btn";
     button.textContent = measure.label;
 
-    button.setAttribute('aria-pressed', 'false');
+    button.setAttribute("aria-pressed", "false");
+
     button.setAttribute(
-      'aria-controls',
-      'chart11-measure-definition'
+      "aria-controls",
+      "chart11-measure-definition"
     );
 
-    button.addEventListener('click', () => {
-      selectMeasure(index);
+    button.addEventListener("click", () => {
+      showDefinition(index);
     });
 
     buttons.push(button);
-    buttonsContainer.append(button);
+    buttonsContainer.appendChild(button);
   });
 
-  // Display the first definition when the page opens.
-  selectMeasure(0);
+  // Populate the panel immediately.
+  showDefinition(0);
 }
 
-if (document.readyState === 'loading') {
+// Works whether the module loads before or after DOMContentLoaded.
+if (document.readyState === "loading") {
   document.addEventListener(
-    'DOMContentLoaded',
-    initialiseChart11Definitions
+    "DOMContentLoaded",
+    initialiseChart11Definitions,
+    { once: true }
   );
 } else {
   initialiseChart11Definitions();
