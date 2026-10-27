@@ -3,7 +3,6 @@
    COMPLETE STYLESHEET
    ========================================================= */
 
-
 /* =========================================================
    01. GLOBAL VARIABLES
    ========================================================= */
@@ -17,9 +16,8 @@
   --line: #d9e7e3;
 }
 
-
 /* =========================================================
-   02. GLOBAL RESET AND TYPOGRAPHY
+   02. RESET AND GLOBAL TYPOGRAPHY
    ========================================================= */
 
 * {
@@ -51,7 +49,6 @@ select {
   display: none !important;
 }
 
-
 /* =========================================================
    03. PAGE LAYOUT
    ========================================================= */
@@ -70,7 +67,6 @@ section {
 section:nth-of-type(even) {
   background: var(--pale);
 }
-
 
 /* =========================================================
    04. HEADER AND NAVIGATION
@@ -132,7 +128,6 @@ nav a:focus-visible {
   outline-offset: 3px;
 }
 
-
 /* =========================================================
    05. SECTION HEADINGS AND INTRODUCTIONS
    ========================================================= */
@@ -189,7 +184,6 @@ h2 {
   border-left: 3px solid var(--sea);
 }
 
-
 /* =========================================================
    06. CHART CARDS
    ========================================================= */
@@ -208,7 +202,6 @@ h3 {
   margin: 0 0 14px;
 }
 
-
 /* =========================================================
    07. VEGA VISUALISATION CONTAINERS
    ========================================================= */
@@ -222,7 +215,6 @@ h3 {
 .viz .vega-embed {
   max-width: 100%;
 }
-
 
 /* =========================================================
    08. CHART ANNOTATIONS
@@ -249,7 +241,6 @@ h3 {
   line-height: 1;
 }
 
-
 /* =========================================================
    09. CHART INTERPRETATIONS
    ========================================================= */
@@ -262,7 +253,6 @@ h3 {
   font-size: 1rem;
   line-height: 1.68;
 }
-
 
 /* =========================================================
    10. SOURCE ATTRIBUTION
@@ -283,7 +273,6 @@ h3 {
 .chart-source a:hover {
   color: #0d3443;
 }
-
 
 /* =========================================================
    11. CHART 1 — INTERACTIVE SURFING RESERVES MAP
@@ -383,7 +372,6 @@ h3 {
   margin: 4px 0 0;
 }
 
-
 /* MAP ANALYSIS PANEL */
 
 .map-analysis {
@@ -460,7 +448,6 @@ h3 {
   margin: 11px 0 0;
 }
 
-
 /* =========================================================
    12. FULL-WIDTH CHAPTER HEADINGS
    ========================================================= */
@@ -499,40 +486,101 @@ h3 {
   width: 100%;
 }
 
-
 /* =========================================================
-   13. CHART 6 — INTERACTIVE PARTICIPATION CARTOGRAM
+   13. PARTICIPATION CHARTS 5, 6 AND 7
    ========================================================= */
 
 /*
-   This styling supports the corrected main.js.
+   Preserve the original marks, chart dimensions,
+   legends and data from the Vega-Lite specifications.
 
-   The dropdown switches between:
+   These rules style only the surrounding elements.
+*/
+
+[data-chart="ausplay-surf-map"],
+[data-chart="ausplay-surf-ranking"],
+[data-chart="ausplay-surf-gender"] {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 22px 24px;
+}
+
+[data-chart="ausplay-surf-map"] h3,
+[data-chart="ausplay-surf-ranking"] h3,
+[data-chart="ausplay-surf-gender"] h3 {
+  color: #123442;
+  font-weight: 800;
+  margin-bottom: 14px;
+}
+
+[data-chart="ausplay-surf-map"] .viz,
+[data-chart="ausplay-surf-ranking"] .viz,
+[data-chart="ausplay-surf-gender"] .viz {
+  width: 100%;
+  min-width: 0;
+  overflow-x: auto;
+}
+
+[data-chart="ausplay-surf-map"] .vega-embed,
+[data-chart="ausplay-surf-ranking"] .vega-embed,
+[data-chart="ausplay-surf-gender"] .vega-embed {
+  max-width: 100%;
+}
+
+/* PARTICIPATION CHART CALLOUTS */
+
+[data-chart="ausplay-surf-map"] .chart-callout,
+[data-chart="ausplay-surf-ranking"] .chart-callout,
+[data-chart="ausplay-surf-gender"] .chart-callout {
+  max-width: none;
+  margin: 18px 0 12px;
+  padding: 15px 18px;
+  border-radius: 10px;
+  line-height: 1.6;
+}
+
+[data-chart="ausplay-surf-map"] .chart-callout::before,
+[data-chart="ausplay-surf-ranking"] .chart-callout::before,
+[data-chart="ausplay-surf-gender"] .chart-callout::before,
+[data-chart="ausplay-surf-map"] .chart-callout::after,
+[data-chart="ausplay-surf-ranking"] .chart-callout::after,
+[data-chart="ausplay-surf-gender"] .chart-callout::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* PARTICIPATION ANALYTICAL PARAGRAPHS */
+
+[data-chart="ausplay-surf-map"] .chart-story,
+[data-chart="ausplay-surf-ranking"] .chart-story,
+[data-chart="ausplay-surf-gender"] .chart-story {
+  max-width: none;
+  margin-top: 14px;
+  line-height: 1.75;
+}
+
+/* =========================================================
+   14. CHART 6 — INTERACTIVE DORLING CARTOGRAM
+   ========================================================= */
+
+/*
+   The corrected main.js creates the controls.
+
+   Modes:
    - Estimated participants (people)
    - Adult participation rate (%)
 */
 
-[data-chart="ausplay-surf-ranking"] {
-  overflow: hidden;
-}
-
-
-/* CHART 6 DROPDOWN CONTAINER */
-
-[data-chart="ausplay-surf-ranking"]
-.cartogram-controls {
+[data-chart="ausplay-surf-ranking"] .cartogram-controls {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 12px;
-  margin: 4px 0 20px;
+  margin: 4px 0 16px;
 }
 
-
-/* DROPDOWN LABEL */
-
-[data-chart="ausplay-surf-ranking"]
-.cartogram-controls label {
+[data-chart="ausplay-surf-ranking"] .cartogram-controls label {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -543,94 +591,35 @@ h3 {
   line-height: 1.4;
 }
 
-
-/* DROPDOWN SELECT */
-
-[data-chart="ausplay-surf-ranking"]
-.cartogram-controls select {
+[data-chart="ausplay-surf-ranking"] .cartogram-controls select {
   min-width: 250px;
   max-width: 350px;
   padding: 9px 14px;
-
+  border: 1px solid #bdd7d3;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #123442;
   font: inherit;
   font-size: .9rem;
   font-weight: 600;
-
-  color: #123442;
-  background: #ffffff;
-
-  border: 1px solid #bdd7d3;
-  border-radius: 8px;
-
   cursor: pointer;
-
   transition:
     border-color .15s ease,
     box-shadow .15s ease;
 }
 
-[data-chart="ausplay-surf-ranking"]
-.cartogram-controls select:hover {
+[data-chart="ausplay-surf-ranking"] .cartogram-controls select:hover {
   border-color: #167d88;
 }
 
-[data-chart="ausplay-surf-ranking"]
-.cartogram-controls select:focus-visible {
-  outline: none;
-  border-color: #167d88;
-  box-shadow: 0 0 0 3px rgb(22 125 136 / 16%);
+[data-chart="ausplay-surf-ranking"] .cartogram-controls select:focus-visible {
+  outline: 3px solid rgba(22, 125, 136, .2);
+  outline-offset: 2px;
 }
-
-
-/* CHART 6 VISUALISATION */
-
-[data-chart="ausplay-surf-ranking"] .viz {
-  width: 100%;
-  min-width: 0;
-  overflow-x: auto;
-}
-
-[data-chart="ausplay-surf-ranking"] .vega-embed {
-  max-width: 100%;
-}
-
-
-/* CHART 6 CALLOUT */
-
-[data-chart="ausplay-surf-ranking"]
-.chart-callout {
-  max-width: none;
-  margin: 18px 0 12px;
-  padding: 15px 20px;
-  border-radius: 10px;
-  line-height: 1.6;
-}
-
-
-/* REMOVE DECORATIVE ARROW */
-
-[data-chart="ausplay-surf-ranking"]
-.chart-callout::before,
-
-[data-chart="ausplay-surf-ranking"]
-.chart-callout::after {
-  content: none !important;
-  display: none !important;
-}
-
-
-/* CHART 6 INTERPRETATION */
-
-[data-chart="ausplay-surf-ranking"]
-.chart-story {
-  max-width: none;
-  margin-top: 15px;
-  line-height: 1.75;
-}
-
 
 /* =========================================================
-   14. SHARED FILTER STYLING — CHART 8 AND WORLD TOUR
+   15. SHARED VEGA FILTER STYLING
+   CHART 8 AND WORLD TOUR
    ========================================================= */
 
 [data-chart="surf-destination-ratings"] .vega-embed,
@@ -646,17 +635,13 @@ h3 {
 [data-chart="surf-destination-ratings"] .vega-bindings,
 [data-chart="world-tour"] .vega-bindings {
   order: -1;
-
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-
   gap: 12px 18px;
-
   width: 100%;
   margin: 0 0 20px;
   padding: 15px 17px;
-
   background: #f5faf9;
   border: 1px solid #d7e9e5;
   border-radius: 12px;
@@ -667,9 +652,7 @@ h3 {
   display: flex;
   align-items: center;
   gap: 9px;
-
   margin: 0;
-
   color: #183847;
   font-size: .92rem;
   font-weight: 700;
@@ -680,21 +663,15 @@ h3 {
 [data-chart="world-tour"] .vega-bindings select {
   min-width: 155px;
   max-width: 250px;
-
   padding: 10px 30px 10px 12px;
-
   border: 1px solid #bdd7d3;
   border-radius: 8px;
-
   background: #ffffff;
   color: #123442;
-
   font-family: inherit;
   font-size: .88rem;
   font-weight: 600;
-
   cursor: pointer;
-
   transition:
     border-color .15s ease,
     box-shadow .15s ease;
@@ -709,12 +686,11 @@ h3 {
 [data-chart="world-tour"] .vega-bindings select:focus-visible {
   outline: none;
   border-color: #167d88;
-  box-shadow: 0 0 0 3px rgb(22 125 136 / 16%);
+  box-shadow: 0 0 0 3px rgba(22, 125, 136, .16);
 }
 
-
 /* =========================================================
-   15. CHART 8 — SURF BREAK RATINGS
+   16. CHART 8 — SURF BREAK RATINGS
    ========================================================= */
 
 [data-chart="surf-destination-ratings"] .chart-callout {
@@ -738,17 +714,13 @@ h3 {
   line-height: 1.75;
 }
 
-
 /* =========================================================
-   16. CHART 11 — RADAR COMPARISON
+   17. CHART 11 — RADAR COMPARISON
    ========================================================= */
 
 /*
-   The explanatory panel and its buttons
-   have been removed.
-
-   The radar chart now occupies the
-   available chart width.
+   The explanatory button panel has been removed.
+   The radar now occupies the available width.
 */
 
 .chart11-layout {
@@ -786,34 +758,23 @@ h3 {
   display: none !important;
 }
 
-
 /* =========================================================
-   17. CHART 11 → CHART 12 TRANSITION
+   18. CHART 11 TO CHART 12 TRANSITION
    ========================================================= */
 
 .comparison-transition {
   max-width: 970px;
   margin: 28px 0;
   padding: 0 0 0 17px;
-
   border-left: 3px solid var(--sea);
-
   color: #31535f;
   font-size: 1.02rem;
   line-height: 1.75;
 }
 
-
 /* =========================================================
-   18. CHART 12 — SEASONAL SURFABILITY COMPARISON
+   19. CHART 12 — SEASONAL SURFABILITY HEATMAP
    ========================================================= */
-
-/*
-   Three concentric rings:
-   Outer  — Snapper Rocks
-   Middle — Mystics
-   Inner  — Bilinga area
-*/
 
 .chart12-card {
   padding: 24px 28px;
@@ -826,26 +787,21 @@ h3 {
 .chart12-subtitle {
   max-width: 850px;
   margin: 0 0 20px;
-
   color: var(--muted);
   font-size: .95rem;
   line-height: 1.7;
 }
 
-
-/* LOCATION GUIDE */
+/* LOCATION / RING GUIDE */
 
 .chart12-ring-labels {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-
   gap: 12px 26px;
-
   margin: 0 0 20px;
   padding: 14px 18px;
-
   background: #f5faf9;
   border: 1px solid var(--line);
   border-radius: 10px;
@@ -855,7 +811,6 @@ h3 {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-
   color: #31535f;
   font-size: .85rem;
   font-weight: 700;
@@ -864,24 +819,19 @@ h3 {
 .chart12-ring-labels span::before {
   content: '';
   display: inline-block;
-
   width: 10px;
   height: 10px;
-
   border-radius: 50%;
-  background: #167d88;
+  background: var(--sea);
 }
 
-
-/* RADIAL VISUALISATION */
+/* RADIAL CHART */
 
 [data-chart="surfability-comparison"] .viz {
   display: flex;
   justify-content: center;
-
   width: 100%;
   min-width: 0;
-
   overflow-x: auto;
 }
 
@@ -890,14 +840,12 @@ h3 {
   margin: 0 auto;
 }
 
-
 /* CHART 12 CALLOUT */
 
 [data-chart="surfability-comparison"] .chart-callout {
   max-width: none;
   margin: 18px 0 12px;
   padding: 16px 20px;
-
   border-radius: 10px;
   line-height: 1.6;
 }
@@ -908,24 +856,15 @@ h3 {
   display: none !important;
 }
 
-
-/* CHART 12 INTERPRETATION */
-
 [data-chart="surfability-comparison"] .chart-story {
   max-width: none;
   margin-top: 16px;
   line-height: 1.75;
 }
 
-
 /* =========================================================
-   19. PROFESSIONAL SURFING — WORLD TOUR
+   20. PROFESSIONAL SURFING — WORLD TOUR
    ========================================================= */
-
-/*
-   World Tour now belongs under
-   Chapter 07: Professional Surfing.
-*/
 
 [data-chart="world-tour"] .viz {
   width: 100%;
@@ -939,19 +878,13 @@ h3 {
 [data-chart="world-tour"] .chart-callout {
   margin: 18px 0 12px;
   max-width: none;
-
   padding: 16px 20px;
-
   border-radius: 10px;
   background: #e0f2ed;
   border: 1px solid #bcded4;
-
   color: #123f48;
   line-height: 1.55;
 }
-
-
-/* REMOVE ARROW FROM WORLD TOUR ANNOTATION */
 
 [data-chart="world-tour"] .chart-callout::before,
 [data-chart="world-tour"] .chart-callout::after,
@@ -966,9 +899,8 @@ h3 {
   line-height: 1.75;
 }
 
-
 /* =========================================================
-   20. FOOTER
+   21. FOOTER
    ========================================================= */
 
 footer {
@@ -982,14 +914,11 @@ footer p {
   margin: 5px 0;
 }
 
-
 /* =========================================================
-   21. RESPONSIVE — TABLETS
+   22. RESPONSIVE — TABLETS
    ========================================================= */
 
 @media (max-width: 900px) {
-
-  /* Map becomes one column */
 
   .map-layout {
     grid-template-columns: 1fr;
@@ -1008,17 +937,14 @@ footer p {
     display: none;
   }
 
-  /* Radar remains full-width */
-
   .chart11-layout {
     display: block;
     width: 100%;
   }
 }
 
-
 /* =========================================================
-   22. RESPONSIVE — SMALL TABLETS
+   23. RESPONSIVE — SMALL TABLETS
    ========================================================= */
 
 @media (max-width: 760px) {
@@ -1059,24 +985,21 @@ footer p {
 
   /* Chart 6 dropdown */
 
-  [data-chart="ausplay-surf-ranking"]
-  .cartogram-controls label {
+  [data-chart="ausplay-surf-ranking"] .cartogram-controls label {
     width: 100%;
     flex-direction: column;
     align-items: flex-start;
   }
 
-  [data-chart="ausplay-surf-ranking"]
-  .cartogram-controls select {
+  [data-chart="ausplay-surf-ranking"] .cartogram-controls select {
     width: 100%;
     min-width: 0;
     max-width: none;
   }
 }
 
-
 /* =========================================================
-   23. RESPONSIVE — MOBILE
+   24. RESPONSIVE — MOBILE
    ========================================================= */
 
 @media (max-width: 700px) {
@@ -1102,6 +1025,14 @@ footer p {
     padding: 0 16px;
   }
 
+  /* Participation charts */
+
+  [data-chart="ausplay-surf-map"],
+  [data-chart="ausplay-surf-ranking"],
+  [data-chart="ausplay-surf-gender"] {
+    padding: 16px;
+  }
+
   /* Chart 12 */
 
   .chart12-card {
@@ -1124,9 +1055,8 @@ footer p {
   }
 }
 
-
 /* =========================================================
-   24. RESPONSIVE — SMALL MOBILE
+   25. RESPONSIVE — SMALL MOBILE
    ========================================================= */
 
 @media (max-width: 480px) {
@@ -1145,27 +1075,22 @@ footer p {
     font-size: .94rem;
   }
 
-  [data-chart="ausplay-surf-ranking"]
-  .cartogram-controls {
+  [data-chart="ausplay-surf-ranking"] .cartogram-controls {
     gap: 9px;
   }
 
-  [data-chart="ausplay-surf-ranking"]
-  .cartogram-controls select {
+  [data-chart="ausplay-surf-ranking"] .cartogram-controls select {
     font-size: .85rem;
     padding: 9px 11px;
   }
 }
 
-
 /* =========================================================
-   25. ACCESSIBILITY
+   26. ACCESSIBILITY
    ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
-
   html {
     scroll-behavior: auto;
   }
-
 }
