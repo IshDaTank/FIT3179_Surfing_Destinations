@@ -1,6 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Australian surfing participation bubble map with horizontal legends underneath.",
+  "description": "Australian surfing participation map with a separate boxed legend panel beneath the map. The size legend runs horizontally and the chart is sized to fit within the dashboard card without horizontal scrolling.",
   "usermeta": {
     "title": "Where Are Australia’s Surfers?",
     "annotation": "NSW leads Australia with 117,953 estimated adult surfing participants in 2025.",
@@ -12,24 +12,25 @@
       }
     ]
   },
-  "background": "#ffffff",
-  "spacing": 10,
+  "background": "transparent",
+  "spacing": 12,
   "vconcat": [
     {
-      "description": "Main Australian bubble map, retaining state colours and geographic locations.",
-      "width": "container",
-      "height": 500,
+      "description": "Main map with state bubbles and labels. Automatic legends are disabled because custom legends are drawn below in a separate box.",
+      "width": 760,
+      "height": 470,
       "projection": {
         "type": "mercator"
       },
       "padding": {
-        "left": 12,
-        "right": 24,
-        "top": 18,
-        "bottom": 28
+        "left": 10,
+        "right": 10,
+        "top": 10,
+        "bottom": 0
       },
       "layer": [
         {
+          "description": "Australian land outline.",
           "data": {
             "url": "https://vega.github.io/vega-datasets/data/world-110m.json",
             "format": {
@@ -45,11 +46,12 @@
           "mark": {
             "type": "geoshape",
             "fill": "#eef5f3",
-            "stroke": "#a6bcbc",
-            "strokeWidth": 1.35
+            "stroke": "#a8bec0",
+            "strokeWidth": 1.4
           }
         },
         {
+          "description": "State and territory bubbles sized by estimated surfers aged 15+.",
           "data": {
             "url": "data/ausplay_surf_map_2025.csv"
           },
@@ -57,7 +59,7 @@
             "type": "circle",
             "opacity": 0.86,
             "stroke": "#ffffff",
-            "strokeWidth": 1.5
+            "strokeWidth": 1.6
           },
           "encoding": {
             "longitude": {
@@ -102,32 +104,23 @@
                   "#666666"
                 ]
               },
-              "legend": {
-                "title": "State / territory",
-                "orient": "bottom",
-                "direction": "horizontal",
-                "columns": 4,
-                "symbolSize": 200,
-                "titleFontSize": 14,
-                "titleFontWeight": "bold",
-                "labelFontSize": 13,
-                "columnPadding": 18,
-                "rowPadding": 12,
-                "offset": 16
-              }
+              "legend": null
             },
             "tooltip": [
               {
                 "field": "state",
+                "type": "nominal",
                 "title": "State / territory"
               },
               {
                 "field": "participants",
-                "title": "Estimated participants aged 15+",
+                "type": "quantitative",
+                "title": "Estimated surfers aged 15+",
                 "format": ",.0f"
               },
               {
                 "field": "participation_rate_pct",
+                "type": "quantitative",
                 "title": "Adult participation rate (%)",
                 "format": ".2f"
               }
@@ -135,14 +128,16 @@
           }
         },
         {
+          "description": "State abbreviations positioned over the bubbles.",
           "data": {
             "url": "data/ausplay_surf_map_2025.csv"
           },
           "mark": {
             "type": "text",
+            "font": "Arial",
             "fontSize": 13,
             "fontWeight": "bold",
-            "color": "#204551"
+            "color": "#234957"
           },
           "encoding": {
             "longitude": {
@@ -154,89 +149,178 @@
               "type": "quantitative"
             },
             "text": {
-              "field": "state"
-            },
-            "yOffset": {
-              "value": -16
+              "field": "state",
+              "type": "nominal"
             }
           }
         }
-      ]
+      ],
+      "config": {
+        "view": {
+          "stroke": null
+        }
+      }
     },
+
     {
-      "description": "Custom horizontal bubble-size legend placed below the state legend. Circle areas use the same scale as the map.",
-      "title": {
-        "text": "Estimated surfers aged 15+",
-        "anchor": "start",
-        "font": "Arial",
-        "fontSize": 14,
-        "fontWeight": "bold",
-        "color": "#244654",
-        "offset": 9
-      },
-      "width": "container",
-      "height": 110,
-      "data": {
-        "values": [
-          {
-            "index": 0,
-            "participants": 0,
-            "label": "0"
-          },
-          {
-            "index": 1,
-            "participants": 25000,
-            "label": "25,000"
-          },
-          {
-            "index": 2,
-            "participants": 50000,
-            "label": "50,000"
-          },
-          {
-            "index": 3,
-            "participants": 75000,
-            "label": "75,000"
-          },
-          {
-            "index": 4,
-            "participants": 100000,
-            "label": "100,000"
-          },
-          {
-            "index": 5,
-            "participants": 125000,
-            "label": "125,000"
-          }
-        ]
-      },
+      "description": "Separate custom legend box containing both the horizontal size legend and the state legend. This avoids Vega-Lite placing legends to the right and prevents horizontal scrolling.",
+      "width": 760,
+      "height": 220,
+      "padding": 0,
       "layer": [
         {
-          "description": "Six circles representing increasing participant counts.",
+          "description": "Background legend box, matching the styled panel treatment used elsewhere in the dashboard.",
+          "data": {
+            "values": [
+              {
+                "x1": 0,
+                "x2": 760,
+                "y1": 0,
+                "y2": 220
+              }
+            ]
+          },
+          "mark": {
+            "type": "rect",
+            "fill": "#f5faf9",
+            "stroke": "#d7e9e5",
+            "strokeWidth": 1.2,
+            "cornerRadius": 12
+          },
+          "encoding": {
+            "x": {
+              "field": "x1",
+              "type": "quantitative",
+              "scale": {
+                "domain": [0, 760]
+              },
+              "axis": null
+            },
+            "x2": {
+              "field": "x2"
+            },
+            "y": {
+              "field": "y1",
+              "type": "quantitative",
+              "scale": {
+                "domain": [220, 0]
+              },
+              "axis": null
+            },
+            "y2": {
+              "field": "y2"
+            }
+          }
+        },
+
+        {
+          "description": "Size legend title.",
+          "data": {
+            "values": [
+              {
+                "x": 20,
+                "y": 28,
+                "label": "Estimated surfers aged 15+"
+              }
+            ]
+          },
+          "mark": {
+            "type": "text",
+            "align": "left",
+            "baseline": "middle",
+            "font": "Arial",
+            "fontSize": 14,
+            "fontWeight": "bold",
+            "color": "#244654"
+          },
+          "encoding": {
+            "x": {
+              "field": "x",
+              "type": "quantitative",
+              "scale": {
+                "domain": [0, 760]
+              },
+              "axis": null
+            },
+            "y": {
+              "field": "y",
+              "type": "quantitative",
+              "scale": {
+                "domain": [220, 0]
+              },
+              "axis": null
+            },
+            "text": {
+              "field": "label",
+              "type": "nominal"
+            }
+          }
+        },
+
+        {
+          "description": "Horizontal bubble-size legend circles.",
+          "data": {
+            "values": [
+              {
+                "x": 105,
+                "y": 82,
+                "participants": 0,
+                "label": "0"
+              },
+              {
+                "x": 225,
+                "y": 82,
+                "participants": 25000,
+                "label": "25,000"
+              },
+              {
+                "x": 345,
+                "y": 82,
+                "participants": 50000,
+                "label": "50,000"
+              },
+              {
+                "x": 465,
+                "y": 82,
+                "participants": 75000,
+                "label": "75,000"
+              },
+              {
+                "x": 585,
+                "y": 82,
+                "participants": 100000,
+                "label": "100,000"
+              },
+              {
+                "x": 705,
+                "y": 82,
+                "participants": 125000,
+                "label": "125,000"
+              }
+            ]
+          },
           "mark": {
             "type": "circle",
             "filled": true,
-            "color": "#6798a1",
-            "stroke": "#35626d",
+            "color": "#6f9faa",
+            "stroke": "#406a75",
             "strokeWidth": 1.2,
             "opacity": 0.95
           },
           "encoding": {
             "x": {
-              "field": "index",
+              "field": "x",
               "type": "quantitative",
               "scale": {
-                "domain": [-0.55, 5.55],
-                "nice": false
+                "domain": [0, 760]
               },
               "axis": null
             },
             "y": {
-              "datum": 67,
+              "field": "y",
               "type": "quantitative",
               "scale": {
-                "domain": [0, 110],
-                "nice": false
+                "domain": [220, 0]
               },
               "axis": null
             },
@@ -259,33 +343,66 @@
             ]
           }
         },
+
         {
-          "description": "Numeric labels displayed directly below the corresponding bubbles.",
+          "description": "Labels beneath the size legend circles.",
+          "data": {
+            "values": [
+              {
+                "x": 105,
+                "y": 136,
+                "label": "0"
+              },
+              {
+                "x": 225,
+                "y": 136,
+                "label": "25,000"
+              },
+              {
+                "x": 345,
+                "y": 136,
+                "label": "50,000"
+              },
+              {
+                "x": 465,
+                "y": 136,
+                "label": "75,000"
+              },
+              {
+                "x": 585,
+                "y": 136,
+                "label": "100,000"
+              },
+              {
+                "x": 705,
+                "y": 136,
+                "label": "125,000"
+              }
+            ]
+          },
           "mark": {
             "type": "text",
+            "align": "center",
+            "baseline": "middle",
             "font": "Arial",
             "fontSize": 13,
             "fontWeight": "bold",
-            "color": "#31535f",
-            "align": "center",
-            "baseline": "middle"
+            "color": "#31535f"
           },
           "encoding": {
             "x": {
-              "field": "index",
+              "field": "x",
               "type": "quantitative",
               "scale": {
-                "domain": [-0.55, 5.55],
-                "nice": false
+                "domain": [0, 760]
               },
               "axis": null
             },
             "y": {
-              "datum": 15,
+              "field": "y",
               "type": "quantitative",
               "scale": {
-                "domain": [0, 110],
-                "nice": false
+                "domain": [220, 0]
               },
               "axis": null
             },
@@ -294,22 +411,232 @@
               "type": "nominal"
             }
           }
+        },
+
+        {
+          "description": "State legend title.",
+          "data": {
+            "values": [
+              {
+                "x": 20,
+                "y": 164,
+                "label": "State / territory"
+              }
+            ]
+          },
+          "mark": {
+            "type": "text",
+            "align": "left",
+            "baseline": "middle",
+            "font": "Arial",
+            "fontSize": 14,
+            "fontWeight": "bold",
+            "color": "#244654"
+          },
+          "encoding": {
+            "x": {
+              "field": "x",
+              "type": "quantitative",
+              "scale": {
+                "domain": [0, 760]
+              },
+              "axis": null
+            },
+            "y": {
+              "field": "y",
+              "type": "quantitative",
+              "scale": {
+                "domain": [220, 0]
+              },
+              "axis": null
+            },
+            "text": {
+              "field": "label",
+              "type": "nominal"
+            }
+          }
+        },
+
+        {
+          "description": "State legend coloured points.",
+          "data": {
+            "values": [
+              {
+                "x": 42,
+                "y": 188,
+                "state": "NSW",
+                "color": "#0072B2"
+              },
+              {
+                "x": 170,
+                "y": 188,
+                "state": "QLD",
+                "color": "#E69F00"
+              },
+              {
+                "x": 298,
+                "y": 188,
+                "state": "VIC",
+                "color": "#CC79A7"
+              },
+              {
+                "x": 426,
+                "y": 188,
+                "state": "WA",
+                "color": "#D55E00"
+              },
+              {
+                "x": 42,
+                "y": 210,
+                "state": "SA",
+                "color": "#009E73"
+              },
+              {
+                "x": 170,
+                "y": 210,
+                "state": "TAS",
+                "color": "#7B61A8"
+              },
+              {
+                "x": 298,
+                "y": 210,
+                "state": "ACT",
+                "color": "#8C6D31"
+              },
+              {
+                "x": 426,
+                "y": 210,
+                "state": "NT",
+                "color": "#666666"
+              }
+            ]
+          },
+          "mark": {
+            "type": "point",
+            "filled": true,
+            "size": 185
+          },
+          "encoding": {
+            "x": {
+              "field": "x",
+              "type": "quantitative",
+              "scale": {
+                "domain": [0, 760]
+              },
+              "axis": null
+            },
+            "y": {
+              "field": "y",
+              "type": "quantitative",
+              "scale": {
+                "domain": [220, 0]
+              },
+              "axis": null
+            },
+            "color": {
+              "field": "color",
+              "type": "nominal",
+              "scale": null,
+              "legend": null
+            }
+          }
+        },
+
+        {
+          "description": "State legend labels placed to the right of each coloured point.",
+          "data": {
+            "values": [
+              {
+                "x": 42,
+                "y": 188,
+                "state": "NSW"
+              },
+              {
+                "x": 170,
+                "y": 188,
+                "state": "QLD"
+              },
+              {
+                "x": 298,
+                "y": 188,
+                "state": "VIC"
+              },
+              {
+                "x": 426,
+                "y": 188,
+                "state": "WA"
+              },
+              {
+                "x": 42,
+                "y": 210,
+                "state": "SA"
+              },
+              {
+                "x": 170,
+                "y": 210,
+                "state": "TAS"
+              },
+              {
+                "x": 298,
+                "y": 210,
+                "state": "ACT"
+              },
+              {
+                "x": 426,
+                "y": 210,
+                "state": "NT"
+              }
+            ]
+          },
+          "mark": {
+            "type": "text",
+            "align": "left",
+            "baseline": "middle",
+            "dx": 13,
+            "font": "Arial",
+            "fontSize": 13,
+            "color": "#244654"
+          },
+          "encoding": {
+            "x": {
+              "field": "x",
+              "type": "quantitative",
+              "scale": {
+                "domain": [0, 760]
+              },
+              "axis": null
+            },
+            "y": {
+              "field": "y",
+              "type": "quantitative",
+              "scale": {
+                "domain": [220, 0]
+              },
+              "axis": null
+            },
+            "text": {
+              "field": "state",
+              "type": "nominal"
+            }
+          }
         }
-      ]
+      ],
+      "config": {
+        "view": {
+          "stroke": null
+        }
+      }
     }
   ],
   "config": {
     "view": {
       "stroke": null
     },
+    "font": "Arial",
     "axis": {
       "labelColor": "#31535f",
       "titleColor": "#31535f",
       "gridColor": "#e4eeec"
-    },
-    "text": {
-      "font": "Arial"
-    },
-    "font": "Arial"
+    }
   }
 }
