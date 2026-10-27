@@ -9,25 +9,214 @@
 
 <!DOCTYPE html>
 <html lang="en-AU">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
 
   <meta
     name="description"
     content="Exploring the coastlines, communities and culture behind Australia's surfing identity."
   >
 
-  <title>Australia: A Nation Built on Surf | FIT3179 DV2</title>
+  <title>
+    Australia: A Nation Built on Surf | FIT3179 DV2
+  </title>
 
   <link rel="stylesheet" href="./css/style.css">
+
+  <!--
+    These styles affect only Charts 11 and 12.
+    All existing styling remains in css/style.css.
+  -->
+
+  <style>
+
+    /* ==========================================
+       CHART 11 — RADAR WITHOUT BUTTONS
+    ========================================== */
+
+    #comparison .chart11-layout {
+      display: block;
+      grid-template-columns: minmax(0, 1fr);
+      max-width: 100%;
+      margin: 12px 0 20px;
+    }
+
+    #comparison .chart11-plot {
+      width: 100%;
+      min-width: 0;
+      overflow: visible;
+    }
+
+    #comparison .chart11-plot .viz {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+
+    #comparison .chart11-plot .vega-embed {
+      max-width: 100%;
+    }
+
+    /* ==========================================
+       CHART 11 TO CHART 12 TRANSITION
+    ========================================== */
+
+    .comparison-transition {
+      max-width: 970px;
+      margin: 28px 0;
+      padding: 0 0 0 17px;
+
+      border-left: 3px solid #167d88;
+
+      color: #31535f;
+      font-size: 1.02rem;
+      line-height: 1.75;
+    }
+
+    /* ==========================================
+       CHART 12 — SEASONAL HEATMAP
+    ========================================== */
+
+    #comparison .chart12-card {
+      padding: 24px 28px;
+    }
+
+    #comparison .chart12-card h3 {
+      margin-bottom: 8px;
+    }
+
+    .chart12-subtitle {
+      max-width: 850px;
+      margin: 0 0 20px;
+
+      color: #4f6972;
+      font-size: .95rem;
+      line-height: 1.7;
+    }
+
+    /* Ring location guide */
+
+    .chart12-ring-labels {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+
+      gap: 12px 26px;
+      margin: 0 0 20px;
+      padding: 14px 18px;
+
+      background: #f5faf9;
+      border: 1px solid #d9e7e3;
+      border-radius: 10px;
+    }
+
+    .chart12-ring-labels span {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+
+      color: #31535f;
+      font-size: .85rem;
+      font-weight: 700;
+    }
+
+    .chart12-ring-labels span::before {
+      content: "";
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #167d88;
+    }
+
+    /* Radial chart container */
+
+    [data-chart="surfability-comparison"] .viz {
+      display: flex;
+      justify-content: center;
+
+      width: 100%;
+      min-width: 0;
+      overflow-x: auto;
+    }
+
+    [data-chart="surfability-comparison"] .vega-embed {
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Chart 12 interpretation */
+
+    [data-chart="surfability-comparison"]
+    .chart-callout {
+      max-width: none;
+      margin: 18px 0 12px;
+      padding: 16px 20px;
+      border-radius: 10px;
+      line-height: 1.6;
+    }
+
+    [data-chart="surfability-comparison"]
+    .chart-callout::before,
+
+    [data-chart="surfability-comparison"]
+    .chart-callout::after {
+      content: none !important;
+      display: none !important;
+    }
+
+    [data-chart="surfability-comparison"]
+    .chart-story {
+      max-width: none;
+      margin-top: 16px;
+      line-height: 1.75;
+    }
+
+    /* ==========================================
+       MOBILE
+    ========================================== */
+
+    @media (max-width: 700px) {
+
+      #comparison .chart12-card {
+        padding: 18px 16px;
+      }
+
+      .chart12-ring-labels {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 9px;
+      }
+
+      [data-chart="surfability-comparison"] .viz {
+        justify-content: flex-start;
+      }
+
+      .comparison-transition {
+        font-size: .94rem;
+        margin: 24px 0;
+      }
+
+    }
+
+  </style>
+
 </head>
 
 <body>
 
-  <!-- ===================================================== -->
-  <!-- HEADER -->
-  <!-- ===================================================== -->
+  <!-- ==========================================
+       HEADER
+  ========================================== -->
 
   <header>
     <div class="wrap">
@@ -36,7 +225,9 @@
         FIT3179 · Data Visualisation 2
       </p>
 
-      <h1>Australia: A Nation Built on Surf</h1>
+      <h1>
+        Australia: A Nation Built on Surf
+      </h1>
 
       <p>
         Exploring the coastlines, communities and culture
@@ -44,6 +235,7 @@
       </p>
 
       <nav aria-label="Dashboard sections">
+
         <a href="#geography">Geography</a>
         <a href="#history">History</a>
         <a href="#hotspots">Participation</a>
@@ -52,28 +244,37 @@
         <a href="#comparison">Destination Comparison</a>
         <a href="#professional">Professional Surfing</a>
         <a href="#conclusion">Big Picture</a>
+
       </nav>
 
     </div>
   </header>
 
+
   <main>
 
-    <!-- ===================================================== -->
-    <!-- SECTION 01 — SURFING GEOGRAPHY -->
-    <!-- ===================================================== -->
+    <!-- ==========================================
+         SECTION 01 — SURFING GEOGRAPHY
+    ========================================== -->
 
     <section id="geography">
+
       <div class="wrap">
 
         <div class="section-head section-head--full">
           <div>
-            <p class="section-label">01 / Surfing Geography</p>
-            <h2>A Coastline of Possibilities</h2>
+            <p class="section-label">
+              01 / Surfing Geography
+            </p>
+
+            <h2>
+              A Coastline of Possibilities
+            </h2>
           </div>
         </div>
 
         <!-- CHART 1 -->
+
         <article
           class="chart-card"
           data-chart="map-reserves"
@@ -87,6 +288,7 @@
         </article>
 
         <!-- CHART 2 -->
+
         <article
           class="chart-card"
           data-chart="map-bar-chart"
@@ -100,23 +302,32 @@
         </article>
 
       </div>
+
     </section>
 
-    <!-- ===================================================== -->
-    <!-- SECTION 02 — RECOGNITION OVER TIME -->
-    <!-- ===================================================== -->
+
+    <!-- ==========================================
+         SECTION 02 — RECOGNITION OVER TIME
+    ========================================== -->
 
     <section id="history">
+
       <div class="wrap">
 
         <div class="section-head section-head--full">
           <div>
-            <p class="section-label">02 / Recognition Over Time</p>
-            <h2>Different Coasts, Different Histories</h2>
+            <p class="section-label">
+              02 / Recognition Over Time
+            </p>
+
+            <h2>
+              Different Coasts, Different Histories
+            </h2>
           </div>
         </div>
 
         <!-- CHART 3 -->
+
         <article
           class="chart-card"
           data-chart="recognition-maps"
@@ -130,6 +341,7 @@
         </article>
 
         <!-- CHART 4 -->
+
         <article
           class="chart-card"
           data-chart="heritage-timeline"
@@ -143,27 +355,35 @@
         </article>
 
       </div>
+
     </section>
 
-    <!-- ===================================================== -->
-    <!-- SECTION 03 — SURFING PARTICIPATION -->
-    <!-- ===================================================== -->
+
+    <!-- ==========================================
+         SECTION 03 — SURFING PARTICIPATION
+    ========================================== -->
 
     <section id="hotspots">
+
       <div class="wrap">
 
         <div class="section-head section-head--full">
           <div>
-            <p class="section-label">03 / Surfing Participation</p>
-            <h2>A Nation of Surfers</h2>
+            <p class="section-label">
+              03 / Surfing Participation
+            </p>
+
+            <h2>
+              A Nation of Surfers
+            </h2>
           </div>
         </div>
 
         <p class="chart-story section-intro">
           Explore
           <strong>
-            estimated surfing participation among Australians
-            aged 15 and over in 2025
+            estimated surfing participation among
+            Australians aged 15 and over in 2025
           </strong>.
           Figures measure where participants
           <strong>live</strong>,
@@ -173,6 +393,7 @@
         </p>
 
         <!-- CHART 5 -->
+
         <article
           class="chart-card"
           data-chart="ausplay-surf-map"
@@ -186,6 +407,7 @@
         </article>
 
         <!-- CHART 6 -->
+
         <article
           class="chart-card"
           data-chart="ausplay-surf-ranking"
@@ -199,6 +421,7 @@
         </article>
 
         <!-- CHART 7 -->
+
         <article
           class="chart-card"
           data-chart="ausplay-surf-gender"
@@ -212,23 +435,32 @@
         </article>
 
       </div>
+
     </section>
 
-    <!-- ===================================================== -->
-    <!-- SECTION 04 — SURF BREAK RATINGS -->
-    <!-- ===================================================== -->
+
+    <!-- ==========================================
+         SECTION 04 — SURF BREAK RATINGS
+    ========================================== -->
 
     <section id="destinations">
+
       <div class="wrap">
 
         <div class="section-head section-head--full">
           <div>
-            <p class="section-label">04 / Surf Break Ratings</p>
-            <h2>Where Are Australia's Best-Rated Waves?</h2>
+            <p class="section-label">
+              04 / Surf Break Ratings
+            </p>
+
+            <h2>
+              Where Are Australia's Best-Rated Waves?
+            </h2>
           </div>
         </div>
 
         <!-- CHART 8 -->
+
         <article
           class="chart-card"
           data-chart="surf-destination-ratings"
@@ -241,7 +473,8 @@
           <p class="chart-source" hidden></p>
         </article>
 
-        <!-- EXISTING FUTURE CHART PLACEHOLDER -->
+        <!-- EXISTING PLACEHOLDER -->
+
         <article
           class="chart-card"
           data-chart="surf-destination-comparison"
@@ -255,21 +488,30 @@
         </article>
 
       </div>
+
     </section>
 
-    <!-- ===================================================== -->
-    <!-- SECTION 05 — GOLD COAST WAVE CONDITIONS -->
-    <!-- ===================================================== -->
+
+    <!-- ==========================================
+         SECTION 05 — WAVE CONDITIONS
+    ========================================== -->
 
     <section id="competition">
+
       <div class="wrap">
 
         <div class="section-head">
           <div>
-            <p class="section-label">05 / Wave Conditions</p>
+
+            <p class="section-label">
+              05 / Wave Conditions
+            </p>
+
             <h2>
-              How Do Gold Coast Wave Conditions Change Over Time?
+              How Do Gold Coast Wave Conditions
+              Change Over Time?
             </h2>
+
           </div>
 
           <p>
@@ -278,18 +520,22 @@
             and <strong>Mystics</strong> in New South Wales
             emerge as the highest-rated surf breaks,
             both scoring <strong>5.0/5 overall</strong>.
+
             Snapper Rocks' position on the Gold Coast
             raises an interesting question:
             beyond reputation, how do wave conditions
             in this region change throughout the year?
+
             Using wave measurements from nearby
             <strong>Bilinga</strong>, the following charts
             explore monthly variability and recurring
             seasonal patterns between 2022 and 2025.
           </p>
+
         </div>
 
         <!-- CHART 9 — BILINGA MONTHLY CONDITIONS -->
+
         <article
           class="chart-card"
           data-chart="regional-comparison"
@@ -303,6 +549,7 @@
         </article>
 
         <!-- CHART 10 — BILINGA SEASONAL HEATMAP -->
+
         <article
           class="chart-card"
           data-chart="wave-seasonality"
@@ -315,7 +562,8 @@
           <p class="chart-source" hidden></p>
         </article>
 
-        <!-- EXISTING ADDITIONAL WAVE COMPARISON -->
+        <!-- EXISTING WAVE COMPARISON -->
+
         <article
           class="chart-card"
           data-chart="qld-wave-dumbbell"
@@ -329,24 +577,30 @@
         </article>
 
       </div>
+
     </section>
 
-    <!-- ===================================================== -->
-    <!-- SECTION 06 — DESTINATION COMPARISON -->
-    <!-- ===================================================== -->
+
+    <!-- ==========================================
+         SECTION 06 — DESTINATION COMPARISON
+    ========================================== -->
 
     <section id="comparison">
+
       <div class="wrap">
 
         <div class="section-head section-head--full">
           <div>
+
             <p class="section-label">
               06 / Destination Comparison
             </p>
 
             <h2>
-              Two Five-Star Breaks, Two Different Experiences
+              Two Five-Star Breaks,
+              Two Different Experiences
             </h2>
+
           </div>
         </div>
 
@@ -354,6 +608,7 @@
           Snapper Rocks and Mystics both achieve
           <strong>5.0/5 overall</strong> among the selected
           destinations receiving at least 15 votes.
+
           Yet their identical overall scores conceal
           important differences. Comparing individual
           attributes reveals why the highest-rated
@@ -361,65 +616,143 @@
           for every surfer.
         </p>
 
-        <!-- CHART 11 — EXISTING VEGA-LITE RADAR -->
+
+        <!-- ====================================
+             CHART 11 — RADAR COMPARISON
+
+             Removed:
+             - What Do the Measures Mean?
+             - Explanation buttons
+             - Definition panel
+
+             Existing Vega-Lite chart retained.
+        ===================================== -->
+
         <article
           class="chart-card chart11-card"
           data-chart="surf-break-head-to-head"
           hidden
         >
+
           <h3></h3>
 
           <div class="chart11-layout">
 
             <div class="chart11-plot">
+
               <div class="viz"></div>
+
             </div>
-
-            <aside
-              class="chart11-explainer"
-              aria-label="Surf-break rating criteria explained"
-            >
-              <h4>What Do the Measures Mean?</h4>
-
-              <p class="chart11-explainer-intro">
-                Select a measure to understand what its
-                rating represents.
-              </p>
-
-              <div
-                id="chart11-measure-buttons"
-                class="chart11-measure-buttons"
-                role="group"
-                aria-label="Rating measures"
-              ></div>
-
-              <div
-                id="chart11-measure-definition"
-                class="chart11-measure-definition"
-                aria-live="polite"
-              ></div>
-
-            </aside>
 
           </div>
 
-          <div class="chart-callout" hidden></div>
-          <p class="chart-story" hidden></p>
-          <p class="chart-source" hidden></p>
+          <div
+            class="chart-callout"
+            hidden
+          ></div>
+
+          <p
+            class="chart-story"
+            hidden
+          ></p>
+
+          <p
+            class="chart-source"
+            hidden
+          ></p>
+
+        </article>
+
+
+        <!-- ====================================
+             CHART 11 TO CHART 12 TRANSITION
+        ===================================== -->
+
+        <p class="comparison-transition">
+          Although Snapper Rocks and Mystics have
+          equally strong overall ratings, their appeal
+          cannot be explained by ratings alone.
+
+          Surfing conditions also vary throughout
+          the year. Comparing these highly rated
+          destinations with the Bilinga area provides
+          a seasonal perspective on the diversity
+          of Australia's surf breaks.
+        </p>
+
+
+        <!-- ====================================
+             CHART 12 — RADIAL SEASONAL HEATMAP
+
+             New chart:
+             Snapper Rocks vs Mystics vs Bilinga
+        ===================================== -->
+
+        <article
+          class="chart-card chart12-card"
+          data-chart="surfability-comparison"
+          hidden
+        >
+
+          <h3></h3>
+
+          <p class="chart12-subtitle">
+            A month-by-month comparison of modelled
+            surfable hours across three Australian
+            surf locations.
+          </p>
+
+          <div class="chart12-ring-labels">
+
+            <span>
+              Outer ring: Snapper Rocks
+            </span>
+
+            <span>
+              Middle ring: Mystics
+            </span>
+
+            <span>
+              Inner ring: Bilinga area
+            </span>
+
+          </div>
+
+          <div class="viz"></div>
+
+          <div
+            class="chart-callout"
+            hidden
+          ></div>
+
+          <p
+            class="chart-story"
+            hidden
+          ></p>
+
+          <p
+            class="chart-source"
+            hidden
+          ></p>
+
         </article>
 
       </div>
+
     </section>
 
-    <!-- ===================================================== -->
-    <!-- SECTION 07 — PROFESSIONAL SURFING -->
-    <!-- ===================================================== -->
+
+    <!-- ==========================================
+         SECTION 07 — PROFESSIONAL SURFING
+    ========================================== -->
 
     <section id="professional">
+
       <div class="wrap">
 
         <div class="section-head section-head--full">
           <div>
+
             <p class="section-label">
               07 / Professional Surfing
             </p>
@@ -427,21 +760,25 @@
             <h2>
               Australia on the World Surfing Stage
             </h2>
+
           </div>
         </div>
 
         <p class="section-intro section-transition">
           Snapper Rocks is more than one of Australia's
-          highest-rated surf breaks: it also hosts a stop on
-          the World Surf League Championship Tour.
+          highest-rated surf breaks: it also hosts a stop
+          on the World Surf League Championship Tour.
+
           Alongside Bells Beach and Margaret River,
           it places Australia at the beginning of the
           2026 international competition calendar.
+
           But how significant is Australia's role when
           we consider the full global tour?
         </p>
 
-        <!-- CHART 12 — WORLD SURFING TOUR MAP -->
+        <!-- WORLD SURFING TOUR MAP -->
+
         <article
           class="chart-card"
           data-chart="world-tour"
@@ -493,22 +830,28 @@
         </article>
 
       </div>
+
     </section>
 
-    <!-- ===================================================== -->
-    <!-- SECTION 08 — CONCLUSION -->
-    <!-- ===================================================== -->
+
+    <!-- ==========================================
+         SECTION 08 — CONCLUSION
+    ========================================== -->
 
     <section id="conclusion">
+
       <div class="wrap">
 
         <div class="section-head">
+
           <div>
             <p class="section-label">
               08 / The Big Picture
             </p>
 
-            <h2>Why Australia Stands Out</h2>
+            <h2>
+              Why Australia Stands Out
+            </h2>
           </div>
 
           <p>
@@ -517,6 +860,7 @@
             coastal wave conditions and professional
             surfing achievements.
           </p>
+
         </div>
 
         <article
@@ -544,17 +888,23 @@
         </article>
 
       </div>
+
     </section>
 
   </main>
 
-  <!-- ===================================================== -->
-  <!-- FOOTER -->
-  <!-- ===================================================== -->
+
+  <!-- ==========================================
+       FOOTER
+  ========================================== -->
 
   <footer>
+
     <div class="wrap">
-      <p>FIT3179 Data Visualisation 2 · 2026</p>
+
+      <p>
+        FIT3179 Data Visualisation 2 · 2026
+      </p>
 
       <p>
         Sources are linked beneath each chart.
@@ -562,21 +912,37 @@
         data and interpretations must be verified
         before submission.
       </p>
+
     </div>
+
   </footer>
 
-  <!-- ===================================================== -->
-  <!-- VEGA-LITE LIBRARIES -->
-  <!-- ===================================================== -->
+
+  <!-- ==========================================
+       VEGA-LITE LIBRARIES
+  ========================================== -->
 
   <script src="https://cdn.jsdelivr.net/npm/vega@6.4.0"></script>
+
   <script src="https://cdn.jsdelivr.net/npm/vega-lite@6.5.0"></script>
+
   <script src="https://cdn.jsdelivr.net/npm/vega-embed@7.3.0"></script>
 
-  <script type="module" src="./js/main.js"></script>
 
-  <!-- Explanatory buttons only; radar remains Vega-Lite -->
-  <script type="module" src="./js/chart11-info.js"></script>
+  <!-- ==========================================
+       MAIN DASHBOARD LOADER
+  ========================================== -->
+
+  <script
+    type="module"
+    src="./js/main.js"
+  ></script>
+
+  <!--
+    chart11-info.js has deliberately been removed.
+    The Chart 11 explanatory buttons are no longer used.
+  -->
 
 </body>
+
 </html>
