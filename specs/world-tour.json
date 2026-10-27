@@ -1,0 +1,267 @@
+
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Interactive world map of the non-cancelled 2026 World Surf League Championship Tour locations, highlighting the three Australian stops.",
+  "background": "#ffffff",
+  "width": "container",
+  "height": 485,
+  "usermeta": {
+    "title": "Where Does Australia Feature on the World Surfing Tour?",
+    "annotation": "Australia hosts the first three stops of the 2026 Championship Tour: Bells Beach, Margaret River and Snapper Rocks. These are three of the 12 non-cancelled locations on the revised calendar.",
+    "analysis": "The 2026 Championship Tour demonstrates Australia's prominent position in international professional surfing. The first three stops take place at Bells Beach in Victoria, Margaret River in Western Australia and Snapper Rocks in Queensland, before the competition moves to Raglan in New Zealand and then to other international destinations. Australia therefore hosts three of the 12 non-cancelled stops displayed, or 25% of the mapped calendar. The Australian events also cover three geographically distinct coastal regions, demonstrating that the country's professional surfing significance extends beyond a single destination. The tour continues across the Americas, Pacific Islands, Europe and Asia, before concluding at Pipeline in Hawaii. The map represents the revised 2026 schedule rather than the original announcement: Jeffreys Bay was replaced by Raglan, Cloud 9 in the Philippines was added, and the cancelled Abu Dhabi event is excluded. Numbered markers show the order of scheduled stops, not performance rankings or travel routes. Event locations use approximate coordinates.",
+    "sources": [
+      {
+        "label": "World Surf League · Revised 2026 Championship Tour calendar",
+        "url": "https://www.fantasysurfingleague.com/en/events/?season=2026"
+      },
+      {
+        "label": "WSL announcement · Cloud 9 added to the 2026 Championship Tour",
+        "url": "https://sdmisports.com/news/world-surf-league-adds-cloud-9-philippines-to-2026-championship-tour-lineup"
+      },
+      {
+        "label": "Surfing New Zealand · Raglan replaces Jeffreys Bay",
+        "url": "https://surfingnz.co.nz/latest/19681/"
+      },
+      {
+        "label": "World Atlas · Geographic basemap data",
+        "url": "https://github.com/topojson/world-atlas"
+      }
+    ]
+  },
+  "params": [
+    {
+      "name": "hostChoice",
+      "value": "All locations",
+      "bind": {
+        "input": "select",
+        "options": [
+          "All locations",
+          "Australia",
+          "International"
+        ],
+        "name": "Host locations: "
+      }
+    },
+    {
+      "name": "phaseChoice",
+      "value": "All events",
+      "bind": {
+        "input": "select",
+        "options": [
+          "All events",
+          "Regular season",
+          "Postseason"
+        ],
+        "name": "Tour phase: "
+      }
+    }
+  ],
+  "projection": {
+    "type": "equalEarth"
+  },
+  "layer": [
+    {
+      "description": "Light world map background.",
+      "data": {
+        "url": "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json",
+        "format": {
+          "type": "topojson",
+          "feature": "countries"
+        }
+      },
+      "mark": {
+        "type": "geoshape",
+        "fill": "#e8f0ee",
+        "stroke": "#ffffff",
+        "strokeWidth": 0.7
+      }
+    },
+    {
+      "description": "Event location circles coloured by Australian versus international host.",
+      "data": {
+        "url": "data/wsl-2026-tour-locations.csv",
+        "format": {
+          "type": "csv",
+          "parse": {
+            "stop": "number",
+            "longitude": "number",
+            "latitude": "number"
+          }
+        }
+      },
+      "transform": [
+        {
+          "filter": "hostChoice === 'All locations' || datum.host_group === hostChoice"
+        },
+        {
+          "filter": "phaseChoice === 'All events' || datum.phase === phaseChoice"
+        }
+      ],
+      "mark": {
+        "type": "circle",
+        "size": 600,
+        "opacity": 0.96,
+        "stroke": "#ffffff",
+        "strokeWidth": 2
+      },
+      "encoding": {
+        "longitude": {
+          "field": "longitude",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "latitude",
+          "type": "quantitative"
+        },
+        "color": {
+          "field": "host_group",
+          "type": "nominal",
+          "scale": {
+            "domain": [
+              "Australia",
+              "International"
+            ],
+            "range": [
+              "#0072B2",
+              "#D55E00"
+            ]
+          },
+          "legend": {
+            "title": "2026 Championship Tour hosts",
+            "orient": "top",
+            "direction": "horizontal",
+            "symbolType": "circle",
+            "symbolSize": 210,
+            "labelFontSize": 14,
+            "titleFontSize": 14,
+            "titleFontWeight": "bold",
+            "offset": 16
+          }
+        },
+        "tooltip": [
+          {
+            "field": "stop",
+            "type": "quantitative",
+            "title": "Stop number",
+            "format": ".0f"
+          },
+          {
+            "field": "event",
+            "type": "nominal",
+            "title": "Event"
+          },
+          {
+            "field": "location",
+            "type": "nominal",
+            "title": "Surf location"
+          },
+          {
+            "field": "country",
+            "type": "nominal",
+            "title": "Host country"
+          },
+          {
+            "field": "date_window",
+            "type": "nominal",
+            "title": "Event window"
+          },
+          {
+            "field": "phase",
+            "type": "nominal",
+            "title": "Tour phase"
+          }
+        ]
+      }
+    },
+    {
+      "description": "Chronological stop numbers displayed inside each event symbol.",
+      "data": {
+        "url": "data/wsl-2026-tour-locations.csv",
+        "format": {
+          "type": "csv",
+          "parse": {
+            "stop": "number",
+            "longitude": "number",
+            "latitude": "number"
+          }
+        }
+      },
+      "transform": [
+        {
+          "filter": "hostChoice === 'All locations' || datum.host_group === hostChoice"
+        },
+        {
+          "filter": "phaseChoice === 'All events' || datum.phase === phaseChoice"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "font": "Arial",
+        "fontSize": 11,
+        "fontWeight": "bold",
+        "color": "#ffffff",
+        "align": "center",
+        "baseline": "middle"
+      },
+      "encoding": {
+        "longitude": {
+          "field": "longitude",
+          "type": "quantitative"
+        },
+        "latitude": {
+          "field": "latitude",
+          "type": "quantitative"
+        },
+        "text": {
+          "field": "stop",
+          "type": "quantitative",
+          "format": ".0f"
+        },
+        "tooltip": [
+          {
+            "field": "stop",
+            "type": "quantitative",
+            "title": "Stop number",
+            "format": ".0f"
+          },
+          {
+            "field": "event",
+            "type": "nominal",
+            "title": "Event"
+          },
+          {
+            "field": "location",
+            "type": "nominal",
+            "title": "Surf location"
+          },
+          {
+            "field": "country",
+            "type": "nominal",
+            "title": "Host country"
+          },
+          {
+            "field": "date_window",
+            "type": "nominal",
+            "title": "Event window"
+          }
+        ]
+      }
+    }
+  ],
+  "config": {
+    "view": {
+      "stroke": null
+    },
+    "font": "Arial",
+    "legend": {
+      "labelColor": "#31535f",
+      "titleColor": "#244654"
+    }
+  },
+  "padding": {
+    "left": 8,
+    "right": 8,
+    "top": 12,
+    "bottom": 12
+  }
+}
