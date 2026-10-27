@@ -1,0 +1,479 @@
+
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Radar chart comparing Snapper Rocks and Mystics across nine Surf-Forecast visitor-rating criteria.",
+  "background": "#ffffff",
+  "data": {
+    "url": "data/surf-break-head-to-head.csv",
+    "format": {
+      "type": "csv",
+      "parse": {
+        "sort_order": "number",
+        "snapper": "number",
+        "mystics": "number"
+      }
+    }
+  },
+  "usermeta": {
+    "title": "Two Five-Star Breaks: How Do Their Strengths Compare?",
+    "annotation": "Despite both scoring 5.0/5 overall, the two breaks offer different experiences. Snapper Rocks leads in wave quality (4.9 vs 4.2), while Mystics receives a more favourable crowding rating (2.6 vs 1.5, where higher means less crowded).",
+    "analysis": "Snapper Rocks and Mystics both receive overall visitor ratings of 5.0/5 on Surf-Forecast, with 16 reported votes each. However, comparing individual attributes reveals important differences. Snapper Rocks scores more strongly in wave quality (4.9 versus 4.2), consistency (3.9 versus 3.6), access (4.5 versus 3.1) and equipment availability (4.8 versus 2.5). Mystics, meanwhile, has more favourable crowding (2.6 versus 1.5) and local-attitude (3.1 versus 2.2) ratings. These differences suggest that the appeal of a surf destination involves trade-offs between wave performance, accessibility and the surrounding experience. The radar chart highlights these contrasting profiles, although individual ratings are subjective and the overall site vote count does not necessarily represent the number of responses to every criterion. Each axis uses the same 1–5 rating scale, but higher crowd ratings mean fewer crowds. The polygon shapes should be interpreted as visual comparisons, not as an overall performance score.",
+    "sources": [
+      {
+        "label": "Surf-Forecast · Snapper Rocks visitor ratings",
+        "url": "https://www.surf-forecast.com/breaks/Snapper-Rocks/reviews"
+      },
+      {
+        "label": "Surf-Forecast · Mystics visitor ratings",
+        "url": "https://www.surf-forecast.com/breaks/Mystics/reviews"
+      }
+    ]
+  },
+  "width": 590,
+  "height": 590,
+  "padding": {
+    "left": 22,
+    "right": 22,
+    "top": 25,
+    "bottom": 16
+  },
+  "transform": [
+    {
+      "calculate": "PI / 2 - (datum.sort_order - 1) * 2 * PI / 9",
+      "as": "angle"
+    }
+  ],
+  "encoding": {
+    "x": {
+      "field": "x",
+      "type": "quantitative",
+      "scale": {
+        "domain": [-1.6, 1.6],
+        "nice": false,
+        "zero": false
+      },
+      "axis": null
+    },
+    "y": {
+      "field": "y",
+      "type": "quantitative",
+      "scale": {
+        "domain": [-1.52, 1.52],
+        "nice": false,
+        "zero": false
+      },
+      "axis": null
+    }
+  },
+  "layer": [
+    {
+      "description": "Reference polygon for rating 1.",
+      "transform": [
+        {
+          "calculate": "cos(datum.angle) * 0.2",
+          "as": "x"
+        },
+        {
+          "calculate": "sin(datum.angle) * 0.2",
+          "as": "y"
+        }
+      ],
+      "mark": {
+        "type": "line",
+        "interpolate": "linear-closed",
+        "stroke": "#dbe8e7",
+        "strokeWidth": 1,
+        "filled": false
+      },
+      "encoding": {
+        "order": {
+          "field": "sort_order",
+          "type": "quantitative"
+        }
+      }
+    },
+    {
+      "description": "Reference polygon for rating 2.",
+      "transform": [
+        {
+          "calculate": "cos(datum.angle) * 0.4",
+          "as": "x"
+        },
+        {
+          "calculate": "sin(datum.angle) * 0.4",
+          "as": "y"
+        }
+      ],
+      "mark": {
+        "type": "line",
+        "interpolate": "linear-closed",
+        "stroke": "#dbe8e7",
+        "strokeWidth": 1,
+        "filled": false
+      },
+      "encoding": {
+        "order": {
+          "field": "sort_order",
+          "type": "quantitative"
+        }
+      }
+    },
+    {
+      "description": "Reference polygon for rating 3.",
+      "transform": [
+        {
+          "calculate": "cos(datum.angle) * 0.6",
+          "as": "x"
+        },
+        {
+          "calculate": "sin(datum.angle) * 0.6",
+          "as": "y"
+        }
+      ],
+      "mark": {
+        "type": "line",
+        "interpolate": "linear-closed",
+        "stroke": "#cbdcda",
+        "strokeWidth": 1.2,
+        "filled": false
+      },
+      "encoding": {
+        "order": {
+          "field": "sort_order",
+          "type": "quantitative"
+        }
+      }
+    },
+    {
+      "description": "Reference polygon for rating 4.",
+      "transform": [
+        {
+          "calculate": "cos(datum.angle) * 0.8",
+          "as": "x"
+        },
+        {
+          "calculate": "sin(datum.angle) * 0.8",
+          "as": "y"
+        }
+      ],
+      "mark": {
+        "type": "line",
+        "interpolate": "linear-closed",
+        "stroke": "#cbdcda",
+        "strokeWidth": 1,
+        "filled": false
+      },
+      "encoding": {
+        "order": {
+          "field": "sort_order",
+          "type": "quantitative"
+        }
+      }
+    },
+    {
+      "description": "Outermost reference polygon for rating 5.",
+      "transform": [
+        {
+          "calculate": "cos(datum.angle)",
+          "as": "x"
+        },
+        {
+          "calculate": "sin(datum.angle)",
+          "as": "y"
+        }
+      ],
+      "mark": {
+        "type": "line",
+        "interpolate": "linear-closed",
+        "stroke": "#a9c5c4",
+        "strokeWidth": 1.5,
+        "filled": false
+      },
+      "encoding": {
+        "order": {
+          "field": "sort_order",
+          "type": "quantitative"
+        }
+      }
+    },
+    {
+      "description": "Nine radial spokes extending from the centre to rating 5.",
+      "transform": [
+        {
+          "calculate": "cos(datum.angle)",
+          "as": "spoke_x"
+        },
+        {
+          "calculate": "sin(datum.angle)",
+          "as": "spoke_y"
+        }
+      ],
+      "mark": {
+        "type": "rule",
+        "stroke": "#d8e5e3",
+        "strokeWidth": 1
+      },
+      "encoding": {
+        "x": {
+          "datum": 0
+        },
+        "y": {
+          "datum": 0
+        },
+        "x2": {
+          "field": "spoke_x"
+        },
+        "y2": {
+          "field": "spoke_y"
+        }
+      }
+    },
+    {
+      "description": "Filled radar polygons for both locations.",
+      "transform": [
+        {
+          "fold": [
+            "snapper",
+            "mystics"
+          ],
+          "as": [
+            "location_key",
+            "rating"
+          ]
+        },
+        {
+          "calculate": "datum.location_key === 'snapper' ? 'Snapper Rocks' : 'Mystics'",
+          "as": "location"
+        },
+        {
+          "calculate": "cos(datum.angle) * datum.rating / 5",
+          "as": "x"
+        },
+        {
+          "calculate": "sin(datum.angle) * datum.rating / 5",
+          "as": "y"
+        }
+      ],
+      "mark": {
+        "type": "line",
+        "interpolate": "linear-closed",
+        "filled": true,
+        "fillOpacity": 0.12,
+        "strokeWidth": 3,
+        "strokeOpacity": 0.95
+      },
+      "encoding": {
+        "order": {
+          "field": "sort_order",
+          "type": "quantitative"
+        },
+        "detail": {
+          "field": "location",
+          "type": "nominal"
+        },
+        "fill": {
+          "field": "location",
+          "type": "nominal",
+          "scale": {
+            "domain": [
+              "Snapper Rocks",
+              "Mystics"
+            ],
+            "range": [
+              "#0072B2",
+              "#D55E00"
+            ]
+          },
+          "legend": {
+            "title": "Surf break",
+            "orient": "top",
+            "direction": "horizontal",
+            "symbolType": "square",
+            "symbolSize": 170,
+            "labelFontSize": 14,
+            "titleFontSize": 14,
+            "titleFontWeight": "bold",
+            "offset": 18
+          }
+        },
+        "stroke": {
+          "field": "location",
+          "type": "nominal",
+          "scale": {
+            "domain": [
+              "Snapper Rocks",
+              "Mystics"
+            ],
+            "range": [
+              "#0072B2",
+              "#D55E00"
+            ]
+          },
+          "legend": null
+        }
+      }
+    },
+    {
+      "description": "Interactive rating points with exact tooltips.",
+      "transform": [
+        {
+          "fold": [
+            "snapper",
+            "mystics"
+          ],
+          "as": [
+            "location_key",
+            "rating"
+          ]
+        },
+        {
+          "calculate": "datum.location_key === 'snapper' ? 'Snapper Rocks' : 'Mystics'",
+          "as": "location"
+        },
+        {
+          "calculate": "cos(datum.angle) * datum.rating / 5",
+          "as": "x"
+        },
+        {
+          "calculate": "sin(datum.angle) * datum.rating / 5",
+          "as": "y"
+        }
+      ],
+      "mark": {
+        "type": "circle",
+        "size": 105,
+        "stroke": "#ffffff",
+        "strokeWidth": 1.4,
+        "filled": true,
+        "opacity": 1
+      },
+      "encoding": {
+        "color": {
+          "field": "location",
+          "type": "nominal",
+          "scale": {
+            "domain": [
+              "Snapper Rocks",
+              "Mystics"
+            ],
+            "range": [
+              "#0072B2",
+              "#D55E00"
+            ]
+          },
+          "legend": null
+        },
+        "tooltip": [
+          {
+            "field": "criterion",
+            "type": "nominal",
+            "title": "Criterion"
+          },
+          {
+            "field": "location",
+            "type": "nominal",
+            "title": "Surf break"
+          },
+          {
+            "field": "rating",
+            "type": "quantitative",
+            "title": "Rating / 5",
+            "format": ".1f"
+          },
+          {
+            "field": "interpretation",
+            "type": "nominal",
+            "title": "Interpretation"
+          }
+        ]
+      }
+    },
+    {
+      "description": "Labels positioned outside the radar grid.",
+      "transform": [
+        {
+          "calculate": "cos(datum.angle) * 1.23",
+          "as": "x"
+        },
+        {
+          "calculate": "sin(datum.angle) * 1.23",
+          "as": "y"
+        },
+        {
+          "calculate": "datum.criterion === 'Equipment and repairs' ? 'Equipment & repairs' : datum.criterion === 'Surf consistency' ? 'Consistency' : datum.criterion",
+          "as": "axis_label"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "font": "Arial",
+        "fontSize": 12,
+        "fontWeight": "bold",
+        "color": "#244654",
+        "align": {
+          "expr": "datum.x > 0.25 ? 'left' : datum.x < -0.25 ? 'right' : 'center'"
+        },
+        "baseline": "middle"
+      },
+      "encoding": {
+        "text": {
+          "field": "axis_label",
+          "type": "nominal"
+        }
+      }
+    },
+    {
+      "description": "Numeric scale labels on the vertical reference axis.",
+      "data": {
+        "values": [
+          {
+            "value": 1
+          },
+          {
+            "value": 2
+          },
+          {
+            "value": 3
+          },
+          {
+            "value": 4
+          },
+          {
+            "value": 5
+          }
+        ]
+      },
+      "transform": [
+        {
+          "calculate": "0.035",
+          "as": "x"
+        },
+        {
+          "calculate": "datum.value / 5",
+          "as": "y"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "fontSize": 10,
+        "color": "#71868a",
+        "align": "left",
+        "baseline": "bottom",
+        "dy": -3
+      },
+      "encoding": {
+        "text": {
+          "field": "value",
+          "type": "quantitative",
+          "format": ".0f"
+        }
+      }
+    }
+  ],
+  "config": {
+    "view": {
+      "stroke": null
+    },
+    "font": "Arial"
+  }
+}
