@@ -1,29 +1,28 @@
-
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
-  "description": "Interactive world map of the non-cancelled 2026 World Surf League Championship Tour locations, highlighting the three Australian stops.",
+  "description": "Interactive map of 12 non-cancelled 2026 World Surf League Championship Tour locations, highlighting the three Australian stops.",
   "background": "#ffffff",
   "width": "container",
   "height": 485,
   "usermeta": {
     "title": "Where Does Australia Feature on the World Surfing Tour?",
-    "annotation": "Australia hosts the first three stops of the 2026 Championship Tour: Bells Beach, Margaret River and Snapper Rocks. These are three of the 12 non-cancelled locations on the revised calendar.",
-    "analysis": "The 2026 Championship Tour demonstrates Australia's prominent position in international professional surfing. The first three stops take place at Bells Beach in Victoria, Margaret River in Western Australia and Snapper Rocks in Queensland, before the competition moves to Raglan in New Zealand and then to other international destinations. Australia therefore hosts three of the 12 non-cancelled stops displayed, or 25% of the mapped calendar. The Australian events also cover three geographically distinct coastal regions, demonstrating that the country's professional surfing significance extends beyond a single destination. The tour continues across the Americas, Pacific Islands, Europe and Asia, before concluding at Pipeline in Hawaii. The map represents the revised 2026 schedule rather than the original announcement: Jeffreys Bay was replaced by Raglan, Cloud 9 in the Philippines was added, and the cancelled Abu Dhabi event is excluded. Numbered markers show the order of scheduled stops, not performance rankings or travel routes. Event locations use approximate coordinates.",
+    "annotation": "Australia hosts the opening three stops of the 2026 Championship Tour: Bells Beach, Margaret River and Snapper Rocks. Together, they account for 3 of the 12 non-cancelled stops shown on the revised calendar.",
+    "analysis": "The Championship Tour provides a different perspective on Australia's international surfing significance. Rather than examining surfing destinations through visitor ratings, it reveals where elite professional competitions are held. Australia hosts the first three stops of the revised 2026 calendar: Bells Beach in Victoria, Margaret River in Western Australia and Snapper Rocks in Queensland. These represent 25% of the 12 non-cancelled stops mapped. Their locations also demonstrate the geographic diversity of Australia's professional surfing venues, stretching across its eastern, southern and western coasts. Beyond Australia, the tour continues across New Zealand, the Americas, the Pacific, Europe and Asia, highlighting surfing's international reach. The numbered points represent the published order of events, not travel routes or rankings of surf quality. The map uses approximate venue coordinates, and it reflects the revised schedule rather than the original tour announcement.",
     "sources": [
       {
-        "label": "World Surf League · Revised 2026 Championship Tour calendar",
+        "label": "2026 Championship Tour calendar",
         "url": "https://www.fantasysurfingleague.com/en/events/?season=2026"
       },
       {
-        "label": "WSL announcement · Cloud 9 added to the 2026 Championship Tour",
-        "url": "https://sdmisports.com/news/world-surf-league-adds-cloud-9-philippines-to-2026-championship-tour-lineup"
-      },
-      {
-        "label": "Surfing New Zealand · Raglan replaces Jeffreys Bay",
+        "label": "Surfing New Zealand · Raglan calendar change",
         "url": "https://surfingnz.co.nz/latest/19681/"
       },
       {
-        "label": "World Atlas · Geographic basemap data",
+        "label": "2026 Championship Tour · Philippines addition",
+        "url": "https://sdmisports.com/news/world-surf-league-adds-cloud-9-philippines-to-2026-championship-tour-lineup"
+      },
+      {
+        "label": "World Atlas · Geographic boundaries",
         "url": "https://github.com/topojson/world-atlas"
       }
     ]
@@ -39,7 +38,12 @@
           "Australia",
           "International"
         ],
-        "name": "Host locations: "
+        "labels": [
+          "All locations",
+          "Australia only",
+          "International only"
+        ],
+        "name": "Event location: "
       }
     },
     {
@@ -52,7 +56,12 @@
           "Regular season",
           "Postseason"
         ],
-        "name": "Tour phase: "
+        "labels": [
+          "All events",
+          "Regular season",
+          "Postseason"
+        ],
+        "name": "Competition stage: "
       }
     }
   ],
@@ -61,7 +70,7 @@
   },
   "layer": [
     {
-      "description": "Light world map background.",
+      "description": "World geography provides spatial context for the Championship Tour.",
       "data": {
         "url": "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json",
         "format": {
@@ -71,13 +80,13 @@
       },
       "mark": {
         "type": "geoshape",
-        "fill": "#e8f0ee",
+        "fill": "#e9f1ef",
         "stroke": "#ffffff",
-        "strokeWidth": 0.7
+        "strokeWidth": 0.75
       }
     },
     {
-      "description": "Event location circles coloured by Australian versus international host.",
+      "description": "Event markers, coloured according to whether a stop is in Australia.",
       "data": {
         "url": "data/wsl-2026-tour-locations.csv",
         "format": {
@@ -127,33 +136,40 @@
             ]
           },
           "legend": {
-            "title": "2026 Championship Tour hosts",
+            "title": "Event location",
             "orient": "top",
             "direction": "horizontal",
+            "columns": 2,
             "symbolType": "circle",
             "symbolSize": 210,
-            "labelFontSize": 14,
-            "titleFontSize": 14,
+            "labelFontSize": 13,
+            "labelColor": "#244654",
+            "labelLimit": 230,
+            "titleFontSize": 13,
             "titleFontWeight": "bold",
-            "offset": 16
+            "titleColor": "#244654",
+            "columnPadding": 22,
+            "rowPadding": 8,
+            "offset": 15,
+            "labelExpr": "datum.label === 'Australia' ? 'Australia (3 stops)' : 'International (9 stops)'"
           }
         },
         "tooltip": [
           {
             "field": "stop",
             "type": "quantitative",
-            "title": "Stop number",
+            "title": "Tour stop",
             "format": ".0f"
           },
           {
             "field": "event",
             "type": "nominal",
-            "title": "Event"
+            "title": "Competition"
           },
           {
             "field": "location",
             "type": "nominal",
-            "title": "Surf location"
+            "title": "Surf break"
           },
           {
             "field": "country",
@@ -168,13 +184,13 @@
           {
             "field": "phase",
             "type": "nominal",
-            "title": "Tour phase"
+            "title": "Competition stage"
           }
         ]
       }
     },
     {
-      "description": "Chronological stop numbers displayed inside each event symbol.",
+      "description": "Number labels inside markers show the chronological order of the events.",
       "data": {
         "url": "data/wsl-2026-tour-locations.csv",
         "format": {
@@ -221,18 +237,18 @@
           {
             "field": "stop",
             "type": "quantitative",
-            "title": "Stop number",
+            "title": "Tour stop",
             "format": ".0f"
           },
           {
             "field": "event",
             "type": "nominal",
-            "title": "Event"
+            "title": "Competition"
           },
           {
             "field": "location",
             "type": "nominal",
-            "title": "Surf location"
+            "title": "Surf break"
           },
           {
             "field": "country",
@@ -255,7 +271,9 @@
     "font": "Arial",
     "legend": {
       "labelColor": "#31535f",
-      "titleColor": "#244654"
+      "titleColor": "#244654",
+      "labelFont": "Arial",
+      "titleFont": "Arial"
     }
   },
   "padding": {
