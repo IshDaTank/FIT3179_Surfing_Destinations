@@ -1,837 +1,628 @@
-:root {
-  --ink: #123442;
-  --muted: #4f6972;
-  --deep: #0d3443;
-  --pale: #eef6f3;
-  --sea: #167d88;
-  --line: #d9e7e3;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  line-height: 1.55;
-  color: var(--ink);
-  background: #ffffff;
-}
-
-a {
-  color: inherit;
-}
-
-.wrap {
-  max-width: 1120px;
-  margin: auto;
-  padding: 0 24px;
-}
-
-header {
-  background: var(--deep);
-  color: #ffffff;
-  padding: 70px 0 56px;
-}
-
-header .eyebrow,
-.section-label {
-  text-transform: uppercase;
-  letter-spacing: .15em;
-  font-size: .75rem;
-  font-weight: 700;
-}
-
-h1,
-h2,
-h3 {
-  font-family: Arial, Helvetica, sans-serif;
-  letter-spacing: -.035em;
-  line-height: 1.15;
-}
-
-h1 {
-  font-size: clamp(3rem, 7vw, 5rem);
-  max-width: 800px;
-  margin: 12px 0;
-}
-
-header p {
-  color: #d0e5e7;
-  max-width: 720px;
-  font-size: 1.1rem;
-}
-
-nav {
-  display: flex;
-  gap: 18px;
-  flex-wrap: wrap;
-  margin-top: 28px;
-}
-
-nav a {
-  font-size: .83rem;
-  text-decoration: none;
-  color: #c3e4e2;
-}
-
-nav a:hover {
-  text-decoration: underline;
-}
-
-section {
-  padding: 52px 0 42px;
-  scroll-margin-top: 25px;
-}
-
-section:nth-of-type(even) {
-  background: var(--pale);
-}
-
-.section-head {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 28px;
-  align-items: end;
-  margin-bottom: 20px;
-}
-
-.section-label {
-  color: var(--sea);
-  margin: 0 0 8px;
-}
-
-h2 {
-  font-size: clamp(2rem, 4vw, 3.1rem);
-  margin: 0;
-}
-
-.section-head > p {
-  font-size: 1rem;
-  color: var(--muted);
-  max-width: 480px;
-  margin: 0;
-}
-
-.section-head--full {
-  display: block;
-}
-
-.section-head--full > div {
-  max-width: none;
-}
-
-.section-head--full h2 {
-  width: 100%;
-  max-width: none;
-}
-
-.section-intro {
-  margin: 0 0 24px;
-  max-width: 970px;
-  color: #31535f;
-  font-size: 1.05rem;
-  line-height: 1.7;
-}
-
-.section-transition {
-  max-width: 1000px;
-  padding: 0 0 0 17px;
-  border-left: 3px solid var(--sea);
-}
-
-/* =========================================================
-   CHART CARDS
-   ========================================================= */
-
-.chart-card {
-  background: #ffffff;
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 22px 24px;
-  margin: 0 0 20px;
-  overflow: hidden;
-}
-
-.chart-card[hidden],
-.chart-callout[hidden],
-.chart-story[hidden],
-.chart-source[hidden] {
-  display: none;
-}
-
-h3 {
-  font-size: clamp(1.28rem, 2vw, 1.65rem);
-  margin: 0 0 14px;
-}
-
-.viz {
-  width: 100%;
-  min-width: 0;
-  overflow-x: auto;
-}
-
-.viz .vega-embed {
-  max-width: 100%;
-}
-
-.chart-callout {
-  position: relative;
-  margin: 18px 0 12px 16px;
-  padding: 13px 17px;
-  background: #e0f2ed;
-  border: 1px solid #bcded4;
-  border-radius: 8px;
-  font-weight: 700;
-  max-width: 860px;
-}
-
-.chart-callout::before {
-  content: '↗';
-  position: absolute;
-  left: -22px;
-  top: -21px;
-  color: var(--sea);
-  font-size: 27px;
-  line-height: 1;
-}
-
-.chart-story {
-  margin: 0 0 10px;
-  padding-left: 15px;
-  border-left: 3px solid var(--sea);
-  max-width: 950px;
-  font-size: 1rem;
-  line-height: 1.68;
-}
-
-.chart-source {
-  margin: 10px 0 0;
-  color: var(--muted);
-  font-size: .8rem;
-}
-
-.chart-source a {
-  color: #137586;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-footer {
-  background: var(--deep);
-  color: #d3e6e9;
-  padding: 25px 0;
-  font-size: .83rem;
-}
-
-footer p {
-  margin: 5px 0;
-}
-
-/* =========================================================
-   CHART 1 — INTERACTIVE SURFING RESERVES MAP
-   ========================================================= */
-
-.map-card {
-  padding: 22px 24px 20px;
-}
-
-.map-card h3 {
-  margin: 0 0 16px;
-}
-
-.map-layout {
-  display: grid;
-  grid-template-columns:
-    minmax(0, 1.35fr)
-    minmax(300px, 1fr);
-  gap: 24px;
-  align-items: stretch;
-}
-
-.map-side {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.state-filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-  margin: 0 0 10px;
-}
-
-.state-filter {
-  font: inherit;
-  font-size: .82rem;
-  font-weight: 700;
-  line-height: 1.2;
-  cursor: pointer;
-  background: #f5faf8;
-  color: #375b65;
-  border: 1px solid #c8dcda;
-  border-radius: 999px;
-  padding: 8px 12px;
-  transition:
-    background .15s,
-    border-color .15s;
-}
-
-.state-filter:hover {
-  border-color: #117989;
-  background: #e7f4f0;
-}
-
-.state-filter:focus-visible {
-  outline: 3px solid #117989;
-  outline-offset: 2px;
-}
-
-.state-filter.is-active {
-  background: #0e5967;
-  color: #ffffff;
-  border-color: #0e5967;
-}
-
-.state-filter:not(:first-child)::before {
-  content: '';
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--state-color, #117989);
-  margin-right: 6px;
-  vertical-align: 1px;
-}
-
-.state-filter.is-active:not(:first-child)::before {
-  border: 1px solid #ffffff;
-}
-
-.map-card .viz {
-  width: 100%;
-  overflow: visible;
-}
-
-.map-card .vega-embed,
-.map-card .vega-embed svg {
-  max-width: 100%;
-  display: block;
-}
-
-.state-context {
-  font-size: .77rem;
-  color: var(--muted);
-  margin: 4px 0 0;
-}
-
-.map-analysis {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: 11px;
-  min-width: 0;
-  padding: 16px 18px;
-  background: #f6faf9;
-  border: 1px solid #d4e6e1;
-  border-radius: 12px;
-}
-
-.map-card .chart-callout {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  margin: 0 0 2px 9px;
-  background: #dff2ee;
-  border: 1px solid #b6d9d0;
-  border-left: 4px solid #117989;
-  padding: 12px 14px;
-  max-width: none;
-  line-height: 1.4;
-  font-size: .92rem;
-  font-weight: 400;
-  color: #124552;
-}
-
-.map-card .chart-callout::before {
-  content: '';
-  position: absolute;
-  display: block;
-  top: 20px;
-  left: -17px;
-  width: 0;
-  height: 0;
-  border-top: 9px solid transparent;
-  border-bottom: 9px solid transparent;
-  border-right: 13px solid #117989;
-}
-
-.map-card .chart-callout strong {
-  font-size: 1rem;
-  color: #0e4c59;
-  line-height: 1.35;
-}
-
-.map-card .chart-callout span {
-  font-size: .91rem;
-  color: #264e57;
-}
-
-.map-card .state-detail {
-  font-size: .78rem;
-  color: #426773;
-  margin: 0 0 2px;
-  line-height: 1.4;
-}
-
-.map-card .chart-story {
-  border: 0;
-  border-top: 1px solid #d5e5e0;
-  padding: 11px 0 0;
-  margin: 0;
-  max-width: none;
-  font-size: .9rem;
-  line-height: 1.58;
-  color: #294b56;
-}
-
-.map-card .chart-source {
-  margin: 11px 0 0;
-}
-
-/* =========================================================
-   FULL-WIDTH SECTION HEADINGS
-   ========================================================= */
-
-#geography .section-head,
-#history .section-head,
-#hotspots .section-head,
-#destinations .section-head,
-#comparison .section-head,
-#professional .section-head {
-  display: block;
-  margin-bottom: 22px;
-}
-
-#geography h2,
-#history h2,
-#hotspots h2,
-#destinations h2,
-#comparison h2,
-#professional h2 {
-  font-size: clamp(1.85rem, 3.2vw, 3rem);
-  font-weight: 800;
-  line-height: 1.15;
-  letter-spacing: -.035em;
-}
-
-#geography h2,
-#history h2,
-#hotspots h2 {
-  white-space: nowrap;
-}
-
-#comparison h2,
-#professional h2 {
-  max-width: none;
-  width: 100%;
-}
-
-/* =========================================================
-   CHART 8 AND CHART 12 — SHARED FILTER STYLING
-   ========================================================= */
-
-[data-chart="surf-destination-ratings"] .vega-embed,
-[data-chart="world-tour"] .vega-embed {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  max-width: 100%;
-  border: none;
-  background: transparent;
-}
-
-[data-chart="surf-destination-ratings"] .vega-bindings,
-[data-chart="world-tour"] .vega-bindings {
-  order: -1;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 12px 18px;
-  width: 100%;
-  margin: 0 0 20px;
-  padding: 15px 17px;
-  background: #f5faf9;
-  border: 1px solid #d7e9e5;
-  border-radius: 12px;
-}
-
-[data-chart="surf-destination-ratings"] .vega-bindings label,
-[data-chart="world-tour"] .vega-bindings label {
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  margin: 0;
-  color: #183847;
-  font-size: .92rem;
-  font-weight: 700;
-  line-height: 1.4;
-}
-
-[data-chart="surf-destination-ratings"] .vega-bindings select,
-[data-chart="world-tour"] .vega-bindings select {
-  min-width: 155px;
-  max-width: 250px;
-  padding: 10px 30px 10px 12px;
-  border: 1px solid #bdd7d3;
-  border-radius: 8px;
-  background: #ffffff;
-  color: #123442;
-  font-family: inherit;
-  font-size: .88rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition:
-    border-color .15s ease,
-    box-shadow .15s ease;
-}
-
-[data-chart="surf-destination-ratings"] .vega-bindings select:hover,
-[data-chart="world-tour"] .vega-bindings select:hover {
-  border-color: #58989b;
-}
-
-[data-chart="surf-destination-ratings"] .vega-bindings select:focus-visible,
-[data-chart="world-tour"] .vega-bindings select:focus-visible {
-  outline: none;
-  border-color: #167d88;
-  box-shadow: 0 0 0 3px rgb(22 125 136 / 16%);
-}
-
-/* =========================================================
-   CHART 8 — EXISTING RATING CHART
-   ========================================================= */
-
-[data-chart="surf-destination-ratings"] .chart-callout {
-  margin: 17px 0 12px;
-  padding: 16px 20px;
-  max-width: none;
-  border-radius: 10px;
-  font-size: 1rem;
-  line-height: 1.55;
-}
-
-[data-chart="surf-destination-ratings"] .chart-callout::before,
-[data-chart="surf-destination-ratings"] .chart-callout::after {
-  content: none !important;
-  display: none !important;
-}
-
-[data-chart="surf-destination-ratings"] .chart-story {
-  max-width: none;
-  margin-top: 15px;
-  line-height: 1.75;
-}
-
-/* =========================================================
-   CHART 11 — RADAR AND MEASURE DEFINITIONS
-   ========================================================= */
-
-.chart11-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 280px;
-  gap: 16px;
-  align-items: start;
-  margin: 12px 0 20px;
-}
-
-.chart11-plot {
-  min-width: 0;
-  overflow: visible;
-}
-
-.chart11-plot .viz {
-  overflow-x: auto;
-  overflow-y: hidden;
-}
-
-.chart11-explainer {
-  background: #f6faf9;
-  border: 1px solid #d8e9e4;
-  border-radius: 12px;
-  padding: 18px;
-}
-
-.chart11-explainer h4 {
-  margin: 0 0 8px;
-  font-size: 1.05rem;
-  font-weight: 800;
-  line-height: 1.35;
-  color: #173847;
-}
-
-.chart11-explainer-intro {
-  margin: 0 0 15px;
-  font-size: .88rem;
-  color: #55707a;
-  line-height: 1.5;
-}
-
-.chart11-measure-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.chart11-measure-btn {
-  padding: 8px 10px;
-  font: inherit;
-  font-size: .82rem;
-  font-weight: 700;
-  line-height: 1.25;
-  border: 1px solid #c4dbd5;
-  border-radius: 8px;
-  background: #ffffff;
-  color: #254c56;
-  cursor: pointer;
-  transition:
-    background .15s ease,
-    border-color .15s ease;
-}
-
-.chart11-measure-btn:hover {
-  background: #eaf5f1;
-  border-color: #8bb9ad;
-}
-
-.chart11-measure-btn:focus-visible {
-  outline: 3px solid #6fa7a5;
-  outline-offset: 2px;
-}
-
-.chart11-measure-btn.is-active {
-  background: #135c69;
-  border-color: #135c69;
-  color: #ffffff;
-}
-
-.chart11-measure-definition {
-  margin-top: 16px;
-  padding: 15px;
-  background: #ffffff;
-  border: 1px solid #d8e8e2;
-  border-radius: 10px;
-  min-height: 145px;
-}
-
-.chart11-measure-definition h5 {
-  margin: 0 0 8px;
-  color: #123b47;
-  font-size: 1rem;
-  line-height: 1.35;
-}
-
-.chart11-measure-definition p {
-  margin: 0;
-  color: #385863;
-  font-size: .91rem;
-  line-height: 1.6;
-}
-
-.chart11-measure-definition .measure-note {
-  display: block;
-  margin-top: 10px;
-  color: #57737b;
-  font-size: .84rem;
-  font-style: italic;
-  line-height: 1.5;
-}
-
-[data-chart="surf-break-head-to-head"] .chart-callout {
-  margin: 18px 0 12px;
-  max-width: none;
-}
-
-[data-chart="surf-break-head-to-head"] .chart-callout::before,
-[data-chart="surf-break-head-to-head"] .chart-callout::after {
-  content: none !important;
-  display: none !important;
-}
-
-/* =========================================================
-   CHART 12 — WORLD TOUR
-   ========================================================= */
-
-[data-chart="world-tour"] .viz {
-  width: 100%;
-  overflow-x: auto;
-}
-
-[data-chart="world-tour"] .vega-embed {
-  width: 100%;
-}
-
-[data-chart="world-tour"] .chart-callout {
-  margin: 18px 0 12px;
-  max-width: none;
-  padding: 16px 20px;
-  border-radius: 10px;
-  background: #e0f2ed;
-  border: 1px solid #bcded4;
-  color: #123f48;
-  line-height: 1.55;
-}
-
-/* Remove the arrow beside Chart 12's key note. */
-
-[data-chart="world-tour"] .chart-callout::before,
-[data-chart="world-tour"] .chart-callout::after,
-[data-chart="world-tour"] .chart-story::before {
-  content: none !important;
-  display: none !important;
-}
-
-[data-chart="world-tour"] .chart-story {
-  max-width: none;
-  margin-top: 16px;
-  line-height: 1.75;
-}
-
-/* =========================================================
-   RESPONSIVE DESIGN
-   ========================================================= */
-
-@media (max-width: 1100px) {
-  .chart11-layout {
-    grid-template-columns: minmax(0, 1fr) 255px;
-    gap: 12px;
+/* ========================================
+   FIT3179 - AUSTRALIAN SURFING DASHBOARD
+   MAIN CHART LOADER
+   VEGA-LITE VERSION 6
+
+   Supports:
+   - All existing dashboard charts
+   - Chart 1 interactive state map
+   - Chart 11 radar chart without buttons
+   - Chart 12 seasonal surfability comparison
+   - Vega-Lite annotations and source links
+======================================== */
+
+
+// ========================================
+// 1. GLOBAL CONFIGURATION
+// ========================================
+
+const root = new URL('../', import.meta.url);
+
+const chartCards = [
+  ...document.querySelectorAll(
+    '.chart-card[data-chart]'
+  )
+];
+
+const options = {
+  actions: false,
+  renderer: 'svg',
+  loader: vega.loader({
+    baseURL: root.href
+  })
+};
+
+
+// ========================================
+// 2. POPULATE CHART INFORMATION
+// ========================================
+
+function populateInformation(card, info) {
+
+  const heading = card.querySelector('h3');
+
+  const callout =
+    card.querySelector('.chart-callout');
+
+  const story =
+    card.querySelector('.chart-story');
+
+  const source =
+    card.querySelector('.chart-source');
+
+
+  // CHART TITLE
+
+  if (heading && info.title) {
+    heading.textContent = info.title;
+  }
+
+
+  // CHART ANNOTATION
+
+  if (callout) {
+
+    callout.textContent =
+      info.annotation || '';
+
+    callout.hidden = !info.annotation;
+  }
+
+
+  // ANALYTICAL INTERPRETATION
+
+  if (story) {
+
+    const existingStory =
+      story.textContent.trim();
+
+    story.textContent =
+      info.analysis || existingStory;
+
+    story.hidden =
+      !story.textContent.trim();
+  }
+
+
+  // SOURCES
+
+  if (source) {
+
+    source.replaceChildren();
+
+    // Support both a single source object
+    // and multiple sources.
+
+    const sources = Array.isArray(info.sources)
+      ? info.sources
+      : info.source
+        ? [info.source]
+        : [];
+
+    if (sources.length > 0) {
+
+      source.append('Sources: ');
+
+      sources.forEach((item, index) => {
+
+        if (!item.url || !item.label) return;
+
+        if (index > 0) {
+          source.append(' · ');
+        }
+
+        const link =
+          document.createElement('a');
+
+        link.href = item.url;
+        link.textContent = item.label;
+
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+
+        source.append(link);
+      });
+    }
+
+    source.hidden =
+      !source.querySelector('a');
   }
 }
 
-@media (max-width: 900px) {
-  .map-layout {
-    grid-template-columns: 1fr;
-    gap: 12px;
+
+// ========================================
+// 3. CHART 1: INTERACTIVE STATE MAP
+// ========================================
+
+async function renderStateMap(
+  card,
+  spec,
+  info
+) {
+
+  card.classList.add('map-card');
+
+  const viz =
+    card.querySelector('.viz');
+
+  const callout =
+    card.querySelector('.chart-callout');
+
+  const story =
+    card.querySelector('.chart-story');
+
+  const source =
+    card.querySelector('.chart-source');
+
+
+  // CREATE MAP LAYOUT
+
+  const layout =
+    document.createElement('div');
+
+  layout.className = 'map-layout';
+
+  const mapSide =
+    document.createElement('div');
+
+  mapSide.className = 'map-side';
+
+  const analysisSide =
+    document.createElement('aside');
+
+  analysisSide.className = 'map-analysis';
+
+  analysisSide.setAttribute(
+    'aria-live',
+    'polite'
+  );
+
+
+  // STATE FILTER CONTROLS
+
+  const filters =
+    document.createElement('div');
+
+  filters.className = 'state-filters';
+
+  filters.setAttribute(
+    'role',
+    'group'
+  );
+
+  filters.setAttribute(
+    'aria-label',
+    'Filter surfing reserves by state'
+  );
+
+
+  // ADDITIONAL MAP INFORMATION
+
+  const context =
+    document.createElement('p');
+
+  context.className = 'state-context';
+
+  const detail =
+    document.createElement('p');
+
+  detail.className = 'state-detail';
+
+
+  // ASSEMBLE LAYOUT
+
+  mapSide.append(
+    filters,
+    viz,
+    context
+  );
+
+  if (callout) {
+    analysisSide.append(callout);
   }
 
-  .map-analysis {
-    padding: 17px;
+  analysisSide.append(detail);
+
+  if (story) {
+    analysisSide.append(story);
   }
 
-  .map-card .chart-callout {
-    margin-left: 0;
+  layout.append(
+    mapSide,
+    analysisSide
+  );
+
+  if (source) {
+    card.insertBefore(layout, source);
+  } else {
+    card.append(layout);
   }
 
-  .map-card .chart-callout::before {
-    display: none;
+
+  // MAP COLOUR PALETTE
+
+  const palette = {
+    NSW: '#117989',
+    QLD: '#E3A049',
+    VIC: '#7D6BA3',
+    SA: '#B96A75',
+    WA: '#568C69'
+  };
+
+  const buttons = [];
+
+  let latestRequest = 0;
+
+
+  // ====================================
+  // STATE SELECTION HANDLER
+  // ====================================
+
+  async function selectState(state) {
+
+    const request = ++latestRequest;
+
+
+    // UPDATE BUTTON STATE
+
+    for (const button of buttons) {
+
+      const active =
+        button.dataset.state === state;
+
+      button.classList.toggle(
+        'is-active',
+        active
+      );
+
+      button.setAttribute(
+        'aria-pressed',
+        String(active)
+      );
+    }
+
+
+    // RETRIEVE STATE INTERPRETATION
+
+    const result =
+      info.interpretations[state];
+
+    if (!result) return;
+
+    const target =
+      info.annotationTargets?.[state];
+
+
+    // UPDATE ANNOTATION
+
+    if (callout) {
+
+      callout.replaceChildren();
+
+      const title =
+        document.createElement('strong');
+
+      title.textContent =
+        target?.name || 'Map finding';
+
+      const description =
+        document.createElement('span');
+
+      description.textContent =
+        result.callout || '';
+
+      callout.append(
+        title,
+        description
+      );
+
+      callout.hidden = false;
+    }
+
+
+    // UPDATE ANALYSIS
+
+    if (story) {
+
+      story.textContent =
+        result.analysis || '';
+
+      story.hidden =
+        !result.analysis;
+    }
+
+
+    // UPDATE STATE DETAIL
+
+    detail.textContent =
+      result.detail || '';
+
+    detail.hidden =
+      !result.detail;
+
+
+    // UPDATE CONTEXT
+
+    context.textContent =
+      state === 'All'
+        ? 'All 19 nationally listed reserves · equal-sized location markers'
+        : `${state} only · national map extent unchanged`;
+
+
+    // CLONE SPECIFICATION
+
+    const selectedSpec =
+      structuredClone(spec);
+
+
+    // FILTER LOCATION MARKERS ONLY
+
+    if (
+      state !== 'All' &&
+      selectedSpec.layer?.[1]
+    ) {
+
+      selectedSpec.layer[1].transform = [
+        ...(selectedSpec.layer[1].transform || []),
+        {
+          filter: {
+            field: 'state',
+            equal: state
+          }
+        }
+      ];
+    }
+
+
+    // PREVENT OUTDATED SELECTIONS
+
+    if (request !== latestRequest) {
+      return;
+    }
+
+
+    // RENDER UPDATED MAP
+
+    try {
+
+      await vegaEmbed(
+        viz,
+        selectedSpec,
+        options
+      );
+
+    } catch (error) {
+
+      console.error(
+        'Could not render state map:',
+        error
+      );
+
+      viz.textContent =
+        `Map could not load: ${error.message}`;
+    }
   }
 
-  .chart11-layout {
-    grid-template-columns: 1fr;
-    gap: 18px;
+
+  // ====================================
+  // CREATE STATE FILTER BUTTONS
+  // ====================================
+
+  for (const state of info.stateOrder) {
+
+    const button =
+      document.createElement('button');
+
+    button.type = 'button';
+
+    button.className =
+      'state-filter';
+
+    button.dataset.state =
+      state;
+
+
+    // COLOURED STATE MARKERS
+
+    if (palette[state]) {
+
+      button.style.setProperty(
+        '--state-color',
+        palette[state]
+      );
+    }
+
+
+    // BUTTON LABEL
+
+    button.textContent =
+      state === 'All'
+        ? 'All states'
+        : state;
+
+
+    // CLICK INTERACTION
+
+    button.addEventListener(
+      'click',
+      () => selectState(state)
+    );
+
+
+    filters.append(button);
+    buttons.push(button);
   }
 
-  .chart11-explainer {
-    width: 100%;
-  }
 
-  .chart11-measure-definition {
-    min-height: 0;
+  // SHOW MAP AND INITIAL SELECTION
+
+  card.hidden = false;
+
+  await selectState(
+    info.defaultState || 'All'
+  );
+}
+
+
+// ========================================
+// 4. MAIN CHART LOADER
+// ========================================
+
+async function loadChart(card) {
+
+  const id = card.dataset.chart;
+
+  const viz =
+    card.querySelector('.viz');
+
+  if (!viz) return;
+
+  try {
+
+    // ====================================
+    // LOAD CHART SPECIFICATION
+    // ====================================
+
+    const response = await fetch(
+      new URL(`specs/${id}.json`, root)
+    );
+
+    if (response.status === 404) {
+
+      console.warn(
+        `Chart specification not found: ${id}`
+      );
+
+      return;
+    }
+
+    if (!response.ok) {
+
+      throw new Error(
+        `HTTP ${response.status}`
+      );
+    }
+
+
+    // PARSE VEGA-LITE JSON
+
+    const spec = await response.json();
+
+    if (
+      !spec.$schema?.includes(
+        'vega-lite/v6'
+      )
+    ) {
+
+      throw new Error(
+        'Expected Vega-Lite version 6'
+      );
+    }
+
+
+    // ====================================
+    // POPULATE CHART INFORMATION
+    // ====================================
+
+    const info = spec.usermeta || {};
+
+    populateInformation(
+      card,
+      info
+    );
+
+
+    // ====================================
+    // CHART 1: INTERACTIVE STATE MAP
+    // ====================================
+
+    if (
+      id === 'map-reserves' &&
+      info.interpretations &&
+      info.stateOrder
+    ) {
+
+      await renderStateMap(
+        card,
+        spec,
+        info
+      );
+
+      return;
+    }
+
+
+    // ====================================
+    // CHART 11: RADAR COMPARISON
+    // ====================================
+
+    // No special code is required.
+    //
+    // Its explanatory buttons were removed
+    // from index.html.
+    //
+    // The original radar specification is
+    // rendered without modification.
+
+
+    // ====================================
+    // CHART 12: SEASONAL COMPARISON
+    // ====================================
+
+    // The following chart ID loads:
+    //
+    // specs/surfability-comparison.json
+    //
+    // No additional rendering logic is
+    // necessary for this Vega-Lite chart.
+
+
+    // ====================================
+    // RENDER STANDARD CHART
+    // ====================================
+
+    await vegaEmbed(
+      viz,
+      spec,
+      options
+    );
+
+    card.hidden = false;
+
+
+  } catch (error) {
+
+    console.error(
+      `Could not render ${id}:`,
+      error
+    );
+
+    viz.textContent =
+      `Chart could not load: ${error.message}`;
+
+    card.hidden = false;
   }
 }
 
-@media (max-width: 760px) {
-  #geography h2,
-  #history h2,
-  #hotspots h2,
-  #destinations h2,
-  #comparison h2,
-  #professional h2 {
-    font-size: clamp(1.45rem, 5vw, 2rem);
-    white-space: normal;
-  }
 
-  [data-chart="surf-destination-ratings"] .vega-bindings,
-  [data-chart="world-tour"] .vega-bindings {
-    gap: 12px;
-    padding: 13px;
-  }
+// ========================================
+// 5. INITIALISE DASHBOARD
+// ========================================
 
-  [data-chart="surf-destination-ratings"] .vega-bindings label,
-  [data-chart="world-tour"] .vega-bindings label {
-    width: 100%;
-    justify-content: space-between;
-    flex-wrap: wrap;
-  }
+async function initialiseCharts() {
 
-  [data-chart="surf-destination-ratings"] .vega-bindings select,
-  [data-chart="world-tour"] .vega-bindings select {
-    flex: 1 1 180px;
-    min-width: 0;
-    max-width: none;
-  }
+  // Render each chart independently so
+  // one failure does not stop the dashboard.
 
-  .section-intro {
-    font-size: .98rem;
+  for (const card of chartCards) {
+
+    await loadChart(card);
   }
 }
 
-@media (max-width: 700px) {
-  header {
-    padding: 48px 0;
-  }
 
-  section {
-    padding: 38px 0 28px;
-  }
+// ========================================
+// 6. START
+// ========================================
 
-  .section-head {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-
-  .chart-card {
-    padding: 16px;
-  }
-
-  .wrap {
-    padding: 0 16px;
-  }
-}
-
-@media (max-width: 480px) {
-  .map-card {
-    padding: 16px;
-  }
-
-  .state-filter {
-    padding: 7px 10px;
-    font-size: .76rem;
-  }
-
-  .chart11-explainer {
-    padding: 14px;
-  }
-
-  .chart11-measure-btn {
-    font-size: .78rem;
-    padding: 8px 9px;
-  }
-
-  [data-chart="world-tour"] .chart-callout {
-    padding: 14px 15px;
-    font-size: .94rem;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-}
+initialiseCharts();
